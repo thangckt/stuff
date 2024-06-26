@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=62", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gptweb"
+dynamic = ["version"]
+requires-python = ">=3.10"
+description = "ChatGPT PlayWright API"
+dependencies = ["playwright >= 1.43.0", "aioconsole", "aiohttp", "httpx"]
+
+
+[tool.setuptools.dynamic]
+version = { attr = "gptweb.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["gptweb*"]
+exclude = ["example*"]
+
+[tool.setuptools.package-data]
+thaml = ['_cookie_file/*']
