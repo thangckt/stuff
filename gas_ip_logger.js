@@ -82,6 +82,11 @@
                 console.error('Failed to get visitor info from ipinfo.io:', error);
             }
         }
+        if (isEmpty(visitorInfo)) {
+            visitorInfo = {
+                org: 'not available',
+            }
+        }
 
         return visitorInfo;
     }
