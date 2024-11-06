@@ -37,7 +37,7 @@
             visitorInfo = {
                 ip: jdata.ip,
                 org: jdata.org,
-                city: jdata.city,
+                city: jdata.city + '-' + jdata.region,
                 country: jdata.country_name,
                 postal: jdata.postal,
                 asn: jdata.asn,
