@@ -37,11 +37,12 @@
             visitorInfo = {
                 ip: jdata.ip,
                 org: jdata.org,
-                city: jdata.city + '-' + jdata.region,
+                city: jdata.city,
                 country: jdata.country_name,
                 postal: jdata.postal,
                 asn: jdata.asn,
-                loc: jdata.latitude + ';' + jdata.longitude,
+                latitude: jdata.latitude,
+                longitude: jdata.longitude,
             };
         } catch (error) {
             console.error('Failed to get visitor info from ipapi.co:', error);
@@ -58,7 +59,8 @@
                     country: jdata.country,
                     postal: jdata.postal,
                     asn: jdata.connection.asn,
-                    loc: jdata.latitude + ';' + jdata.longitude,
+                    latitude: jdata.latitude,
+                    longitude: jdata.longitude,
                 };
             } catch (error) {
                 console.error('Failed to get visitor info from ipwho.is:', error);
@@ -76,7 +78,8 @@
                     country: jdata.country,
                     postal: jdata.postal,
                     asn: '',
-                    loc: jdata.loc,
+                    latitude: jdata.loc.split(',')[0],
+                    longitude: jdata.loc.split(',')[1],
                 };
             } catch (error) {
                 console.error('Failed to get visitor info from ipinfo.io:', error);
@@ -163,7 +166,8 @@
             region: visitorInfo.region,
             country: visitorInfo.country,
             postal: visitorInfo.postal,
-            loc: visitorInfo.loc,
+            latitude: visitorInfo.latitude,
+            longitude: visitorInfo.longitude,
             asn: visitorInfo.asn,
             browser: `${browserInfo.name} ${browserInfo.version}`,
             os: navigator.platform,
