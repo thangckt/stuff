@@ -31,64 +31,83 @@
             return Object.keys(obj).length === 0;
         }
 
-        try {
-            let res = await fetch('https://ipapi.co/json');
-            let jdata = await res.json();
-            visitorInfo = {
-                ip: jdata.ip,
-                org: jdata.org,
-                city: jdata.city,
-                country: jdata.country_name,
-                postal: jdata.postal,
-                asn: jdata.asn,
-                latitude: jdata.latitude,
-                longitude: jdata.longitude,
-            };
-        } catch (error) {
-            console.error('Failed to get visitor info from ipapi.co:', error);
-        }
+        // Array of API endpoints with their respective data extraction logic
+        const apis = [
+            {
+                url: 'https://api.ip.sb/geoip',
+                parse: (data) => ({
+                    ip: data.ip,
+                    org: data.organization,
+                    city: data.city,
+                    country: data.country,
+                    postal: data.postal_code,
+                    asn: data.continent_code + data.asn,
+                    latitude: data.latitude,
+                    longitude: data.longitude,
+                }),
+            },
+            {
+                url: 'https://ipinfo.io/json',
+                parse: (data) => ({
+                    ip: data.ip,
+                    org: data.org.split(' ').slice(1).join(" "),
+                    city: data.city,
+                    country: data.country,
+                    postal: data.postal,
+                    asn: data.org.split(' ')[0],
+                    latitude: data.loc.split(',')[0],
+                    longitude: data.loc.split(',')[1],
+                }),
+            },
+            {
+                url: 'https://ipapi.co/json',
+                parse: (data) => ({
+                    ip: data.ip,
+                    org: data.org,
+                    city: data.city,
+                    country: data.country_name,
+                    postal: data.postal,
+                    asn: data.asn,
+                    latitude: data.latitude,
+                    longitude: data.longitude,
+                }),
+            },
+            {
+                url: 'https://ipwho.is',
+                parse: (data) => ({
+                    ip: data.ip,
+                    org: data.connection.isp,
+                    city: data.city,
+                    country: data.country,
+                    postal: data.postal,
+                    asn: data.connection.asn,
+                    latitude: data.latitude,
+                    longitude: data.longitude,
+                }),
+            },
+        ];
 
-        if (isEmpty(visitorInfo)) {
+        // Iterate over the APIs until one returns valid data
+        for (const api of apis) {
             try {
-                let res = await fetch('https://ipwho.is');
-                let jdata = await res.json();
-                visitorInfo = {
-                    ip: jdata.ip,
-                    org: jdata.connection.isp,
-                    city: jdata.city,
-                    country: jdata.country,
-                    postal: jdata.postal,
-                    asn: jdata.connection.asn,
-                    latitude: jdata.latitude,
-                    longitude: jdata.longitude,
-                };
+                const res = await fetch(api.url);
+                const jdata = await res.json();
+                if (jdata && jdata.ip) {
+                    visitorInfo = api.parse(jdata);
+                    if (!isEmpty(visitorInfo)) {
+                        break; // Stop if valid data is obtained
+                    }
+                }
             } catch (error) {
-                console.error('Failed to get visitor info from ipwho.is:', error);
+                console.error(`Failed to get visitor info from ${api.url}:`, error);
             }
         }
 
-        if (isEmpty(visitorInfo)) {
-            try {
-                let res = await fetch('https://ipinfo.io/json');
-                let jdata = await res.json();
-                visitorInfo = {
-                    ip: jdata.ip,
-                    org: jdata.org,
-                    city: jdata.city,
-                    country: jdata.country,
-                    postal: jdata.postal,
-                    asn: '',
-                    latitude: jdata.loc.split(',')[0],
-                    longitude: jdata.loc.split(',')[1],
-                };
-            } catch (error) {
-                console.error('Failed to get visitor info from ipinfo.io:', error);
-            }
-        }
+        // Default if all attempts fail
         if (isEmpty(visitorInfo)) {
             visitorInfo = {
                 org: 'not available',
-            }
+            };
         }
 
         return visitorInfo;
@@ -132,7 +151,6 @@
                 browserInfo.version = versionMatch ? versionMatch[1] : 'Unknown';
             }
         }
-
         return browserInfo;
     }
 
@@ -175,7 +193,6 @@
         };
         await sendDataToGoogleApp(jsonData);
     }
-
 
     // Function trigger the visitor logging when the page loads
     window.onload = function () {
