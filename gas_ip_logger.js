@@ -118,17 +118,33 @@
         const ua = navigator.userAgent;
         const browserInfo = { name: 'Unknown', version: 'Unknown' };
 
-        // Check for Safari on iOS devices
-        if (/iP(hone|od|ad)/.test(ua) && /Safari/.test(ua) && !/CriOS/.test(ua) && !/FxiOS/.test(ua)) {
-            const versionMatch = ua.match(/Version\/(\d+\.\d+)/);
-            browserInfo.name = 'Safari';
-            browserInfo.version = versionMatch ? versionMatch[1] : 'Unknown';
+        // Check for iOS devices and specific Safari scenarios
+        if (/iP(hone|od|ad)/.test(ua)) {
+            if (/Safari/.test(ua) && !/CriOS/.test(ua) && !/FxiOS/.test(ua)) {
+                // Safari on iOS
+                const versionMatch = ua.match(/Version\/(\d+\.\d+)/);
+                browserInfo.name = 'Safari';
+                browserInfo.version = versionMatch ? versionMatch[1] : 'Unknown';
+            } else if (/CriOS/.test(ua)) {
+                // Chrome on iOS
+                const versionMatch = ua.match(/CriOS\/(\d+\.\d+)/);
+                browserInfo.name = 'Chrome';
+                browserInfo.version = versionMatch ? versionMatch[1] : 'Unknown';
+            } else if (/FxiOS/.test(ua)) {
+                // Firefox on iOS
+                const versionMatch = ua.match(/FxiOS\/(\d+\.\d+)/);
+                browserInfo.name = 'Firefox';
+                browserInfo.version = versionMatch ? versionMatch[1] : 'Unknown';
+            } else {
+                // Other WebKit-based browsers on iOS
+                browserInfo.name = 'WebKit-based Browser';
+            }
         } else {
+            // Handle non-iOS devices
             const browserData = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
-
             if (/trident/i.test(browserData[1])) {
                 const version = /\brv[ :]+(\d+)/g.exec(ua) || [];
-                browserInfo.name = 'IE';
+                browserInfo.name = 'Internet Explorer';
                 browserInfo.version = version[1] || 'Unknown';
             } else if (browserData[1] === 'Chrome') {
                 const temp = ua.match(/\b(OPR|Edg)\/(\d+)/);
@@ -144,13 +160,14 @@
                 browserInfo.version = browserData[2];
             }
 
-            // Handle Safari on desktop or other WebKit-based browsers
+            // Special handling for Safari
             if (/Safari/.test(ua) && !/Chrome/.test(ua)) {
                 const versionMatch = ua.match(/Version\/(\d+\.\d+)/);
                 browserInfo.name = 'Safari';
                 browserInfo.version = versionMatch ? versionMatch[1] : 'Unknown';
             }
         }
+
         return browserInfo;
     }
 
@@ -196,7 +213,7 @@
 
     // Function trigger the visitor logging when the page loads
     window.onload = function () {
-        setTimeout(logVisitor, 3000); // Wait for 5000 milliseconds (5 seconds) before calling logVisitor
+        setTimeout(logVisitor, 3000); // Wait for 3000 milliseconds (3 seconds) before calling logVisitor
     };
 
 })();
