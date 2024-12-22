@@ -34,19 +34,6 @@
         // Array of API endpoints with their respective data extraction logic
         const apis = [
             {
-                url: 'https://api.ip.sb/geoip',
-                parse: (data) => ({
-                    ip: data.ip,
-                    org: data.organization,
-                    city: data.city,
-                    country: data.country,
-                    postal: data.postal_code,
-                    asn: data.continent_code + data.asn,
-                    latitude: data.latitude,
-                    longitude: data.longitude,
-                }),
-            },
-            {
                 url: 'https://ipinfo.io/json',
                 parse: (data) => ({
                     ip: data.ip,
@@ -57,6 +44,19 @@
                     asn: data.org.split(' ')[0],
                     latitude: data.loc.split(',')[0],
                     longitude: data.loc.split(',')[1],
+                }),
+            },
+            {
+                url: 'https://api.ip.sb/geoip',
+                parse: (data) => ({
+                    ip: data.ip,
+                    org: data.organization,
+                    city: data.city,
+                    country: data.country,
+                    postal: data.postal_code,
+                    asn: data.continent_code + data.asn,
+                    latitude: data.latitude,
+                    longitude: data.longitude,
                 }),
             },
             {
