@@ -34,6 +34,19 @@
         // Array of API endpoints with their respective data extraction logic
         const apis = [
             {
+                url: 'https://ipapi.co/json',
+                parse: (data) => ({
+                    ip: data.ip,
+                    org: data.org,
+                    city: data.city,
+                    country: data.country_name,
+                    postal: data.postal,
+                    asn: data.asn,
+                    latitude: data.latitude,
+                    longitude: data.longitude,
+                }),
+            },
+            {
                 url: 'https://ipinfo.io/json',
                 parse: (data) => ({
                     ip: data.ip,
@@ -60,19 +73,6 @@
                 }),
             },
             {
-                url: 'https://ipapi.co/json',
-                parse: (data) => ({
-                    ip: data.ip,
-                    org: data.org,
-                    city: data.city,
-                    country: data.country_name,
-                    postal: data.postal,
-                    asn: data.asn,
-                    latitude: data.latitude,
-                    longitude: data.longitude,
-                }),
-            },
-            {
                 url: 'https://ipwho.is',
                 parse: (data) => ({
                     ip: data.ip,
@@ -83,6 +83,19 @@
                     asn: data.connection.asn,
                     latitude: data.latitude,
                     longitude: data.longitude,
+                }),
+            },
+            {
+                url: 'https://api.techniknews.net/ipgeo',
+                parse: (data) => ({
+                    ip: data.ip,
+                    org: data.isp,
+                    city: data.city,
+                    country: data.country,
+                    postal: data.zip,
+                    asn: data.as.split(' ')[0],
+                    latitude: data.lat,
+                    longitude: data.lon,
                 }),
             },
         ];
