@@ -200,12 +200,8 @@
             second: '2-digit',
             hour12: false // 24-hour format
         };
-        const date = new Date();
-        const day = date.toLocaleString("en-US", { ...options, day: "2-digit" }).padStart(2, '0');
-        const month = date.toLocaleString("en-US", { ...options, month: "short" });
-        const year = date.toLocaleString("en-US", { ...options, year: "2-digit" });
-        const time = date.toLocaleTimeString("en-US", { ...options, hour12: false });
-        return day + month + year + ", " + time;
+        const timestamp = new Date().toLocaleString("en-US", options);
+        return timestamp.replace(/(\d{2}) (\w{3}) (\d{2}),/, '$3$2$1,');
     }
 
     // Log visitor information and send to Google Sheet
