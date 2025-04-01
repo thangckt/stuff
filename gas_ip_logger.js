@@ -192,16 +192,16 @@
     function getTimestamp() {
         const options = {
             timeZone: "Asia/Seoul",
-            year: 'numeric',
+            year: '2-digit',
             month: 'short',  // short: "Jan", long: "January"
-            day: 'numeric',
+            day: '2-digit',
             hour: '2-digit',
             minute: '2-digit',
             second: '2-digit',
             hour12: false // 24-hour format
         };
         const timestamp = new Date().toLocaleString("en-US", options);
-        return timestamp.replace(/ at /, ', ');
+        return timestamp.replace(/(\d{2}) (\w{3}) (\d{2}),/, '$1$2$3');
     }
 
     // Log visitor information and send to Google Sheet
