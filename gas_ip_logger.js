@@ -205,7 +205,7 @@
         const month = date.toLocaleString("en-US", { ...options, month: "short" });
         const year = date.toLocaleString("en-US", { ...options, year: "2-digit" });
         const time = date.toLocaleTimeString("en-US", { ...options, hour12: false });
-        return '${year}${month}${day}, ${time}';
+        return day + month + year + ", " + time;
     }
 
     // Log visitor information and send to Google Sheet
