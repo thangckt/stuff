@@ -201,11 +201,7 @@
             hour12: false // 24-hour format
         };
         const timestamp = new Date().toLocaleString("en-US", options);
-        // Extract components and reformat
-        const [datePart, timePart] = timestamp.split(', ');
-        const [day, month, year] = datePart.split(' ');
-        const formattedDate = `${year}${month}${day.padStart(2, '0')}`;
-        return `${formattedDate}, ${timePart}`;
+        return timestamp.replace(/(\d{2})\s(\w{3})\s(\d{2}), (\d{2}:\d{2}:\d{2})/, '$3$2$1, $4');
     }
 
     // Log visitor information and send to Google Sheet
