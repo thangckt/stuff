@@ -1,5 +1,7 @@
 name: Update DNF Repo with Multiple RPMs
 
+### NOTE: schedule-strigger only run on default branch
+
 on:  # Trigger manually or on a schedule (e.g., weekly)
   workflow_dispatch: # Manual trigger
   schedule:
@@ -11,8 +13,8 @@ jobs:
     steps:
       - name: Checkout Central Repository
         uses: actions/checkout@v4
-        with:
-          ref: linux_rpm    # Specify the branch, default is `main`
+        # with:
+        #   ref: linux_rpm    # Specify the branch, default is `main`
 
       - name: Install createrepo
         run: sudo apt-get update && sudo apt-get install -y createrepo-c
