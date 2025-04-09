@@ -1,0 +1,6 @@
+ 
+    [thang_github_rpm]
+    name=Thang RPMs from multi-sources
+    baseurl=fhttps://raw.githubusercontent.com/thangckt/stuff/linux_rpm/rpms/
+    enabled=1
+    gpgcheck=0
