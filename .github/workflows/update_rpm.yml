@@ -20,7 +20,7 @@ jobs:
       - name: Create rpms directory if it doesn't exist
         run: mkdir -p rpms
 
-      - name: Download RPM from repo1 # only if there is an update (different file size)
+      - name: Download RPM 1 rustdesk
         run: |
             RPM_URL="https://github.com/rustdesk/rustdesk/releases/download/1.3.9/rustdesk-1.3.9-0.x86_64.rpm"
             RPM_FILE="rpms/rustdesk-latest.rpm"
