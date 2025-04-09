@@ -22,20 +22,22 @@ jobs:
       - name: Create rpms directory if it doesn't exist
         run: mkdir -p rpms
 
-      - name: Download RPM 1 rustdesk
+    ### Download RPMs
+      - name: Download RPM 1: rustdesk
         run: |
-            RPM_URL=$(curl -sL https://github.com/rustdesk/rustdesk/releases/latest | grep -wo "https.*x86_64.rpm")
-            RPM_FILE="rpms/rustdesk-latest.rpm"
+            RPM_URL='$(curl -sL https://github.com/rustdesk/rustdesk/releases/latest | grep -wo "https.*x86_64.rpm")'
+            RPM_FILE='rpms/rustdesk-latest.rpm'
             curl -L -o ${RPM_FILE} ${RPM_URL}
 
-    #   - name: Download RPM from repo2
-    #     run: |
-    #       curl -L -o rpms/app2-latest.rpm \
-    #       "https://github.com/otheruser/repo2/releases/latest/download/app2-$(curl -s https://api.github.com/repos/otheruser/repo2/releases/latest | jq -r .tag_name)-1.el8.x86_64.rpm"
+      - name: Download RPM 2: electerm
+        run: |
+            RPM_URL='$(curl -sL https://github.com/electerm/electerm/releases/latest | grep -wo "https.*x86_64.rpm")'
+            RPM_FILE='rpms/electerm-latest.rpm'
+            curl -L -o ${RPM_FILE} ${RPM_URL}
 
+    ### Update the repository
       - name: Update Repository Metadata
         run: createrepo_c rpms/
-
 
       - name: Commit and Push Changes      # Commit all changed files back to the repository
         uses: stefanzweifel/git-auto-commit-action@v5
