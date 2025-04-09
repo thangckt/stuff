@@ -25,14 +25,14 @@ jobs:
     ### Download RPMs
       - name: Download RPM 1 - rustdesk
         run: |
-            RPM_URL='$(curl -sL https://github.com/rustdesk/rustdesk/releases/latest | grep -wo "https.*x86_64.rpm")'
-            RPM_FILE='rpms/rustdesk-latest.rpm'
+            RPM_URL="$(curl -sL https://github.com/rustdesk/rustdesk/releases/latest | grep -wo "https.*x86_64.rpm")"
+            RPM_FILE="rpms/rustdesk-latest.rpm"
             curl -L -o ${RPM_FILE} ${RPM_URL}
 
       - name: Download RPM 2 - electerm
         run: |
-            RPM_URL='$(curl -sL https://github.com/electerm/electerm/releases/latest | grep -wo "https.*x86_64.rpm")'
-            RPM_FILE='rpms/electerm-latest.rpm'
+            RPM_URL="$(curl -sL https://github.com/electerm/electerm/releases/latest | grep -wo "https.*x86_64.rpm")"
+            RPM_FILE="rpms/electerm-latest.rpm"
             curl -L -o ${RPM_FILE} ${RPM_URL}
 
     ### Update the repository
