@@ -13,8 +13,8 @@ jobs:
     steps:
       - name: Checkout Central Repository
         uses: actions/checkout@v4
-        # with:
-        #   ref: linux_rpm    # Specify the branch, default is `main`
+        with:
+          ref: linux_rpm    # Specify the branch, default is `main`
 
       - name: Install createrepo
         run: sudo apt-get install -y createrepo-c
@@ -41,6 +41,3 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Automatic update latest RPMs"
-
-
-curl  -sL https://github.com/rustdesk/rustdesk/releases/latest | grep -wo "https.*x86_64.rpm"
