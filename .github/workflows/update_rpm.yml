@@ -1,5 +1,5 @@
 ### NOTE: schedule-strigger only run on default branch
-name: Update DNF Repo with Multiple RPMs
+name: Download multiple RPMs
 
 on:  # Trigger manually or on a schedule (e.g., weekly)
   workflow_dispatch: # Manual trigger
