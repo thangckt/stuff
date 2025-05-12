@@ -1,5 +1,5 @@
-[thang_github_rpm]
-name=Thang's RPMs for multiple packages
+[thang_rpm]
+name=Thang RPMs for multiple packages, host on Github
 baseurl=https://raw.githubusercontent.com/thangckt/stuff/linux_rpm/rpms
 enabled=1
 gpgcheck=0
