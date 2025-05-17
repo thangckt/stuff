@@ -7,9 +7,12 @@
     - ABBYY Lingvo .lsa/.dat audio archives
 
 > In short:
-    - For En-Vi: `Google Translate` for online text + voice
-    - For En-En: `Longman-Contemporary-English-5th-New + Sounds` for offline dictionary
-    - Use more `wikipedia` for online dictionary
+- Google Detect-Vi: ` trans -e google -t vi -show-original y -show-original-phonetics n -show-translation y -no-ansi -show-translation-phonetics n -show-prompt-message n -show-languages n -show-original-dictionary n -show-dictionary n -show-alternatives n %GDWORD% `
+- Google Vi-En: ` trans -e google -s vi -t en -show-original y -show-original-phonetics n -show-translation y -no-ansi -show-translation-phonetics n -show-prompt-message n -show-languages n -show-original-dictionary n -show-dictionary n -show-alternatives n %GDWORD% `
+- Google En Voice: `trans -speak -e google -brief -no-translate %GDWORD% `
+- For En-En: `Longman-Contemporary-English-5th-New + Sounds` for offline dictionary
+- Use more `wikipedia` for online dictionary
+- Use starDict for `Vi-En` and `En-Vi` dictionaries
 
 ## Setting
 `Edit` > `Preferences`:
