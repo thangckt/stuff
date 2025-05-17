@@ -1,8 +1,8 @@
 # Links to download dictionaries for GoldenDict
 `GoldenDict_ng`/`GoldenDict` supports various [dictionary formats](https://xiaoyifang.github.io/goldendict-ng/dictformats/), including StarDict, Babylon, and others.
     - Babylon .BGL files, complete with images and resources
-    - StarDict .ifo/.dict./.idx/.syn dictionaries (i.e., the directory containing the .dict.dz, .idx, and .ifo files)
-    - Dictd .index/.dict(.dz) dictionary files
+    - StarDict: each folder contain these files (.ifo/.dict./.idx/.syn)
+    - Dictd: (.index/.dict(.dz))
     - ABBYY Lingvo .dsl source files, together with abbreviations. The files can be optionally compressed with dictzip. Dictionary resources can be packed together into a .zip file.
     - ABBYY Lingvo .lsa/.dat audio archives
 
@@ -26,9 +26,9 @@
 ### 1. Offline dictionaries:
 - [Collection *.bgl For En](https://drive.google.com/drive/u/0/folders/0BzrQwK2v03aKWjlsQ3NsaWJKalU?resourcekey=0-DtgqOJiVFSDI231ugoQgiQ)
 - [Longman-Contemporary-English-5th-New + Sounds](https://elvand.com/goldendict/)
-- [gitrepo for Vi](https://github.com/dynamotn/stardict-vi)
+- [gitrepo for Vi-En](https://github.com/dynamotn/stardict-vi)
 
-    To use:
+To use:
     - En-En: Use *Longman-Contemporary-English-5th-New* is enough. *Oxford Dictionary 2nd* is too big, not efficient.
 
 ### 2. Use Online dictionaries
