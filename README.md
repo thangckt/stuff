@@ -1,3 +1,3 @@
-# hi
+# file icons
 
-To save some code snippets and notes.
+All files icons created by Thang.
