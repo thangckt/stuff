@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<opml version="2.0" xmlns:rssguard="https://github.com/martinrotter/rssguard">
+  <head>
+    <title>RSS Guard</title>
+    <dateCreated>Fri, 23 May 2025 17:30:59 GMT</dateCreated>
+  </head>
+  <body>
+    <outline description="Updates from github repos" text="Github">
+      <outline description="" text="Trending">
+        <outline description="Weekly Trending of All Languages in GitHub" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="GitHub All Languages Weekly Trending" title="GitHub All Languages Weekly Trending" type="rss" version="RSS" xmlUrl="https://mshibanami.github.io/GitHubTrendingRSS/weekly/all.xml"/>
+        <outline description="Weekly Trending of Python in GitHub" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="GitHub Python Weekly Trending" title="GitHub Python Weekly Trending" type="rss" version="RSS" xmlUrl="https://mshibanami.github.io/GitHubTrendingRSS/weekly/python.xml"/>
+        <outline description="Weekly Trending of Jupyter Notebook in GitHub" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="GitHub Jupyter Notebook Weekly Trending" title="GitHub Jupyter Notebook Weekly Trending" type="rss" version="RSS" xmlUrl="https://mshibanami.github.io/GitHubTrendingRSS/weekly/jupyter-notebook.xml"/>
+      </outline>
+      <outline description="" text="Repos">
+        <outline description="" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="rssguard:master" title="rssguard:master" type="rss" version="ATOM" xmlUrl="https://github.com/martinrotter/rssguard/commits/master.atom"/>
+      </outline>
+    </outline>
+    <outline description="" text="Technology">
+      <outline description="News for nerds, stuff that matters" encoding="ISO-8859-1" rssguard:postProcess="" rssguard:xmlUrlType="0" text="Slashdot" title="Slashdot" type="rss" version="ATOM" xmlUrl="http://rss.slashdot.org/Slashdot/slashdotMainatom"/>
+      <outline description="" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="The Verge" title="The Verge" type="rss" version="ATOM" xmlUrl="https://www.theverge.com/rss/index.xml"/>
+      <outline description="A Linux and Open Source Web Portal" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="It's FOSS" title="It's FOSS" type="rss" version="RSS" xmlUrl="https://itsfoss.com/feed"/>
+    </outline>
+    <outline description="" text="Misc">
+      <outline description="Do everything better" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="Lifehacker" title="Lifehacker" type="rss" version="RSS" xmlUrl="https://lifehacker.com/rss"/>
+    </outline>
+    <outline description="" text="News">
+      <outline description="Google News" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="Top stories - Google News" title="Top stories - Google News" type="rss" version="RSS" xmlUrl="https://news.google.com/rss?hl=en-US&amp;gl=US&amp;ceid=US:en"/>
+      <outline description="Google News" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="Technology - Latest - Google News" title="Technology - Latest - Google News" type="rss" version="RSS" xmlUrl="https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGRqTVhZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&amp;gl=US&amp;ceid=US:en"/>
+      <outline description="Google News" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="World - Latest - Google News" title="World - Latest - Google News" type="rss" version="RSS" xmlUrl="https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&amp;gl=US&amp;ceid=US%3Aen"/>
+      <outline description="Google News" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="U.S. - Latest - Google News" title="U.S. - Latest - Google News" type="rss" version="RSS" xmlUrl="https://news.google.com/rss/topics/CAAqIggKIhxDQkFTRHdvSkwyMHZNRGxqTjNjd0VnSmxiaWdBUAE?hl=en-US&amp;gl=US&amp;ceid=US%3Aen"/>
+    </outline>
+    <outline description="" text="Software">
+      <outline description="MajorGeeks offers only 4-star or better geek-tested and reviewed software for Windows along with tutorials and videos when you need help with your computer." encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="MajorGeeks.Com" title="MajorGeeks.Com" type="rss" version="RSS" xmlUrl="https://www.majorgeeks.com/files/rss"/>
+    </outline>
+    <outline description="" text="Job"/>
+  </body>
+</opml>
