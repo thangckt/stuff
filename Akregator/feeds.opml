@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+ <head>
+  <text/>
+ </head>
+ <body>
+  <outline isOpen="false" text="iMechanica" id="3694156657"/>
+  <outline isOpen="false" text="Science" id="1714698342">
+   <outline useCustomFetchInterval="false" comment="" logoUrl="https://www.nature.com/uploads/product/nature/rss.png" copyright="© 2025 Macmillan Publishers Limited, part of Springer Nature. All rights reserved." fetchInterval="30" logoHeight="0" maxArticleAge="60" id="2913860754" archiveMode="globalDefault" title="Nature" logoWidth="0" xmlUrl="https://www.nature.com/nature.rss" htmlUrl="http://feeds.nature.com/nature/rss/current" type="rss" maxArticleNumber="1000" version="RSS" description="Nature is the foremost international weekly scientific journal in the world and is the flagship journal for Nature Portfolio. It publishes the finest peer-reviewed research in all fields of science and technology on the basis of its originality, importance, interdisciplinary interest, timeliness, accessibility, elegance and surprising conclusions. Nature publishes landmark papers, award winning news, leading comment and expert opinion on important, topical scientific news and events that enable readers to share the latest discoveries in science and evolve the discussion amongst the global scientific community." text="Nature"/>
+   <outline useCustomFetchInterval="false" comment="" logoUrl="https://feeds.science.org/images/science-144sq.png" copyright="" fetchInterval="30" logoHeight="31" maxArticleAge="60" id="2911969056" archiveMode="globalDefault" title="Science" logoWidth="88" xmlUrl="https://feeds.science.org/rss/science.xml" htmlUrl="https://www.science.org/journal/science" type="rss" maxArticleNumber="1000" version="RSS" description="The very best in news and research across the sciences." text="Science"/>
+  </outline>
+  <outline isOpen="false" text="Linux" id="187599507">
+   <outline isOpen="false" text="KDE" id="3008048211">
+    <outline useCustomFetchInterval="false" faviconWidth="0" comment="" logoUrl="https://planet.kde.org/img/planet.png" copyright="" fetchInterval="0" logoHeight="0" maxArticleAge="0" id="4097343182" archiveMode="globalDefault" title="Planet KDE" logoWidth="0" xmlUrl="https://planet.kde.org/global/atom.xml" htmlUrl="https://planet.kde.org/" faviconHeight="0" type="rss" maxArticleNumber="0" version="RSS" description="" faviconUrl="file:///home/tha/.cache/favicons/planet.kde.org.png" text="Planet KDE"/>
+    <outline useCustomFetchInterval="false" comment="" logoUrl="https://store.kde.org/stores/media/store_kde/logo.png" copyright="All rights reserved. All trademarks are copyright by their respective owners. All contributors are responsible for their uploads." fetchInterval="0" logoHeight="0" maxArticleAge="0" id="1025986778" archiveMode="globalDefault" title="KDE Apps" logoWidth="0" xmlUrl="https://store.kde.org/content.rdf" htmlUrl="" type="rss" maxArticleNumber="0" version="RSS" description="" faviconUrl="file:///home/tha/.cache/favicons/store.kde.org.png" text="KDE Apps"/>
+   </outline>
+   <outline isOpen="false" text="RockyLinux" id="2184197467">
+    <outline description="Recently updated packages for Rocky Linux 9 x86_64 plus" useCustomFetchInterval="false" archiveMode="globalDefault" maxArticleAge="60" title="Rocky Linux 9 x86_64 plus" xmlUrl="https://dl.rockylinux.org/pub/feeds//Rocky-Linux-9-x86_64-plus.xml" comment="" version="RSS" htmlUrl="https://rockylinux.org" text="Rocky Linux 9 x86_64 plus" fetchInterval="30" maxArticleNumber="1000" id="3500505839" type="rss" copyright=""/>
+   </outline>
+   <outline description="Links for the intellectually curious, ranked by readers." useCustomFetchInterval="false" archiveMode="globalDefault" maxArticleAge="60" title="Hacker News" xmlUrl="https://news.ycombinator.com//rss" comment="" version="RSS" htmlUrl="https://news.ycombinator.com/" faviconUrl="file:///home/tha/.cache/favicons/news.ycombinator.com.png" text="Hacker News" fetchInterval="30" maxArticleNumber="1000" id="1139245538" type="rss" copyright=""/>
+   <outline description="News For Open Source Professionals" useCustomFetchInterval="false" archiveMode="globalDefault" maxArticleAge="0" title="Linux.com" xmlUrl="https://www.linux.com/feed/" comment="" version="RSS" htmlUrl="https://www.linux.com" faviconUrl="file:///home/tha/.cache/favicons/www.linux.com_wp-includes_images_w-logo-blue-white-bg.png" text="Linux.com" fetchInterval="0" maxArticleNumber="0" id="152580069" type="rss" copyright=""/>
+  </outline>
+  <outline isOpen="false" text="job" id="3006854244">
+   <outline description="" useCustomFetchInterval="false" archiveMode="globalDefault" maxArticleAge="60" title="Indeed" xmlUrl="https://indeed.com/rss?q=computational+mechanics&amp;l=United+States&amp;from=searchOnHP%2Cwhereautocomplete&amp;vjk=d1f3eebfbcb4f1eb" comment="" version="RSS" htmlUrl="" faviconUrl="file:///home/tha/.cache/favicons/www.indeed.com.png" text="Indeed" fetchInterval="30" maxArticleNumber="1000" id="3248460821" type="rss" copyright=""/>
+   <outline description="" useCustomFetchInterval="false" archiveMode="globalDefault" maxArticleAge="60" title="SimplyHired" xmlUrl="https://www.simplyhired.com/rss?q=computational+mechanics&amp;l=United+States" comment="" version="RSS" htmlUrl="" text="SimplyHired" fetchInterval="30" maxArticleNumber="1000" id="1028589117" type="rss" copyright=""/>
+  </outline>
+ </body>
+</opml>
+
