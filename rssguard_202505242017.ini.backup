@@ -1,0 +1,173 @@
+[adblock]
+custom_filters=
+enabled=true
+filter_lists=https://secure.fanboy.co.nz/easylist.txt, https://secure.fanboy.co.nz/easyprivacy.txt, https://secure.fanboy.co.nz/fanboy-social.txt
+
+[categories_expand_states]
+1-16--1=true
+1-512--6=true
+1-8-1=true
+1-8-10=true
+1-8-11=true
+1-8-2=true
+1-8-3=true
+1-8-4=true
+1-8-5=true
+1-8-6=true
+1-8-7=true
+1-8-8=true
+1-8-9=true
+
+[cookies]
+1-_vm_consent_type="AwWdUxbNDB3VjZZuhzbueHS+zQchgcz67MpgCJ3npaiwFvzgrwAo6vw49WYPYoeWp1yfTkclBnTJByBNzYzOgh4vowW27Fv5t0FGTPPBhTq7BCFppo1sKKEXaCyz+DjTyINGtU5Zgp0zNmbq1mDY0L72ZA5LLj/qIVOm5ZvEDg=="
+2-_gh_sess="AwUMzlbJ/8hvMMmZ1LVcqFMqMFOXV1RidFM9VcCaifRt6WNnrS2kiQhYEUWrl0guGLERFZzxtl48ulzscw5InG/mszk6N8eCg3qNuhKRhGeeM0ULnzixj8BKgKSemKrurG7phgeE/5p8eiqrP57zFboRi/Ynm8akVBXpgBkn44HWffsfUilMk4/e8eigWnsZgCp/udcd1ux/8RjfK6ZYmtkCoGIEgBISSMkuN3h43ZJoqqU9Irpu2NGxA2zXa5nZ4Fsx9aIS2EizKKL8YId+AQkjEPPw/idzTnrw+EUVmWdkshN5aY3w34RuesKa8kj3qrSGKBslE0j4eHkrmXabmzDh64AiYBRaKCWZjH1I+WiDgj1+3enyyuR/bxO/wonVm6CQ97YGbuhlBCFKLUVsdweYjhnHtt8r41gYAGl9TiRAd29lWGqiEl7kamsPBtN0zyAJ5oa6Q2Su//FxArMveB2kY3pQowD8IzMxBwvO++FUv8N3hBFhWJKGDw13Xgb/Vv6JEEQ="
+3-_vm_consent_type="AwXpjOgmBiXDwwNRU0i3UlDULFetjXBGUHbdtSBaGG93EevrpBs37fhqCDimLUKQQtl6sh2yX8qXSD82goW92Ye5q0kRv2w+aXjZCXGQBBQxyKOzKdyW3Yn6mg/6m7LqlMgaracb3ja9WljUKLMzGrDgvoWzwZNUI88aZQBfqw=="
+4-_gh_sess=AwXFfNR5X3+9MK4TWpTPL/IvHb1+RtXj9dKP53IoO0bfe/HxOrozEosX/bwrTMD6JGHvnpDxCA8pAfvDLGtUnn1gMWwZ+0YMR/SU7/7dgU+kXJAq6GaJtgAEPZ50JVyMYlfMM+7AmDNZ3K+Ab27yZCqzgxB9TmIwEuGIdCiWuvXPjoTCw4uwTRT6/uoEA6ZkxpLQSgaxdjWdZ0hHx6pMNQJH/473HdL+hKGRixco5GG2Z/ZNAokyxBWAoQyKzflDR2KcCc/EdywErGUX3ghWx37QupKaTwcx4GdyROuffN8tuiKeGXnRirEJzoHBs3yLY7l+q0IjS0ss7kfr+vKXsrk7PvoUyhNzUhRXf+EFuSaLDVrXIBhqEaxckAAabGQx0L8UsI0owsQlfoqJ87rKBdKFKmpD5osphpAGlyHC81UpkBBSxS1CsKTZkjwHTUduhh/jL3uninl0nPIWsBsXSJ1mNgxi6B26v8N9hMmD1WUQ+yTvDy8fuCp9
+5-_octo="AwUSRYjkrCzT+vM772Jg9gUOUQgIuSocCiyN5XACQ0Rc+RMXWPffFQBysupFEfMD0F9IQ4a9JwE0gpxXwwB0iyNjyv30dWYaGAO7abKNhPDrhw4X5gTGs11mXUHLCFGZj4f3PixOagAUUbg9EcGCegMoqfeWBwKYP3dQCzgJkKjp+MFtI2K3n1A="
+6-logged_in="AwVxGwrx/sQ0I01mKcblrnapJJQlJayajKoBafyOwbauyDIyfcLuNCEvr/fU0bSguEIt5f6Sy7t21MHiokUVCVqH73INZCbDw4oC+vb52dafvQ2BcMbO0V1/zUgJhEoF3ZBy6JFBGZ0KQhARKCxmr9m1+MsqOQkovAkiIrTMD0hBGg=="
+7-csv="AwWzIxL41AJRmKE5HdFEUMLMSsjtgToMGjymzltvwtp/bBRSNQTK0umF+ry7acI8BmqNK2k4dpPUwrp6wJXbPh0J89HNgjW3kwV/XSYP/D0msS1180ONd604JxwZK+EeJNNSjAzGEw1TWVr6YBibWTsFFw=="
+8-edgebucket="AwXvHfNeK7ly5y8mUDJRfgmEkWQLPYu9q40vR9LmKFcOZYXYWWjGQSJwMVOWYc4x7uNfPkJLAT0kDXQyVWSqsonlmtzbCaJcZgrtSwlYFvO0otoaoPW7Xn1pk7Gt4lXX82UfPUZvnF1G0U0VkyPtF81YR3x5S4F+RLMy7Gymc20zOTqaAHj72UVC+Q=="
+9-session_tracker="AwUR93M3y2jH4JiRGxzVeFgLBOn2DV1rfVqpwVQmbpnhRb+v4E+TRFFR8Ku1Xq26rwWGLTIgYgoKQDGgraOgV7BjWrp7a9wJxxUpUgdSpKH0hp+2kG3S2RI+DocEYg9kknaxr6BfayXQ8VAX2pHcE07fsEfqWx21oNTgMN2Z0kbdVOpl6l9qG1hg1OuSGsAQUXWPN0ccUSKGSKcuBQBFgeLMrAfb4x22pQiOS8hnl4De1Ay5ZK8dTMzEGgvYeEsi7HLchJTgrUH0xaAFDfJfiQYqrbkigg3uXX1jQc/XXWX8Ufu7YW9HYcN5jL3z74Q+bnW5us9WrPXl8Hyrjot7XRWigv03SDkS7CctSwNKh/evKEGqS16xY3sbOkxxWwe0bPenXfp45JYjZqI="
+
+[custom_skin_colors]
+Allright=#77dd77
+FgDisabledFeed=#000000
+FgError=#e74343
+FgInteresting=#11204f
+FgNewMessages=#3a6fe4
+FgSelectedError=#ffd7d7
+FgSelectedInteresting=#ffffff
+FgSelectedNewMessages=#f0f2fc
+enabled=false
+
+[dialog_geometries]
+AdBlockDialog_size=@Size(453 424)
+FormAccountDetails_size=@Size(550 450)
+FormAddAccount_size=@Size(405 390)
+FormBackupDatabaseSettings_size=@Size(446 341)
+FormCategoryDetails_size=@Size(455 262)
+FormDiscoverFeeds_size=@Size(593 394)
+FormFeedDetails_size=@Size(748 590)
+FormSettings_size=@Size(930 550)
+FormStandardImportExport_size=@Size(564 628)
+FormUpdate_size=@Size(549 324)
+
+[feeds]
+auto_update_enabled=false
+auto_update_fast=false
+auto_update_interval=900
+auto_update_only_unfocused=false
+count_format=(%unread)
+customize_list_font=false
+feed_update_timeout=30000
+feeds_update_on_startup=false
+feeds_update_on_startup_delay=15
+hide_counts_if_no_unread=false
+list_font="Noto Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1"
+only_basic_shortcuts_in_lists=false
+pause_feed_fetching=true
+show_tooltips=true
+show_tree_branches=true
+strikethrough_disabled_feeds=true
+update_feed_list_during_fetching=false
+
+[file_dialog_paths]
+general=/home/tha/d/work/code_hub/stuff
+
+[gui]
+FormBackupDatabaseSettings=@ByteArray(\0\0\0\x2\0\0\0*\0m\0_\0\x63\0h\0\x65\0\x63\0k\0\x42\0\x61\0\x63\0k\0u\0p\0S\0\x65\0t\0t\0i\0n\0g\0s\0\0\0\x1\0\0\0\xe\0\x63\0h\0\x65\0\x63\0k\0\x65\0\x64\0\0\0\x1\0\x1\0\0\0*\0m\0_\0\x63\0h\0\x65\0\x63\0k\0\x42\0\x61\0\x63\0k\0u\0p\0\x44\0\x61\0t\0\x61\0\x62\0\x61\0s\0\x65\0\0\0\x1\0\0\0\xe\0\x63\0h\0\x65\0\x63\0k\0\x65\0\x64\0\0\0\x1\0\0)
+alternate_colors_in_lists=false
+colored_busy_tray_icon=false
+default_sort_column_feeds=0
+default_sort_order_feeds=0
+enable_list_headers=true
+enable_notifications=true
+enable_status_bar=true
+enable_toolbars=true
+feed_view_state=eyJoZWFkZXJfMF9zaXplIjoyNzgsImhlYWRlcl8xX3NpemUiOjQ5LCJoZWFkZXJfY291bnQiOjJ9
+feeds_toolbar="m_actionUpdateAllItems,m_actionStopRunningItemsUpdate,m_actionPauseFeedFetching,m_actionMarkAllItemsRead,spacer,search,m_adblockIconAction"
+forced_skin_colors=true
+height_row_feeds=-1
+height_row_messages=-1
+hide_tabbar_one_tab=false
+hide_when_minimized=false
+icon_theme_name=
+main_menu_visible=true
+messages_toolbar="m_actionMarkSelectedMessagesAsRead,m_actionMarkSelectedMessagesAsUnread,m_actionSwitchImportanceOfSelectedMessages,separator,highlighter[],filter[],spacer,search"
+monochrome_tray_icon=false
+msg_view_state="eyJoZWFkZXJfMF9oaWRkZW4iOnRydWUsImhlYWRlcl8wX2lkeCI6MCwiaGVhZGVyXzBfc2l6ZSI6MCwiaGVhZGVyXzEwX2hpZGRlbiI6dHJ1ZSwiaGVhZGVyXzEwX2lkeCI6MTAsImhlYWRlcl8xMF9zaXplIjowLCJoZWFkZXJfMTFfaGlkZGVuIjp0cnVlLCJoZWFkZXJfMTFfaWR4IjoxMSwiaGVhZGVyXzExX3NpemUiOjAsImhlYWRlcl8xMl9oaWRkZW4iOnRydWUsImhlYWRlcl8xMl9pZHgiOjEyLCJoZWFkZXJfMTJfc2l6ZSI6MCwiaGVhZGVyXzEzX2hpZGRlbiI6dHJ1ZSwiaGVhZGVyXzEzX2lkeCI6MTMsImhlYWRlcl8xM19zaXplIjowLCJoZWFkZXJfMTRfaGlkZGVuIjp0cnVlLCJoZWFkZXJfMTRfaWR4IjoxNCwiaGVhZGVyXzE0X3NpemUiOjAsImhlYWRlcl8xNV9oaWRkZW4iOnRydWUsImhlYWRlcl8xNV9pZHgiOjE1LCJoZWFkZXJfMTVfc2l6ZSI6MCwiaGVhZGVyXzE2X2hpZGRlbiI6dHJ1ZSwiaGVhZGVyXzE2X2lkeCI6MTYsImhlYWRlcl8xNl9zaXplIjowLCJoZWFkZXJfMTdfaGlkZGVuIjp0cnVlLCJoZWFkZXJfMTdfaWR4IjoxNywiaGVhZGVyXzE3X3NpemUiOjAsImhlYWRlcl8xOF9oaWRkZW4iOnRydWUsImhlYWRlcl8xOF9pZHgiOjE4LCJoZWFkZXJfMThfc2l6ZSI6MCwiaGVhZGVyXzE5X2hpZGRlbiI6dHJ1ZSwiaGVhZGVyXzE5X2lkeCI6MTksImhlYWRlcl8xOV9zaXplIjowLCJoZWFkZXJfMV9oaWRkZW4iOmZhbHNlLCJoZWFkZXJfMV9pZHgiOjQsImhlYWRlcl8xX3NpemUiOjMwLCJoZWFkZXJfMjBfaGlkZGVuIjp0cnVlLCJoZWFkZXJfMjBfaWR4IjoyMCwiaGVhZGVyXzIwX3NpemUiOjAsImhlYWRlcl8yX2hpZGRlbiI6ZmFsc2UsImhlYWRlcl8yX2lkeCI6NiwiaGVhZGVyXzJfc2l6ZSI6MzMsImhlYWRlcl8zX2hpZGRlbiI6dHJ1ZSwiaGVhZGVyXzNfaWR4IjoxLCJoZWFkZXJfM19zaXplIjowLCJoZWFkZXJfNF9oaWRkZW4iOnRydWUsImhlYWRlcl80X2lkeCI6MiwiaGVhZGVyXzRfc2l6ZSI6MCwiaGVhZGVyXzVfaGlkZGVuIjp0cnVlLCJoZWFkZXJfNV9pZHgiOjMsImhlYWRlcl81X3NpemUiOjAsImhlYWRlcl82X2hpZGRlbiI6ZmFsc2UsImhlYWRlcl82X2lkeCI6NSwiaGVhZGVyXzZfc2l6ZSI6ODUwLCJoZWFkZXJfN19oaWRkZW4iOnRydWUsImhlYWRlcl83X2lkeCI6OCwiaGVhZGVyXzdfc2l6ZSI6MCwiaGVhZGVyXzhfaGlkZGVuIjpmYWxzZSwiaGVhZGVyXzhfaWR4Ijo5LCJoZWFkZXJfOF9zaXplIjo1NTEsImhlYWRlcl85X2hpZGRlbiI6ZmFsc2UsImhlYWRlcl85X2lkeCI6NywiaGVhZGVyXzlfc2l6ZSI6MTI0LCJoZWFkZXJfY291bnQiOjIxLCJzb3J0XzBfY29sdW1uIjo5LCJzb3J0XzBfb3JkZXIiOjEsInNvcnRfMV9jb2x1bW4iOjEsInNvcnRfMV9vcmRlciI6MSwic29ydF9jb3VudCI6Mn0="
+show_unread_numbers_in_tray_icon=true
+show_unread_numbers_on_task_bar=true
+skin=nudus-dark
+splitter_feeds=325, 1588
+splitter_messages_horizontal=1077, 554
+splitter_messages_is_vertical=true
+splitter_messages_vertical=281, 576
+start_hidden=false
+start_in_fullscreen=false
+status_bar="m_barProgressDownloadAction,m_barProgressFeedsAction,m_actionUpdateAllItems,m_actionUpdateSelectedItems,m_actionStopRunningItemsUpdate,m_actionFullscreen,m_actionQuit"
+style=
+tab_close_double_button=true
+tab_close_mid_button=true
+tab_new_double_button=true
+toast_notifications_margin=16
+toast_notifications_opacity=0.9
+toast_notifications_position=3
+toast_notifications_screen=-1
+toast_notifications_width=300
+toolbar_icon_size=-1
+toolbar_style=0
+use_toast_notifications=true
+use_tray_icon=false
+window_is_maximized=true
+window_position=@Point(1200 420)
+window_size=@Size(1140 1008)
+
+[main]
+first_run=false
+first_run_4.8.3=false
+first_run_4.8.4=false
+
+[messages]
+always_display_preview=true
+article_list_padding=-1
+avoid_old_articles=false
+bring_app_to_front_after_msg_opened=false
+clear_read_on_exit=false
+custom_date_format=
+custom_date_format_for_dates_only=
+custom_time_format=
+customize_list_font=false
+datetime_to_avoid_article=@DateTime(\0\0\0\x10\0\0\0\0\0\0%\x8c\x94\x4R#\xd2\0)
+enable_message_preview=true
+fixup_future_datetimes=false
+hours_to_avoid_article=0
+ignore_contents_changes=true
+keep_cursor_center=false
+limit_count_of_articles=0
+limit_dont_remove_starred=true
+limit_dont_remove_unread=true
+limit_recycle_dont_purge=false
+list_font="Noto Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1"
+mark_message_on_selected=0
+mark_message_on_selected_delay=3000
+message_head_image_height=72
+multiline_article_list=false
+previewer_font_standard="Noto Sans,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1"
+relative_time_for_new_articles=-1
+show_enclosures_in_message=false
+switch_article_list_rtl=true
+unread_icons_in_message_list=1
+use_custom_date=false
+use_custom_date_for_dates_only=false
+use_custom_time=false
+
+[notifications]
+1=1, , 50, 0
+2=1, :/sounds/notify.wav, 50, 0
+3=0, , 50, 0
+4=0, , 50, 0
+5=1, , 50, 0
+6=1, , 47, 0
+7=1, , 50, 0
+8=1, , 50, 0
