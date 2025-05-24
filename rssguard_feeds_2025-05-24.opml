@@ -2,37 +2,37 @@
 <opml version="2.0" xmlns:rssguard="https://github.com/martinrotter/rssguard">
   <head>
     <title>RSS Guard</title>
-    <dateCreated>Fri, 23 May 2025 17:48:36 GMT</dateCreated>
+    <dateCreated>Sat, 24 May 2025 14:57:55 GMT</dateCreated>
   </head>
   <body>
-    <outline description="Updates from github repos" text="Github">
-      <outline description="" text="Trending">
+    <outline description="" text="Technology">
+      <outline description="The Verge is about technology and how it makes us feel. Founded in 2011, we offer our audience everything from breaking news to reviews to award-winning features and investigations, on our site, in video, and in podcasts." encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="The Verge" title="The Verge" type="rss" version="ATOM" xmlUrl="https://www.theverge.com/rss/index.xml"/>
+      <outline description="Making You a Better Linux User" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="It's FOSS" title="It's FOSS" type="rss" version="RSS" xmlUrl="https://itsfoss.com/rss/"/>
+      <outline description="News for nerds, stuff that matters" encoding="ISO-8859-1" rssguard:postProcess="" rssguard:xmlUrlType="0" text="Slashdot" title="Slashdot" type="rss" version="ATOM" xmlUrl="http://rss.slashdot.org/Slashdot/slashdotMainatom"/>
+      <outline description="Updates from github repos" text="Github Trending">
         <outline description="Weekly Trending of All Languages in GitHub" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="GitHub All Languages Weekly Trending" title="GitHub All Languages Weekly Trending" type="rss" version="RSS" xmlUrl="https://mshibanami.github.io/GitHubTrendingRSS/weekly/all.xml"/>
         <outline description="Weekly Trending of Python in GitHub" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="GitHub Python Weekly Trending" title="GitHub Python Weekly Trending" type="rss" version="RSS" xmlUrl="https://mshibanami.github.io/GitHubTrendingRSS/weekly/python.xml"/>
         <outline description="Weekly Trending of Jupyter Notebook in GitHub" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="GitHub Jupyter Notebook Weekly Trending" title="GitHub Jupyter Notebook Weekly Trending" type="rss" version="RSS" xmlUrl="https://mshibanami.github.io/GitHubTrendingRSS/weekly/jupyter-notebook.xml"/>
       </outline>
-      <outline description="" text="Repos">
-        <outline description="" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="rssguard:master" title="rssguard:master" type="rss" version="ATOM" xmlUrl="https://github.com/martinrotter/rssguard/commits/master.atom"/>
+      <outline description="" text="Github Repos">
+        <outline description="" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="Recent Commits to rssguard:master" title="Recent Commits to rssguard:master" type="rss" version="ATOM" xmlUrl="https://github.com/martinrotter/rssguard/commits/master.atom"/>
       </outline>
-    </outline>
-    <outline description="" text="Technology">
-      <outline description="News for nerds, stuff that matters" encoding="ISO-8859-1" rssguard:postProcess="" rssguard:xmlUrlType="0" text="Slashdot" title="Slashdot" type="rss" version="ATOM" xmlUrl="http://rss.slashdot.org/Slashdot/slashdotMainatom"/>
-      <outline description="" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="The Verge" title="The Verge" type="rss" version="ATOM" xmlUrl="https://www.theverge.com/rss/index.xml"/>
-      <outline description="A Linux and Open Source Web Portal" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="It's FOSS" title="It's FOSS" type="rss" version="RSS" xmlUrl="https://itsfoss.com/feed"/>
-    </outline>
-    <outline description="" text="Reddit">
-      <outline description="An open enterprise operating system project." encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="Rocky Linux" title="Rocky Linux" type="rss" version="ATOM" xmlUrl="https://www.reddit.com/r/RockyLinux.rss"/>
-      <outline description="KDE is an international community creating free and open source software. Visit our main page to know more: https://kde.org --- This is not a technical support forum. Please visit https://discuss.kde.org for user support. --- This is not a bug tracker. Please visit https://bugs.kde.org to report bugs." encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="Kreddit, the KDE Community on Reddit" title="Kreddit, the KDE Community on Reddit" type="rss" version="ATOM" xmlUrl="https://www.reddit.com/r/kde.rss"/>
     </outline>
     <outline description="" text="News">
       <outline description="Google News" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="Top stories - Google News" title="Top stories - Google News" type="rss" version="RSS" xmlUrl="https://news.google.com/rss?hl=en-US&amp;gl=US&amp;ceid=US:en"/>
       <outline description="Google News" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="Technology - Latest - Google News" title="Technology - Latest - Google News" type="rss" version="RSS" xmlUrl="https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGRqTVhZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&amp;gl=US&amp;ceid=US:en"/>
-      <outline description="Google News" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="World - Latest - Google News" title="World - Latest - Google News" type="rss" version="RSS" xmlUrl="https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&amp;gl=US&amp;ceid=US%3Aen"/>
       <outline description="Google News" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="U.S. - Latest - Google News" title="U.S. - Latest - Google News" type="rss" version="RSS" xmlUrl="https://news.google.com/rss/topics/CAAqIggKIhxDQkFTRHdvSkwyMHZNRGxqTjNjd0VnSmxiaWdBUAE?hl=en-US&amp;gl=US&amp;ceid=US%3Aen"/>
+      <outline description="Google News" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="World - Latest - Google News" title="World - Latest - Google News" type="rss" version="RSS" xmlUrl="https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&amp;gl=US&amp;ceid=US%3Aen"/>
     </outline>
     <outline description="" text="Software">
+      <outline description="Recently updated applications published on Flathub" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="Flathub – recently updated applications" title="Flathub – recently updated applications" type="rss" version="RSS" xmlUrl="https://flathub.org/api/v2/feed/recently-updated"/>
+      <outline description="Applications recently published on Flathub" encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="Flathub – recently added applications" title="Flathub – recently added applications" type="rss" version="RSS" xmlUrl="https://flathub.org/api/v2/feed/new"/>
       <outline description="MajorGeeks offers only 4-star or better geek-tested and reviewed software for Windows along with tutorials and videos when you need help with your computer." encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="MajorGeeks.Com" title="MajorGeeks.Com" type="rss" version="RSS" xmlUrl="https://www.majorgeeks.com/files/rss"/>
     </outline>
     <outline description="" text="Job"/>
+    <outline description="" text="Reddit">
+      <outline description="An open enterprise operating system project." encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="Rocky Linux" title="Rocky Linux" type="rss" version="ATOM" xmlUrl="https://www.reddit.com/r/RockyLinux.rss"/>
+      <outline description="KDE is an international community creating free and open source software. Visit our main page to know more: https://kde.org --- This is not a technical support forum. Please visit https://discuss.kde.org for user support. --- This is not a bug tracker. Please visit https://bugs.kde.org to report bugs." encoding="UTF-8" rssguard:postProcess="" rssguard:xmlUrlType="0" text="Kreddit, the KDE Community on Reddit" title="Kreddit, the KDE Community on Reddit" type="rss" version="ATOM" xmlUrl="https://www.reddit.com/r/kde.rss"/>
+    </outline>
   </body>
 </opml>
