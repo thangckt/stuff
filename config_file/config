@@ -107,7 +107,7 @@
  <preferences>
   <interfaceLanguage></interfaceLanguage>
   <helpLanguage></helpLanguage>
-  <displayStyle></displayStyle>
+  <displayStyle>lingoes</displayStyle>
   <newTabsOpenAfterCurrentOne>0</newTabsOpenAfterCurrentOne>
   <newTabsOpenInBackground>1</newTabsOpenInBackground>
   <hideSingleTab>0</hideSingleTab>
