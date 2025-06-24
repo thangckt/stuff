@@ -44,7 +44,7 @@ jobs:
                 curl -L -o ${RPM_FILE} ${RPM_URL}
             fi
 
-      # - name: Download RPM 3 - GithubDesktop
+      # - name: Download RPM 3 - GithubDesktop (file larger than 100MB)
       #   run: |
       #       RPM_URL="$(curl -s https://api.github.com/repos/pol-rivero/github-desktop-plus/releases/latest | jq -r '.assets[] | .browser_download_url | select(test("x86_64\\.rpm$"))' | head -1)"
       #       RPM_FILE=rpms/$(basename "$RPM_URL")
