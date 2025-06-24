@@ -44,6 +44,17 @@ jobs:
                 curl -L -o ${RPM_FILE} ${RPM_URL}
             fi
 
+      - name: Download RPM 3 - GithubDesktop
+        run: |
+            RPM_URL="$(curl -s https://api.github.com/repos/pol-rivero/github-desktop-plus/releases/latest | jq -r '.assets[] | .browser_download_url | select(test("x86_64\\.rpm$"))' | head -1)"
+            RPM_FILE=rpms/$(basename "$RPM_URL")
+            if [ -f "${RPM_FILE}" ]; then
+                echo "File ${RPM_FILE} already exists, skipping download."
+            else
+                rm -f rpms/GitHubDesktopPlus-*.rpm
+                curl -L -o ${RPM_FILE} ${RPM_URL}
+            fi
+
       # - name: Download RPM 3 - xdm
       #   run: |
       #       RPM_URL="$(curl -s https://api.github.com/repos/subhra74/xdm/releases/latest | jq -r '.assets[] | .browser_download_url | select(test("x86_64\\.rpm$"))' | head -1)"
