@@ -39,14 +39,17 @@ cd build
 cmake -G Ninja \
   -DCMAKE_BUILD_TYPE=Release \
   ..
-cmake --build .
+cmake --build . -- -j%{?_smp_build_ncpus}
 
 %install
 cd build
 cmake --install . --prefix %{buildroot}%{_prefix}
 
+# Install .desktop if not handled by upstream
+install -D -m 0644 ../dist/linux/ovito.desktop %{buildroot}%{_datadir}/applications/ovito.desktop
+
 %files
-%license LICENSE
+# %license LICENSE
 %{_bindir}/ovito
 %{_datadir}/applications/ovito.desktop
 %{_prefix}/share/ovito/
