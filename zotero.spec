@@ -6,51 +6,46 @@ Summary:        Zotero – Reference Manager (GUI, Linux)
 License:        AGPL-3.0-only
 URL:            https://github.com/zotero/zotero
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
+Source1:        https://github.com/zotero/zotero-build/archive/refs/heads/master.tar.gz
 
 BuildRequires:  git
-BuildRequires:  npm
 BuildRequires:  nodejs
-BuildRequires:  python3
+BuildRequires:  npm
+BuildRequires:  yarn
+BuildRequires:  gtk3-devel
 BuildRequires:  libXt-devel
+BuildRequires:  libX11-devel
+BuildRequires:  dbus-glib-devel
 BuildRequires:  gcc-c++
-BuildRequires: dbus-glib-devel
-BuildRequires: gtk3-devel
-BuildRequires: libX11-devel
+BuildRequires:  python3
 
 Requires:       gtk3
-Requires:       libdbus-glib
 Requires:       libXt
 Requires:       libX11
-
-%description
-Zotero is a free, open-source tool to help you collect, organize, cite, and share research sources. This package builds the Linux GUI application.
+Requires:       dbus-glib
 
 %prep
-%autosetup
+%autosetup -p1 -n zotero-%{version}
+tar xzf %{SOURCES}/master.tar.gz -C builddir
+# Now builddir contains zotero-build master
 
 %build
-# Prepare fetch and build script from upstream
-cd build
-cp ../build.sh .
-cp ../config.sh .
-chmod +x build.sh
-./build.sh -l linux-x86_64
+pushd builddir/zotero-build-master
+npm install
+# example build script
+npm run dist-linux
+popd
 
 %install
-cd build/Zotero_linux-x86_64
-install -d %{buildroot}%{_bindir}
-install -m 0755 zotero %{buildroot}%{_bindir}
-install -d %{buildroot}%{_datadir}/applications
-install -m 0644 zotero.desktop %{buildroot}%{_datadir}/applications
-
-# Install support files
-install -d %{buildroot}%{_prefix}/share/zotero
-cp -r chrome resource %{buildroot}%{_prefix}/share/zotero/
+# adjust paths to actual output location
+install -Dm0755 builddir/zotero-build-master/output/zotero %{buildroot}%{_bindir}/zotero
+install -Dm0644 builddir/zotero-build-master/output/zotero.desktop %{buildroot}%{_datadir}/applications/zotero.desktop
+cp -a builddir/zotero-build-master/output/chrome builddir/zotero-build-master/output/resource %{buildroot}%{_datadir}/zotero/
 
 %files
 %license COPYING
 %{_bindir}/zotero
 %{_datadir}/applications/zotero.desktop
-%{_prefix}/share/zotero/
+%{_datadir}/zotero/
 
 %changelog
