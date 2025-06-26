@@ -11,12 +11,11 @@ BuildRequires:  git
 BuildRequires:  npm
 BuildRequires:  nodejs
 BuildRequires:  python3
-BuildRequires:  libgtk-3.0-devel
-BuildRequires:  libdbus-glib-devel
 BuildRequires:  libXt-devel
-BuildRequires:  libx11-devel
 BuildRequires:  gcc-c++
-BuildRequires:  unzip
+BuildRequires: dbus-glib-devel
+BuildRequires: gtk3-devel
+BuildRequires: libX11-devel
 
 Requires:       gtk3
 Requires:       libdbus-glib
