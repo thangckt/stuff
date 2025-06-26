@@ -1,12 +1,3 @@
-%global __python        %__python3
-%global python          python3
-%global python_pfx      python3
-%global rpm_python      python3-rpm
-%global sitelib         %python3_sitelib
-
-%global copr_common_version 0.21.1.dev
-
-
 Name:           ovito
 Version:        3.12.4
 Release:        1%{?dist}

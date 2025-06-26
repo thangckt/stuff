@@ -1,12 +1,3 @@
-%global __python        %__python3
-%global python          python3
-%global python_pfx      python3
-%global rpm_python      python3-rpm
-%global sitelib         %python3_sitelib
-
-%global copr_common_version 0.21.1.dev
-
-
 Name:           github-desktop-plus
 Version:        0.4.21
 Release:        1%{?dist}
@@ -35,8 +26,8 @@ GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, comm
 
 %build
 npm install @types/glob
-npm install --production --legacy-peer-deps
-npm run build
+npm install --production
+npm run build --legacy-peer-deps
 
 %install
 mkdir -p %{buildroot}%{_datadir}/%{name}
