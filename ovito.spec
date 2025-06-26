@@ -6,7 +6,6 @@ Summary:        OVITO - Open Visualization Tool (GUI)
 License:        MIT
 URL:            https://gitlab.com/stuko/ovito
 Source0:        %{url}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
-# Source0:        https://gitlab.com/stuko/ovito/-/archive/master/ovito-master.tar.gz
 
 BuildRequires:  cmake
 BuildRequires:  ninja-build
@@ -31,7 +30,6 @@ OVITO is a scientific data visualization and analysis software for atomistic, mo
 
 %prep
 %autosetup -n %{name}-v%{version}
-# %autosetup -n %{name}-master
 
 %build
 mkdir -p build
