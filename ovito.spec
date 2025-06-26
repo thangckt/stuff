@@ -1,55 +1,55 @@
 Name:           ovito
 Version:        3.12.4
 Release:        1%{?dist}
-Summary:        OVITO - Open Visualization Tool
+Summary:        OVITO - Open Visualization Tool (GUI)
 
 License:        MIT
 URL:            https://gitlab.com/stuko/ovito
-Source0:        %{url}/-/tag/v%{version}/%{name}-%{version}.tar.gz
+Source0:        %{url}/-/archive/v%{version}/%{name}-%{version}.tar.gz
 
-BuildRequires:  git
-BuildRequires:  nodejs
-BuildRequires:  npm
-BuildRequires:  python3
-Requires:       git
-Requires:       nodejs
+BuildRequires:  cmake
+BuildRequires:  ninja-build
+BuildRequires:  gcc-c++
+BuildRequires:  qt6-qtbase-devel
+BuildRequires:  qt6-qtsvg-devel
+BuildRequires:  boost-devel
+BuildRequires:  ffmpeg-devel
+BuildRequires:  netcdf-devel
+BuildRequires:  libssh-devel
+BuildRequires:  python3-sphinx
+BuildRequires:  python3-sphinx_rtd_theme
+BuildRequires:  python3-devel
+
+Requires:       qt6-qtbase
+Requires:       qt6-qtsvg
+Requires:       boost
+Requires:       ffmpeg
+Requires:       netcdf
+Requires:       libssh
 
 %description
-OVITO is a scientific data visualization and analysis software for atomistic, molecular and other particle-based simulations.
+OVITO is a scientific data visualization and analysis software for atomistic, molecular and other particle-based simulations. This package provides the GUI built with Qt6.
 
 %prep
 %autosetup -n %{name}-%{version}
 
 %build
-npm install @types/glob
-npm install --production --legacy-peer-deps
-npm run build
+mkdir -p build
+cd build
+cmake -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release \
+  ..
+cmake --build .
 
 %install
-mkdir -p %{buildroot}%{_datadir}/%{name}
-cp -r dist/* %{buildroot}%{_datadir}/%{name}
-
-mkdir -p %{buildroot}%{_datadir}/applications
-cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << 'EOF'
-[Desktop Entry]
-Name=GitHub Desktop Plus
-Exec=%{_bindir}/%{name}
-Type=Application
-Terminal=false
-EOF
-
-mkdir -p %{buildroot}%{_bindir}
-cat > %{buildroot}%{_bindir}/%{name} << 'EOF'
-#!/bin/sh
-node %{_datadir}/%{name}/main.js "$@"
-EOF
-chmod +x %{buildroot}%{_bindir}/%{name}
+cd build
+cmake --install . --prefix %{buildroot}%{_prefix}
 
 %files
 %license LICENSE
-%{_bindir}/%{name}
-%{_datadir}/%{name}/
-%{_datadir}/applications/%{name}.desktop
+%{_bindir}/ovito
+%{_datadir}/applications/ovito.desktop
+%{_prefix}/share/ovito/
 
 %changelog
 %autochangelog
