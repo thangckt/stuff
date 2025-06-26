@@ -21,7 +21,8 @@ GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, comm
 %autosetup -n %{name}-%{version}
 
 %build
-npm install --legacy-peer-deps
+npm config set python /usr/bin/python3
+npm install --production --legacy-peer-deps
 npm run build
 
 %install
