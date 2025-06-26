@@ -24,6 +24,9 @@ Requires:       libXt
 Requires:       libX11
 Requires:       dbus-glib
 
+%description
+Zotero is a powerful reference manager that can be used to manage bibliographic data and related research materials.
+
 %prep
 %autosetup -p1 -n zotero-%{version}
 tar xzf %{SOURCES}/master.tar.gz -C builddir
