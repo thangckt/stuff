@@ -7,18 +7,14 @@
 %global copr_common_version 0.21.1.dev
 
 
-Name:           github-desktop-plus
-Version:        0.4.21
+Name:           ovito
+Version:        3.12.4
 Release:        1%{?dist}
-Summary:        GitHub Desktop Plus, a GUI client for Git and GitHub
+Summary:        OVITO - Open Visualization Tool
 
 License:        MIT
-URL:            https://github.com/pol-rivero/github-desktop-plus
-Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
-
-%if 0%{?fedora} > 41
-ExcludeArch:   %{ix86}
-%endif
+URL:            https://gitlab.com/stuko/ovito
+Source0:        %{url}/-/tag/v%{version}/%{name}-%{version}.tar.gz
 
 BuildRequires:  git
 BuildRequires:  nodejs
@@ -28,7 +24,7 @@ Requires:       git
 Requires:       nodejs
 
 %description
-GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, committing, and pull requests on Linux.
+OVITO is a scientific data visualization and analysis software for atomistic, molecular and other particle-based simulations.
 
 %prep
 %autosetup -n %{name}-%{version}
