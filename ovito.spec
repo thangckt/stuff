@@ -50,4 +50,3 @@ cmake --install . --prefix %{buildroot}%{_prefix}
 %{_prefix}/share/ovito/
 
 %changelog
-%autochangelog
