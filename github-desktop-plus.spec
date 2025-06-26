@@ -25,29 +25,22 @@ GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, comm
 %autosetup -n %{name}-%{version}
 
 %build
-npm install @types/glob
-npm install --production
-npm run build --legacy-peer-deps
+# Install all dependencies with proper peer deps
+npm ci --legacy-peer-deps
+# Run production build
+npm run build -- --max_old_space_size=4096
 
 %install
-mkdir -p %{buildroot}%{_datadir}/%{name}
-cp -r dist/* %{buildroot}%{_datadir}/%{name}
+install -d %{buildroot}%{_bindir} %{buildroot}%{_datadir}/%{name} %{buildroot}%{_datadir}/applications
 
-mkdir -p %{buildroot}%{_datadir}/applications
-cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << 'EOF'
-[Desktop Entry]
-Name=GitHub Desktop Plus
-Exec=%{_bindir}/%{name}
-Type=Application
-Terminal=false
-EOF
+# Copy built payload
+cp -r dist/* %{buildroot}%{_datadir}/%{name}/
 
-mkdir -p %{buildroot}%{_bindir}
-cat > %{buildroot}%{_bindir}/%{name} << 'EOF'
-#!/bin/sh
-node %{_datadir}/%{name}/main.js "$@"
-EOF
-chmod +x %{buildroot}%{_bindir}/%{name}
+# Desktop entry
+install -m 644 %{SOURCE0_DIR}/assets/%{name}.desktop %{buildroot}%{_datadir}/applications/%{name}.desktop
+
+# Wrapper script
+install -D -m755 -p %{SOURCE0_DIR}/scripts/launcher.sh %{buildroot}%{_bindir}/%{name}
 
 %files
 %license LICENSE
