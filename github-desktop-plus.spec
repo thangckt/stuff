@@ -11,12 +11,17 @@ Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 ExcludeArch:   %{ix86}
 %endif
 
-BuildRequires:  git
+BuildRequires:  gcc
+BuildRequires:  make
+BuildRequires:  libstdc++-devel
+BuildRequires:  python3
 BuildRequires:  nodejs
 BuildRequires:  npm
-BuildRequires:  python3
-Requires:       git
-Requires:       nodejs
+BuildRequires:  git
+BuildRequires:  libX11-devel
+BuildRequires:  libXScrnSaver-devel
+BuildRequires:  libxkbfile-devel
+BuildRequires:  gtk3-devel
 
 %description
 GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, committing, and pull requests on Linux.
