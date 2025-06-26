@@ -13,7 +13,6 @@ BuildRequires:  gcc-c++
 BuildRequires:  qt6-qtbase-devel
 BuildRequires:  qt6-qtsvg-devel
 BuildRequires:  boost-devel
-BuildRequires:  ffmpeg-devel
 BuildRequires:  netcdf-devel
 BuildRequires:  libssh-devel
 BuildRequires:  python3-sphinx
@@ -23,7 +22,6 @@ BuildRequires:  python3-devel
 Requires:       qt6-qtbase
 Requires:       qt6-qtsvg
 Requires:       boost
-Requires:       ffmpeg
 Requires:       netcdf
 Requires:       libssh
 
