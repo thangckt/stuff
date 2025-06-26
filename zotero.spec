@@ -11,7 +11,6 @@ Source1:        https://github.com/zotero/zotero-build/archive/refs/heads/master
 BuildRequires:  git
 BuildRequires:  nodejs
 BuildRequires:  npm
-BuildRequires:  yarn
 BuildRequires:  gtk3-devel
 BuildRequires:  libXt-devel
 BuildRequires:  libX11-devel
