@@ -29,7 +29,7 @@ Requires:       libssh
 OVITO is a scientific data visualization and analysis software for atomistic, molecular and other particle-based simulations. This package provides the GUI built with Qt6.
 
 %prep
-%autosetup
+%autosetup -n %{name}-v%{version}
 
 %build
 mkdir -p build
