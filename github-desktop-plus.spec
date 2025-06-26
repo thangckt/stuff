@@ -12,7 +12,8 @@ ExcludeArch:   %{ix86}
 %endif
 
 BuildRequires:  gcc
-BuildRequires:  make
+BuildRequires: gcc-c++
+BuildRequires: make
 BuildRequires:  libstdc++-devel
 BuildRequires:  python3
 BuildRequires:  nodejs
