@@ -6,7 +6,6 @@ Summary:        Zotero – Reference Manager (GUI, Linux)
 License:        AGPL-3.0-only
 URL:            https://github.com/zotero/zotero
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
-Source1:        https://github.com/zotero/zotero-build/archive/refs/heads/master.tar.gz
 
 BuildRequires:  git
 BuildRequires:  nodejs
@@ -28,11 +27,8 @@ Zotero is a powerful reference manager that can be used to manage bibliographic 
 
 %prep
 %autosetup -p1 -n zotero-%{version}
-tar xzf %{SOURCES}/master.tar.gz -C builddir
-# Now builddir contains zotero-build master
 
 %build
-pushd builddir/zotero-build-master
 npm install
 # example build script
 npm run dist-linux
