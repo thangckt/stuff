@@ -1,11 +1,5 @@
-# Thang's rpms
+# Use Copr to build a package for Fedora
 
-Repo for linux packages from RPMs files.
+This file contains the `.spec` files for building multiple packages using Copr.
 
-
-## Install packages
-
-```sh
-dnf config-manager --add-repo https://raw.githubusercontent.com/thangckt/stuff/refs/heads/linux_rpm/thang_rpm.repo
-dnf install app1 app2
-```
+See https://copr.fedorainfracloud.org/coprs/thangckt/multi_packages
