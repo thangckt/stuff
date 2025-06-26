@@ -5,8 +5,8 @@ Summary:        OVITO - Open Visualization Tool (GUI)
 
 License:        MIT
 URL:            https://gitlab.com/stuko/ovito
-# Source0:        %{url}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
-Source0:        https://gitlab.com/stuko/ovito/-/archive/master/ovito-master.tar.gz
+Source0:        %{url}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
+# Source0:        https://gitlab.com/stuko/ovito/-/archive/master/ovito-master.tar.gz
 
 BuildRequires:  cmake
 BuildRequires:  ninja-build
@@ -30,8 +30,8 @@ Requires:       libssh
 OVITO is a scientific data visualization and analysis software for atomistic, molecular and other particle-based simulations. This package provides the GUI built with Qt6.
 
 %prep
-# %autosetup -n %{name}-v%{version}
-%autosetup -n %{name}-master
+%autosetup -n %{name}-v%{version}
+# %autosetup -n %{name}-master
 
 %build
 mkdir -p build
