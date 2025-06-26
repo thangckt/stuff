@@ -44,7 +44,11 @@ cd build
 cmake --install . --prefix %{buildroot}%{_prefix}
 
 # Install .desktop if not handled by upstream
-install -D -m 0644 ../dist/linux/ovito.desktop %{buildroot}%{_datadir}/applications/ovito.desktop
+if [ -f ../dist/linux/ovito.desktop ]; then
+    install -D -m 0644 ../dist/linux/ovito.desktop %{buildroot}%{_datadir}/applications/ovito.desktop
+else
+    echo "Warning: ovito.desktop not found, skipping desktop file installation"
+fi
 
 %files
 # %license LICENSE
