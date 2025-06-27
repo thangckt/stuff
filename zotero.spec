@@ -9,6 +9,14 @@ License:        AGPL-3.0-only
 URL:            https://github.com/zotero/zotero
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
+
+%ifarch x86_64
+BuildArch: x86_64
+ExclusiveArch: x86_64
+%else
+%error Zotero only builds on x86_64. This build arch is %{_arch}
+%endif
+
 BuildRequires:  git
 BuildRequires:  gtk3-devel
 BuildRequires:  libXt-devel
