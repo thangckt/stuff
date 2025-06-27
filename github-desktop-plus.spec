@@ -25,12 +25,15 @@ GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, comm
 # Patch types to match latest node versions
 jq '.dependencies["minimatch"] = "3.0.8" |
     .devDependencies["@types/glob"] = "7.2.0" |
-    .scripts.build = "ts-node script/build.ts"' \
+    .devDependencies["typescript"] = "^5.0.0" |
+    .devDependencies["ts-node"] = "^10.9.2" |
+    .scripts.build = "npx ts-node script/build.ts"' \
     package.json > package.json.new && mv package.json.new package.json
 
 %build
-npm install -g typescript ts-node
+# Install project dependencies, including typescript and ts-node
 npm install --legacy-peer-deps
+# Run build using npx to avoid global installation
 npm run build -- --max_old_space_size=4096
 
 %install
