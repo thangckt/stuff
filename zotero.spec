@@ -1,5 +1,5 @@
 ### REF: https://www.zotero.org/support/dev/client_coding/building_the_desktop_app
-# building Zotero from source is quite complex and may still have issues -> Use the official binary (Recommended)
+### building Zotero from source is quite complex and may still have issues -> Use the official binary (Recommended)
 
 Name:           zotero
 Version:        7.0.19
