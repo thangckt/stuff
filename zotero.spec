@@ -29,7 +29,6 @@ BuildRequires:  rust
 BuildRequires:  cargo
 BuildRequires:  unzip
 BuildRequires:  zip
-BuildRequires:  clang  # for some parts of Firefox build
 BuildRequires:  desktop-file-utils
 
 Requires:       gtk3
