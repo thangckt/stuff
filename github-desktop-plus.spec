@@ -7,7 +7,7 @@ License:        MIT
 URL:            https://github.com/pol-rivero/github-desktop-plus
 Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 
-BuildRequires:  nodejs npm git
+BuildRequires:  nodejs npm git python3 gcc-c++ make
 
 %description
 GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, committing, and pull requests on Linux.
@@ -15,15 +15,10 @@ GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, comm
 %prep
 %autosetup -n %{name}-%{version}
 
-# Create minimal git repo for build script
-git init
-git config user.name "builder"
-git config user.email "builder@localhost"
-git add .
-git commit -m "build"
-
 %build
-npm install --legacy-peer-deps
+# Set Python path for node-gyp
+export PYTHON=/usr/bin/python3
+npm install --legacy-peer-deps --no-scripts
 npm run build
 
 %install
