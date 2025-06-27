@@ -22,18 +22,23 @@ GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, comm
 %prep
 %autosetup -n %{name}-%{version}
 
-# Patch types to match latest node versions
+# Patch package.json to set dependencies and disable postinstall
 jq '.dependencies["minimatch"] = "3.0.8" |
     .devDependencies["@types/glob"] = "7.2.0" |
     .devDependencies["typescript"] = "^5.0.0" |
     .devDependencies["ts-node"] = "^10.9.2" |
+    .scripts.postinstall = "echo \"Skipping postinstall\"" |
     .scripts.build = "npx ts-node script/build.ts"' \
     package.json > package.json.new && mv package.json.new package.json
 
+# Remove conflicting dependencies from dependencies (keep only in devDependencies)
+jq 'del(.dependencies["typescript"]) | del(.dependencies["ts-node"])' \
+    package.json > package.json.new && mv package.json.new package.json
+
 %build
-# Install project dependencies, including typescript and ts-node
-npm install --legacy-peer-deps
-# Run build using npx to avoid global installation
+# Install dependencies
+npm install --legacy-peer-deps --no-scripts
+# Run build
 npm run build -- --max_old_space_size=4096
 
 %install
