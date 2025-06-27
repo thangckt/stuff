@@ -8,6 +8,7 @@ Summary:        OVITO - Open Visualization Tool (GUI)
 License:        MIT
 URL:            https://gitlab.com/stuko/ovito
 Source0:        %{url}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
+Source1:        %{url}/-/raw/master/doc/manual/images/team/ovito_logo_128.png
 
 BuildRequires:  cmake ninja-build gcc-c++
 BuildRequires:  qt6-qtbase-devel qt6-qtsvg-devel
@@ -42,14 +43,19 @@ Type=Application
 Categories=Science;Education;Graphics;
 EOF
 
+# Copy icon (since it is not included in the source)
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
+cp ovito_logo_128.png %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/ovito.png
+
 # Clean up
 rm -f %{buildroot}%{_bindir}/ssh_askpass
 
 %files
 %{_bindir}/ovito
-%{_datadir}/applications/ovito.desktop
-%{_prefix}/lib/ovito/
 %{_datadir}/ovito/
+%{_datadir}/applications/ovito.desktop
+%{_datadir}/icons/hicolor/scalable/apps/ovito.png
+%{_prefix}/lib/ovito/
 
 %changelog
 %autochangelog
