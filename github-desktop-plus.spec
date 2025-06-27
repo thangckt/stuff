@@ -15,8 +15,6 @@ BuildRequires:  gcc-c++, make, python3, git, libX11-devel, gtk3-devel
 BuildRequires: nodejs
 BuildRequires: npm
 BuildRequires: jq
-BuildRequires: nodejs-typescript
-BuildRequires: nodejs-ts-node
 
 %description
 GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, committing, and pull requests on Linux.
