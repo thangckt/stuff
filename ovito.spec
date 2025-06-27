@@ -64,9 +64,9 @@ cmake --install . --prefix %{buildroot}%{_prefix}
 install -D -m 0644 ../dist/linux/ovito.desktop %{buildroot}%{_datadir}/applications/ovito.desktop
 
 %files
-%{_bindir}/ovito
-%{_datadir}/applications/ovito.desktop
-%{_libdir}/ovito/
+#%{_bindir}/ovito
+#%{_datadir}/applications/ovito.desktop
+#%{_libdir}/ovito/
 
 %changelog
 %autochangelog
