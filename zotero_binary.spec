@@ -59,7 +59,7 @@ cp icons/icon64.png %{buildroot}%{_datadir}/icons/zotero64.png
 /opt/zotero
 %{_bindir}/zotero
 %{_datadir}/applications/zotero.desktop
-%{_datadir}/icons/zotero.png
+%{_datadir}/icons/zotero64.png
 
 %changelog
 %autochangelog
