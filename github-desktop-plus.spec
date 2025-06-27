@@ -20,7 +20,13 @@ BuildRequires: jq
 GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, committing, and pull requests on Linux.
 
 %prep
-%autosetup -n %{name}-%{version} -p1
+%autosetup -n %{name}-%{version}
+
+# Initialize a minimal Git repository to satisfy git-info.ts
+mkdir -p .git
+echo "ref: refs/heads/main" > .git/HEAD
+mkdir -p .git/refs/heads
+echo "%{version}" > .git/refs/heads/main
 
 # Patch package.json to set dependencies and disable postinstall
 jq '.dependencies["minimatch"] = "3.0.8" |
