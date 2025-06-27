@@ -19,6 +19,9 @@ GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, comm
 %prep
 %autosetup -n %{name}-%{version}
 
+# Compatibility workaround for Node.js 22
+npm install --legacy-peer-deps minimatch@3.0.8 @types/glob@7.2.0
+
 %build
 npm install --legacy-peer-deps
 npm run build -- --max_old_space_size=4096
