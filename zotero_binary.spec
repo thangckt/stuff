@@ -53,7 +53,7 @@ MimeType=text/plain;
 EOF
 
 # Copy icon
-cp icons/icon64.png %{buildroot}%{_datadir}/icons/zotero.png
+cp icons/icon128.png %{buildroot}%{_datadir}/icons/zotero.png
 
 %files
 /opt/zotero
