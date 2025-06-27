@@ -21,7 +21,6 @@ Zotero reference management tool built from source.
 
 %prep
 %autosetup -n %{name}-%{version}
-git submodule update --init --recursive
 
 %build
 export MACH_USE_SYSTEM_PYTHON=1
