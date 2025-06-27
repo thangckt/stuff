@@ -11,16 +11,15 @@ Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 ExcludeArch:   %{ix86}
 %endif
 
-BuildRequires:  gcc-c++, make, python3, nodejs, npm, git, libX11-devel, gtk3-devel
+BuildRequires:  gcc-c++, make, python3, git, libX11-devel, gtk3-devel
+BuildRequires: nodejs = 20
+BuildRequires: npm >= 8.0.0
 
 %description
 GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, committing, and pull requests on Linux.
 
 %prep
 %autosetup -n %{name}-%{version}
-
-# Compatibility workaround for Node.js 22
-npm install --legacy-peer-deps minimatch@3.0.8 @types/glob@7.2.0
 
 %build
 npm install --legacy-peer-deps
