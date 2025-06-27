@@ -1,3 +1,5 @@
+### REF: https://www.zotero.org/support/dev/client_coding/building_the_desktop_app
+
 Name:           zotero
 Version:        7.0.19
 Release:        1%{?dist}
