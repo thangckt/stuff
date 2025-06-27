@@ -7,8 +7,7 @@ Summary:        Zotero – Reference Manager (GUI, Linux)
 
 License:        AGPL-3.0-only
 URL:            https://github.com/zotero/zotero
-Source0:        %{url}/archive/refs/tags/%{version}.tar.gz#/zotero-%{version}.tar.gz
-
+Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
 %ifarch x86_64
 BuildArch: x86_64
@@ -42,7 +41,7 @@ Requires:       hicolor-icon-theme
 Zotero is a free, easy-to-use tool to help you collect, organize, cite, and share research. This package builds the Zotero client from source using Mozilla's `mach` build system.
 
 %prep
-%autosetup -n zotero-%{version}
+%autosetup
 
 # Ensure third-party components and submodules are fetched
 git submodule update --init --recursive

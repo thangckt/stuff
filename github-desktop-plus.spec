@@ -20,7 +20,7 @@ BuildRequires: jq
 GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, committing, and pull requests on Linux.
 
 %prep
-%autosetup -n %{name}-%{version}
+%autosetup -n %{name}-%{version} -p1
 
 # Patch package.json to set dependencies and disable postinstall
 jq '.dependencies["minimatch"] = "3.0.8" |
@@ -36,9 +36,9 @@ jq 'del(.dependencies["typescript"]) | del(.dependencies["ts-node"])' \
     package.json > package.json.new && mv package.json.new package.json
 
 %build
-# Install dependencies
+# Install dependencies, skipping scripts to avoid postinstall issues
 npm install --legacy-peer-deps --no-scripts
-# Run build
+# Run build with increased memory limit
 npm run build -- --max_old_space_size=4096
 
 %install
