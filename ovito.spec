@@ -45,7 +45,7 @@ EOF
 
 # Copy icon (since it is not included in the source)
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
-cp ovito_logo_128.png %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/ovito.png
+cp %{SOURCE1} %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/ovito.png
 
 # Clean up
 rm -f %{buildroot}%{_bindir}/ssh_askpass
