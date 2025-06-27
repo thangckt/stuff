@@ -5,7 +5,7 @@ Summary:        Zotero – Reference Manager (GUI, Linux)
 
 License:        AGPL-3.0-only
 URL:            https://github.com/zotero/zotero
-Source0:        'https://www.zotero.org/download/client/dl?channel=release&platform=linux-x86_64&version='%{version}
+Source0:        https://www.zotero.org/download/client/dl?channel=release&platform=linux-x86_64&version=%{version}
 
 
 BuildRequires:  git
@@ -26,6 +26,7 @@ Requires:       dbus-glib
 Zotero is a powerful reference manager that can be used to manage bibliographic data and related research materials.
 
 %prep
+%autosetup -n zotero-%{version}
 # Nothing to prep; binary tarball
 
 %build
