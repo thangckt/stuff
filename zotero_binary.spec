@@ -13,6 +13,9 @@ Source0:        https://download.zotero.org/client/release/%{version}/Zotero-%{v
 ExclusiveArch:  x86_64
 AutoReqProv:    no
 
+# Disable debug package generation for binary packages
+%global debug_package %{nil}
+
 Requires:       gtk3 libXt libX11 dbus-glib
 
 %description
@@ -37,7 +40,7 @@ exec /opt/zotero/zotero "$@"
 EOF
 chmod +x %{buildroot}%{_bindir}/zotero
 
-# Create .desktop file
+# Create desktop file
 cat > %{buildroot}%{_datadir}/applications/zotero.desktop << 'EOF'
 [Desktop Entry]
 Name=Zotero
@@ -56,7 +59,7 @@ cp icons/icon64.png %{buildroot}%{_datadir}/icons/zotero64.png
 /opt/zotero
 %{_bindir}/zotero
 %{_datadir}/applications/zotero.desktop
-%{_datadir}/icons/zotero64.png
+%{_datadir}/icons/zotero.png
 
 %changelog
 %autochangelog
