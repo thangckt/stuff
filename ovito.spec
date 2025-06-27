@@ -8,75 +8,46 @@ Summary:        OVITO - Open Visualization Tool (GUI)
 License:        MIT
 URL:            https://gitlab.com/stuko/ovito
 Source0:        %{url}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
-Source1:        %{url}/-/raw/master/doc/manual/images/team/ovito_logo_128.png
 
+BuildRequires:  cmake ninja-build gcc-c++
+BuildRequires:  qt6-qtbase-devel qt6-qtsvg-devel
+BuildRequires:  boost-devel netcdf-devel libssh-devel
+BuildRequires:  python3-sphinx python3-sphinx_rtd_theme python3-devel
 
-BuildRequires:  cmake
-BuildRequires:  ninja-build
-BuildRequires:  gcc-c++
-BuildRequires:  qt6-qtbase-devel
-BuildRequires:  qt6-qtsvg-devel
-BuildRequires:  boost-devel
-BuildRequires:  netcdf-devel
-BuildRequires:  libssh-devel
-BuildRequires:  python3-sphinx
-BuildRequires:  python3-sphinx_rtd_theme
-BuildRequires:  python3-devel
-
-Requires:       qt6-qtbase
-Requires:       qt6-qtsvg
-Requires:       boost
-Requires:       netcdf
-Requires:       libssh
+Requires:       qt6-qtbase qt6-qtsvg boost netcdf libssh
 
 %description
-OVITO is a scientific data visualization and analysis software for atomistic, molecular and other particle-based simulations. This package provides the GUI built with Qt6.
+OVITO is a scientific data visualization and analysis software for atomistic, molecular and other particle-based simulations.
 
 %prep
 %autosetup -n %{name}-v%{version}
 
-# Create .desktop file if not already present
-if [ ! -f dist/linux/ovito.desktop ]; then
-    echo "create file ovito.desktop"
-    mkdir -p dist/linux
-    cat > dist/linux/ovito.desktop << EOF
+%build
+%cmake -DCMAKE_BUILD_TYPE=Release
+%cmake_build
+
+%install
+%cmake_install
+
+# Install desktop file
+install -Dm644 /dev/stdin %{buildroot}%{_datadir}/applications/ovito.desktop << 'EOF'
 [Desktop Entry]
-Name=Ovito
+Name=OVITO
 GenericName=Scientific Visualization Tool
 Comment=Visualize and analyze atomistic simulation data
 Exec=ovito
-Icon=ovito_logo_128
+Icon=ovito
 Terminal=false
 Type=Application
 Categories=Science;Education;Graphics;
 EOF
-fi
 
-%build
-mkdir -p build
-cd build
-cmake -G Ninja \
-  -DCMAKE_BUILD_TYPE=Release \
-  ..
-cmake --build . -- -j%{?_smp_build_ncpus}
-
-%install
-cd build
-cmake --install . --prefix %{buildroot}%{_prefix}
-
-# Install .desktop file
-install -D -m 0644 ../dist/linux/ovito.desktop %{buildroot}%{_datadir}/applications/ovito.desktop
-
-# Install icon
-install -D -m 0644 %{SOURCE1} %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/ovito_logo_128.png
-
-# Remove unwanted files
+# Clean up
 rm -f %{buildroot}%{_bindir}/ssh_askpass
 
 %files
 %{_bindir}/ovito
 %{_datadir}/applications/ovito.desktop
-%{_datadir}/icons/hicolor/48x48/apps/ovito_logo_128.png
 %{_prefix}/lib/ovito/
 %{_datadir}/ovito/
 
