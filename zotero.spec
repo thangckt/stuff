@@ -1,4 +1,5 @@
 ### REF: https://www.zotero.org/support/dev/client_coding/building_the_desktop_app
+# building Zotero from source is quite complex and may still have issues -> Use the official binary (Recommended)
 
 Name:           zotero
 Version:        7.0.19
@@ -6,34 +7,57 @@ Release:        1%{?dist}
 Summary:        Zotero Reference Manager
 
 License:        AGPL-3.0-only
-URL:            https://github.com/zotero/zotero
-Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
+URL:            https://www.zotero.org/
+Source0:        https://download.zotero.org/client/release/%{version}/Zotero-%{version}_linux-x86_64.tar.bz2
 
 ExclusiveArch:  x86_64
-
-BuildRequires:  git nodejs rust cargo python3 gcc-c++
-BuildRequires:  gtk3-devel libXt-devel libX11-devel dbus-glib-devel
+AutoReqProv:    no
 
 Requires:       gtk3 libXt libX11 dbus-glib
 
 %description
-Zotero reference management tool built from source.
+Zotero is a free, easy-to-use tool to help you collect, organize, cite,
+and share research. This package contains the official Zotero binary.
 
 %prep
-%autosetup -n %{name}-%{version}
+%setup -q -n Zotero_linux-x86_64
 
 %build
-export MACH_USE_SYSTEM_PYTHON=1
-./mach build
+# Nothing to build - this is a binary package
 
 %install
-mkdir -p %{buildroot}/opt/zotero %{buildroot}%{_bindir}
-cp -a dist/linux64-unpacked/* %{buildroot}/opt/zotero/
-ln -s /opt/zotero/zotero %{buildroot}%{_bindir}/zotero
+mkdir -p %{buildroot}/opt/zotero %{buildroot}%{_bindir} %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/pixmaps
+
+# Install the application
+cp -a * %{buildroot}/opt/zotero/
+
+# Create wrapper script
+cat > %{buildroot}%{_bindir}/zotero << 'EOF'
+#!/bin/bash
+exec /opt/zotero/zotero "$@"
+EOF
+chmod +x %{buildroot}%{_bindir}/zotero
+
+# Create desktop file
+cat > %{buildroot}%{_datadir}/applications/zotero.desktop << 'EOF'
+[Desktop Entry]
+Name=Zotero
+Comment=Zotero Reference Manager
+Exec=zotero
+Icon=zotero
+Type=Application
+Categories=Office;Education;Science;
+MimeType=text/plain;
+EOF
+
+# Copy icon
+cp chrome/icons/default/default48.png %{buildroot}%{_datadir}/pixmaps/zotero.png
 
 %files
 /opt/zotero
 %{_bindir}/zotero
+%{_datadir}/applications/zotero.desktop
+%{_datadir}/pixmaps/zotero.png
 
 %changelog
 %autochangelog
