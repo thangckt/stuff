@@ -41,7 +41,7 @@ if [ ! -f dist/linux/ovito.desktop ]; then
     cat > dist/linux/ovito.desktop << EOF
 [Desktop Entry]
 Name=Ovito
-GenericName=Atomic Visualization Tool
+GenericName=Scientific Visualization Tool
 Comment=Visualize and analyze atomistic simulation data
 Exec=ovito
 Icon=ovito
