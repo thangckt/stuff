@@ -69,7 +69,7 @@ rm -f %{buildroot}%{_bindir}/ssh_askpass
 %files
 %{_bindir}/ovito
 %{_datadir}/applications/ovito.desktop
-%{_libdir}/ovito/
+%{_prefix}/lib/ovito/
 %{_datadir}/ovito/
 
 %changelog
