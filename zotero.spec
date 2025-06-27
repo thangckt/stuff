@@ -7,7 +7,7 @@ Summary:        Zotero – Reference Manager (GUI, Linux)
 
 License:        AGPL-3.0-only
 URL:            https://github.com/zotero/zotero
-Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
+Source0:        %{url}/archive/refs/tags/%{version}.tar.gz#/zotero-%{version}.tar.gz
 
 
 %ifarch x86_64
@@ -30,6 +30,7 @@ BuildRequires:  cargo
 BuildRequires:  unzip
 BuildRequires:  zip
 BuildRequires:  desktop-file-utils
+BuildRequires:  which
 
 Requires:       gtk3
 Requires:       libXt
