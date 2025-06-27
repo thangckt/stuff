@@ -15,6 +15,8 @@ BuildRequires:  gcc-c++, make, python3, git, libX11-devel, gtk3-devel
 BuildRequires: nodejs
 BuildRequires: npm
 BuildRequires: jq
+BuildRequires: nodejs-typescript
+BuildRequires: nodejs-ts-node
 
 %description
 GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, committing, and pull requests on Linux.
@@ -22,16 +24,14 @@ GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, comm
 %prep
 %autosetup -n %{name}-%{version}
 
-# Fix dependencies + disable git-related postinstall script
+# Patch types to match latest node versions
 jq '.dependencies["minimatch"] = "3.0.8" |
     .devDependencies["@types/glob"] = "7.2.0" |
-    del(.dependencies["postinstall-postinstall"]) |
-    del(.devDependencies["postinstall-postinstall"]) |
-    .scripts = (.scripts // {}) | .scripts.postinstall = "" |
-    del(.scripts["postinstall-postinstall"])' \
+    .scripts.build = "ts-node script/build.ts"' \
     package.json > package.json.new && mv package.json.new package.json
 
 %build
+npm install -g typescript ts-node
 npm install --legacy-peer-deps
 npm run build -- --max_old_space_size=4096
 
