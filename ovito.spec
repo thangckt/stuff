@@ -6,6 +6,7 @@ Summary:        OVITO - Open Visualization Tool (GUI)
 License:        MIT
 URL:            https://gitlab.com/stuko/ovito
 Source0:        %{url}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
+Source1:        https://gitlab.com/stuko/ovito/-/raw/master/doc/manual/ovito.ico
 
 BuildRequires:  cmake
 BuildRequires:  ninja-build
@@ -31,14 +32,14 @@ OVITO is a scientific data visualization and analysis software for atomistic, mo
 %prep
 %autosetup -n %{name}-v%{version}
 
-# Ensure file '.desktop' exists
+# Create .desktop file if not already present
 if [ ! -f dist/linux/ovito.desktop ]; then
     echo "create file ovito.desktop"
     mkdir -p dist/linux
     cat > dist/linux/ovito.desktop << EOF
 [Desktop Entry]
-Name=OVITO
-GenericName=Scientific Visualization Tool
+Name=Ovito
+GenericName=Atomic Visualization Tool
 Comment=Visualize and analyze atomistic simulation data
 Exec=ovito
 Icon=ovito
@@ -63,12 +64,16 @@ cmake --install . --prefix %{buildroot}%{_prefix}
 # Install .desktop file
 install -D -m 0644 ../dist/linux/ovito.desktop %{buildroot}%{_datadir}/applications/ovito.desktop
 
+# Install icon
+install -D -m 0644 %{SOURCE1} %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/ovito.ico
+
 # Remove unwanted files
 rm -f %{buildroot}%{_bindir}/ssh_askpass
 
 %files
 %{_bindir}/ovito
 %{_datadir}/applications/ovito.desktop
+%{_datadir}/icons/hicolor/64x64/apps/ovito.ico
 %{_prefix}/lib/ovito/
 %{_datadir}/ovito/
 
