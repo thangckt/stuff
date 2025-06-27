@@ -31,6 +31,23 @@ OVITO is a scientific data visualization and analysis software for atomistic, mo
 %prep
 %autosetup -n %{name}-v%{version}
 
+# Ensure file '.desktop' exists
+if [ ! -f dist/linux/ovito.desktop ]; then
+    echo "create file ovito.desktop"
+    mkdir -p dist/linux
+    cat > dist/linux/ovito.desktop << EOF
+[Desktop Entry]
+Name=OVITO
+GenericName=Scientific Visualization Tool
+Comment=Visualize and analyze atomistic simulation data
+Exec=ovito
+Icon=ovito
+Terminal=false
+Type=Application
+Categories=Science;Education;Graphics;
+EOF
+fi
+
 %build
 mkdir -p build
 cd build
@@ -43,12 +60,9 @@ cmake --build . -- -j%{?_smp_build_ncpus}
 cd build
 cmake --install . --prefix %{buildroot}%{_prefix}
 
-# Install .desktop if not handled by upstream
-if [ -f ../dist/linux/ovito.desktop ]; then
-    install -D -m 0644 ../dist/linux/ovito.desktop %{buildroot}%{_datadir}/applications/ovito.desktop
-else
-    echo "Warning: ovito.desktop not found, skipping desktop file installation"
-fi
+# Install .desktop file
+install -D -m 0644 ../dist/linux/ovito.desktop %{buildroot}%{_datadir}/applications/ovito.desktop
+
 
 %files
 # %license LICENSE
