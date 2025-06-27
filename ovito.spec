@@ -66,7 +66,7 @@ install -D -m 0644 ../dist/linux/ovito.desktop %{buildroot}%{_datadir}/applicati
 %files
 %{_bindir}/ovito
 %{_datadir}/applications/ovito.desktop
-%{_prefix}/share/ovito/
+%{_libdir}/ovito/
 
 %changelog
 %autochangelog
