@@ -8,7 +8,7 @@ Summary:        OVITO - Open Visualization Tool (GUI)
 License:        MIT
 URL:            https://gitlab.com/stuko/ovito
 Source0:        %{url}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
-Source1:        https://github.com/thangckt/stuff/blob/file_icon/tha_ovito.png
+Source1:        https://raw.githubusercontent.com/thangckt/stuff/refs/heads/file_icon/tha_ovito.png
 
 BuildRequires:  cmake
 BuildRequires:  ninja-build
