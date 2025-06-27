@@ -22,10 +22,14 @@ GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, comm
 %prep
 %autosetup -n %{name}-%{version}
 
-# Patch package.json to fix TypeScript type errors with newer Node.js
+# Fix dependencies + disable git-related postinstall script
 jq '.dependencies["minimatch"] = "3.0.8" |
-    .devDependencies["@types/glob"] = "7.2.0"' package.json > package.json.new && \
-    mv package.json.new package.json
+    .devDependencies["@types/glob"] = "7.2.0" |
+    del(.dependencies["postinstall-postinstall"]) |
+    del(.devDependencies["postinstall-postinstall"]) |
+    .scripts.postinstall = "" |
+    del(.scripts["postinstall-postinstall"])' \
+    package.json > package.json.new && mv package.json.new package.json
 
 %build
 npm install --legacy-peer-deps
