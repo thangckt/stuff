@@ -11,27 +11,35 @@ Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 ExcludeArch:   %{ix86}
 %endif
 
-BuildRequires:  gcc-c++, gtk3-devel, libX11-devel
-BuildRequires:  nodejs
-BuildRequires:  npm
+BuildRequires:  gcc-c++, make, python3, git, libX11-devel, gtk3-devel
+BuildRequires: nodejs
+BuildRequires: npm
+BuildRequires: jq
 
 %description
-GitHub Desktop Plus provides a GUI for Git and GitHub via Electron, packaging already built JS in the `dist/` directory.
+GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, committing, and pull requests on Linux.
 
 %prep
 %autosetup -n %{name}-%{version}
 
-# No build necessary — shipping prebuilt assets
+# Fix dependencies + disable git-related postinstall script
+jq '.dependencies["minimatch"] = "3.0.8" |
+    .devDependencies["@types/glob"] = "7.2.0" |
+    del(.dependencies["postinstall-postinstall"]) |
+    del(.devDependencies["postinstall-postinstall"]) |
+    .scripts = (.scripts // {}) | .scripts.postinstall = "" |
+    del(.scripts["postinstall-postinstall"])' \
+    package.json > package.json.new && mv package.json.new package.json
 
 %build
-# skip building, use dist/ provided in the tarball
+npm install --legacy-peer-deps
+npm run build -- --max_old_space_size=4096
 
 %install
 install -d %{buildroot}%{_bindir} \
            %{buildroot}%{_datadir}/%{name} \
            %{buildroot}%{_datadir}/applications
 
-# Copy prebuilt Electron app
 cp -r dist/* %{buildroot}%{_datadir}/%{name}/
 
 install -m 644 assets/%{name}.desktop \
