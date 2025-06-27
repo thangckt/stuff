@@ -8,7 +8,8 @@ Summary:        OVITO - Open Visualization Tool (GUI)
 License:        MIT
 URL:            https://gitlab.com/stuko/ovito
 Source0:        %{url}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
-Source1:        https://raw.githubusercontent.com/thangckt/stuff/refs/heads/file_icon/tha_ovito.png
+%Source1:        https://raw.githubusercontent.com/thangckt/stuff/refs/heads/file_icon/tha_ovito.png
+
 
 BuildRequires:  cmake
 BuildRequires:  ninja-build
@@ -44,7 +45,7 @@ Name=Ovito
 GenericName=Scientific Visualization Tool
 Comment=Visualize and analyze atomistic simulation data
 Exec=ovito
-Icon=tha_ovito
+Icon=ovito
 Terminal=false
 Type=Application
 Categories=Science;Education;Graphics;
@@ -67,7 +68,7 @@ cmake --install . --prefix %{buildroot}%{_prefix}
 install -D -m 0644 ../dist/linux/ovito.desktop %{buildroot}%{_datadir}/applications/ovito.desktop
 
 # Install icon
-install -D -m 0644 %{SOURCE1} %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/tha_ovito.png
+install -D -m 0644 %{SOURCE1} %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/ovito.png
 
 # Remove unwanted files
 rm -f %{buildroot}%{_bindir}/ssh_askpass
@@ -75,7 +76,7 @@ rm -f %{buildroot}%{_bindir}/ssh_askpass
 %files
 %{_bindir}/ovito
 %{_datadir}/applications/ovito.desktop
-%{_datadir}/icons/hicolor/64x64/apps/tha_ovito.png
+%{_datadir}/icons/hicolor/48x48/apps/ovito.png
 %{_prefix}/lib/ovito/
 %{_datadir}/ovito/
 

@@ -30,17 +30,16 @@ BuildRequires:  cargo
 BuildRequires:  unzip
 BuildRequires:  zip
 BuildRequires:  clang  # for some parts of Firefox build
-BuildRequires:  mozjs-devel  # if available for JavaScript engine
 BuildRequires:  desktop-file-utils
 
-Requires:       hicolor-icon-theme
 Requires:       gtk3
 Requires:       libXt
 Requires:       libX11
 Requires:       dbus-glib
+Requires:       hicolor-icon-theme
 
 %description
-Zotero is a powerful reference manager that helps you collect, organize, cite, and share research publications. This package builds Zotero from source using Mozilla’s build system (mach).
+Zotero is a free, easy-to-use tool to help you collect, organize, cite, and share research. This package builds the Zotero client from source using Mozilla's `mach` build system.
 
 %prep
 %autosetup -n zotero-%{version}
@@ -49,10 +48,11 @@ Zotero is a powerful reference manager that helps you collect, organize, cite, a
 git submodule update --init --recursive
 
 %build
-# Set environment if needed
+# Set environment for mach
+export MACH_USE_SYSTEM_PYTHON=1
 export MOZCONFIG=$(pwd)/build/linux64-config
 
-# Run Zotero's build system via mach
+# Build the application
 ./mach build
 
 # After running `./mach build`, the browser is packaged into a dist directory
@@ -63,18 +63,18 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}/opt/zotero
 cp -a dist/linux64-unpacked/* %{buildroot}/opt/zotero/
 
-# Create a symlink
-mkdir -p %{buildroot}%{_bindir}
+# Create symlink to binary
+install -d %{buildroot}%{_bindir}
 ln -s /opt/zotero/zotero %{buildroot}%{_bindir}/zotero
 
-# Desktop integration
-mkdir -p %{buildroot}%{_datadir}/applications
-install -Dm644 %{buildroot}/opt/zotero/zotero.desktop %{buildroot}%{_datadir}/applications/zotero.desktop
+# Desktop file
+install -d %{buildroot}%{_datadir}/applications
+install -m 644 build/linux64/zotero.desktop %{buildroot}%{_datadir}/applications/zotero.desktop || true
 
-# Icons
+# Icon handling
 for icon in %{buildroot}/opt/zotero/chrome/icons/default/default*.png; do
     size=$(basename "$icon" | sed -E 's/default([0-9]+)\.png/\1/')
-    mkdir -p %{buildroot}%{_datadir}/icons/hicolor/${size}x${size}/apps
+    install -d %{buildroot}%{_datadir}/icons/hicolor/${size}x${size}/apps
     cp -a "$icon" %{buildroot}%{_datadir}/icons/hicolor/${size}x${size}/apps/zotero.png
 done
 
@@ -86,10 +86,10 @@ done
 %{_datadir}/icons/hicolor/*/apps/zotero.png
 
 %post
-update-desktop-database &> /dev/null || :
+update-desktop-database &>/dev/null || :
 
 %postun
-update-desktop-database &> /dev/null || :
+update-desktop-database &>/dev/null || :
 
 %changelog
 %autochangelog
