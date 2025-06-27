@@ -46,20 +46,20 @@ cat > %{buildroot}%{_datadir}/applications/zotero.desktop << 'EOF'
 Name=Zotero
 Comment=Zotero Reference Manager
 Exec=zotero
-Icon=zotero64
+Icon=zotero
 Type=Application
 Categories=Office;Education;Science;
 MimeType=text/plain;
 EOF
 
 # Copy icon
-cp icons/icon64.png %{buildroot}%{_datadir}/icons/zotero64.png
+cp icons/icon64.png %{buildroot}%{_datadir}/icons/zotero.png
 
 %files
 /opt/zotero
 %{_bindir}/zotero
 %{_datadir}/applications/zotero.desktop
-%{_datadir}/icons/zotero64.png
+%{_datadir}/icons/zotero.png
 
 %changelog
 %autochangelog
