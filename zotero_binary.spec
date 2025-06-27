@@ -16,8 +16,7 @@ AutoReqProv:    no
 Requires:       gtk3 libXt libX11 dbus-glib
 
 %description
-Zotero is a free, easy-to-use tool to help you collect, organize, cite,
-and share research. This package contains the official Zotero binary.
+Zotero is a free, easy-to-use tool to help you collect, organize, cite, and share research. This package contains the official Zotero binary.
 
 %prep
 %setup -q -n Zotero_linux-x86_64
@@ -26,7 +25,7 @@ and share research. This package contains the official Zotero binary.
 # Nothing to build - this is a binary package
 
 %install
-mkdir -p %{buildroot}/opt/zotero %{buildroot}%{_bindir} %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/pixmaps
+mkdir -p %{buildroot}/opt/zotero %{buildroot}%{_bindir} %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/icons
 
 # Install the application
 cp -a * %{buildroot}/opt/zotero/
@@ -38,26 +37,26 @@ exec /opt/zotero/zotero "$@"
 EOF
 chmod +x %{buildroot}%{_bindir}/zotero
 
-# Create desktop file
+# Create .desktop file
 cat > %{buildroot}%{_datadir}/applications/zotero.desktop << 'EOF'
 [Desktop Entry]
 Name=Zotero
 Comment=Zotero Reference Manager
 Exec=zotero
-Icon=zotero
+Icon=zotero64
 Type=Application
 Categories=Office;Education;Science;
 MimeType=text/plain;
 EOF
 
 # Copy icon
-cp chrome/icons/default/default48.png %{buildroot}%{_datadir}/pixmaps/zotero.png
+cp icons/icon64.png %{buildroot}%{_datadir}/icons/zotero64.png
 
 %files
 /opt/zotero
 %{_bindir}/zotero
 %{_datadir}/applications/zotero.desktop
-%{_datadir}/pixmaps/zotero.png
+%{_datadir}/icons/zotero.png
 
 %changelog
 %autochangelog
