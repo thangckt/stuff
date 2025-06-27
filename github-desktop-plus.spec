@@ -1,3 +1,5 @@
+### This code revise by Claude
+
 Name:           github-desktop-plus
 Version:        0.4.21
 Release:        1%{?dist}
