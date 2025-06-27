@@ -27,7 +27,7 @@ jq '.dependencies["minimatch"] = "3.0.8" |
     .devDependencies["@types/glob"] = "7.2.0" |
     del(.dependencies["postinstall-postinstall"]) |
     del(.devDependencies["postinstall-postinstall"]) |
-    .scripts.postinstall = "" |
+    .scripts = (.scripts // {}) | .scripts.postinstall = "" |
     del(.scripts["postinstall-postinstall"])' \
     package.json > package.json.new && mv package.json.new package.json
 
