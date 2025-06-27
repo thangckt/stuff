@@ -9,12 +9,14 @@ License:        MIT
 URL:            https://github.com/pol-rivero/github-desktop-plus
 Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 
+# Disable debug package generation for binary packages
+%global debug_package %{nil}
+
 BuildRequires:  nodejs npm git python3 gcc-c++ make
 Requires:       git
 
 %description
-GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning,
-committing, and pull requests on Linux.
+GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, committing, and pull requests on Linux.
 
 %prep
 %autosetup -n %{name}-%{version}
