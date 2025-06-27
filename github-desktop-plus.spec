@@ -18,7 +18,9 @@ GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, comm
 %build
 # Set Python path for node-gyp
 export PYTHON=/usr/bin/python3
-npm install --legacy-peer-deps --no-scripts
+# Disable all postinstall scripts completely
+export npm_config_ignore_scripts=true
+npm install --legacy-peer-deps --ignore-scripts
 npm run build
 
 %install
