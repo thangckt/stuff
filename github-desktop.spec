@@ -9,7 +9,6 @@ License:        MIT
 URL:            https://github.com/desktop/desktop
 Source0:        %{url}/archive/refs/tags/release-%{version}.tar.gz
 
-# Skip debug info for bundled Node code
 %global debug_package %{nil}
 
 BuildRequires:  nodejs npm git python3 gcc-c++ make chrpath libsecret-devel
@@ -21,39 +20,44 @@ GitHub Desktop is a graphical Git client for managing GitHub repositories easily
 %prep
 %autosetup -n desktop-release-%{version}
 
-# Initialize dummy git repo (npm postinstall scripts require it)
+# Initialize dummy git repo (for npm install)
 git init
 git config user.email "rpm@localhost"
 git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit"
 
-# Remove native module that breaks build
+# Remove native modules that break build (not needed on Linux)
 rm -rf vendor/desktop-notifications
+rm -rf vendor/windows-argv-parser
 
-# Clean desktop-notifications dependencies
+# Clean from package.json and app/package.json
 npm pkg delete dependencies.desktop-notifications || :
+npm pkg delete dependencies.windows-argv-parser || :
 npm pkg delete optionalDependencies.desktop-notifications || :
+
 pushd app
 npm pkg delete dependencies.desktop-notifications || :
+npm pkg delete dependencies.windows-argv-parser || :
 npm pkg delete optionalDependencies.desktop-notifications || :
 popd
 
-# Remove postinstall-postinstall to avoid .git error during npm install
+# Remove require lines from source
+find app -type f -name '*.js' -exec sed -i '/desktop-notifications/d' {} \;
+find app -type f -name '*.js' -exec sed -i '/windows-argv-parser/d' {} \;
+
+# Remove postinstall-postinstall hook that breaks on CI
 npm pkg delete scripts.postinstall || :
 npm pkg delete dependencies.postinstall-postinstall || :
 rm -rf node_modules/postinstall-postinstall
-
-# Remove require lines referencing desktop-notifications
-find app -type f -name '*.js' -exec sed -i '/desktop-notifications/d' {} \;
 
 %build
 export NODE_OPTIONS="--max_old_space_size=4096"
 export npm_config_cache=/tmp/.npm
 
 pushd app
+# Electron version needed to run (downloaded via npm)
 npm pkg set dependencies.electron="^22.0.0"
-npm pkg set dependencies.node-addon-api="^7.0.0"
 npm install --legacy-peer-deps --omit=optional
 npm run build || :
 popd
@@ -63,17 +67,17 @@ popd
 mkdir -p %{buildroot}%{_datadir}/%{name}
 cp -a app/* %{buildroot}%{_datadir}/%{name}/
 
-# Remove invalid RPATHs from dugite git binaries
+# Fix RPATHs
 if [ -d "%{buildroot}%{_datadir}/%{name}/node_modules/dugite/git/libexec/git-core" ]; then
     find %{buildroot}%{_datadir}/%{name}/node_modules/dugite/git/libexec/git-core \
         -type f -exec chrpath --delete '{}' + 2>/dev/null || :
 fi
 
-# Wrapper script to use bundled Electron
+# Launcher wrapper
 mkdir -p %{buildroot}%{_bindir}
-cat > %{buildroot}%{_bindir}/%{name} << 'EOF'
+cat > %{buildroot}%{_bindir}/%{name} << EOF
 #!/bin/bash
-exec %{_datadir}/%{name}/node_modules/electron/dist/electron %{_datadir}/%{name} "$@"
+exec %{_datadir}/%{name}/node_modules/electron/dist/electron %{_datadir}/%{name} "\$@"
 EOF
 chmod +x %{buildroot}%{_bindir}/%{name}
 
@@ -90,7 +94,7 @@ Terminal=false
 Categories=Development;RevisionControl;
 EOF
 
-# Icon (fallback to dummy if missing)
+# Icon
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
 cp app/static/linux/icon-logo.png %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.png || :
 
