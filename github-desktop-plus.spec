@@ -88,7 +88,7 @@ Terminal=false
 Categories=Development;RevisionControl;
 EOF
 
-# Icon
+# Icon (fallback to dummy if missing)
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
 cp app/static/linux/logos/128x128.png %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.png || :
 
