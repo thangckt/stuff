@@ -29,9 +29,6 @@ git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit"
 
-# Remove problematic postinstall hook
-npm pkg delete scripts.postinstall || :
-
 %build
 export PATH="/usr/libexec/nodejs20/bin:$PATH"
 export NODE_OPTIONS="--max_old_space_size=4096"
