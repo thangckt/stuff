@@ -13,7 +13,7 @@ Source0:        %{url}/archive/refs/tags/release-%{version}.tar.gz
 %global debug_package %{nil}
 
 BuildRequires: nodejs npm yarnpkg git python3 gcc-c++ make chrpath libsecret-devel wget
-Requires:       git
+Requires:      git
 
 %description
 GitHub Desktop is a graphical Git client for managing GitHub repositories easily.
