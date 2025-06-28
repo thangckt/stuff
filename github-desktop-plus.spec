@@ -12,7 +12,8 @@ Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 # Skip debug info for bundled binary
 %global debug_package %{nil}
 
-BuildRequires:  nodejs npm git python3 gcc-c++ make desktop-file-utils
+BuildRequires:  npm git python3 gcc-c++ make desktop-file-utils
+BuildRequires:  nodejs = 20
 Requires:       electron git
 
 %description
@@ -32,7 +33,7 @@ git commit -m "Initial commit"
 npm pkg delete scripts.postinstall || :
 
 %build
-export PYTHON=/usr/bin/python3
+export PATH="/usr/libexec/nodejs20/bin:$PATH"
 export NODE_OPTIONS="--max_old_space_size=4096"
 export npm_config_cache=/tmp/.npm
 
