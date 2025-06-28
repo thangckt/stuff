@@ -49,7 +49,8 @@ find . -type f -name '*.js' \
   -exec sed -i '/desktop-notifications/d;/windows-argv-parser/d;/registry-js/d' '{}' \;
 
 # Fetch CodeMirror 5 & third-party modes
-npm install codemirror@5.65.12
+# Use legacy-peer-deps to avoid dependency tree conflicts
+npm install codemirror@5.65.12 --legacy-peer-deps
 curl -L https://github.com/Roblox/codemirror-luau-mode/archive/refs/heads/master.tar.gz | tar xz -C vendor
 curl -L https://github.com/marzer/codemirror-mode-zig/archive/refs/heads/master.tar.gz | tar xz -C vendor
 
