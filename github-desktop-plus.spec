@@ -29,9 +29,10 @@ git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit"
 
-# Cleanly remove desktop-notifications from both root and app
-rm -rf vendor/desktop-notifications app/node_modules/desktop-notifications
+# Remove problematic native module
+rm -rf vendor/desktop-notifications
 
+# Clean any native deps
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete optionalDependencies.desktop-notifications || :
 
@@ -40,37 +41,28 @@ npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete optionalDependencies.desktop-notifications || :
 popd
 
-# Patch out any import/require lines
-find app -type f \( -name '*.ts' -o -name '*.js' \) -exec sed -i '/desktop-notifications/d' {} \;
-
-# Optionally remove any node_modules that might cause rebuild
-rm -rf node_modules app/node_modules
+# Patch out runtime requires if needed
+find app -type f -name '*.js' -exec sed -i '/desktop-notifications/d' {} \;
 
 %build
-export PATH="/usr/libexec/nodejs20/bin:$PATH"
 export NODE_OPTIONS="--max_old_space_size=4096"
 export npm_config_cache=/tmp/.npm
 
-rm -rf node_modules app/node_modules
 npm install --legacy-peer-deps --no-optional
-
-# Build the Electron app
-npx electron-builder --linux --dir
-
-# Create launcher
-cat > dist/linux-unpacked/%{name} << 'EOF'
-#!/bin/bash
-exec electron "$(dirname "$0")" "$@"
-EOF
-chmod +x dist/linux-unpacked/%{name}
+npm run build || true
 
 %install
-install -d %{buildroot}%{_datadir}/%{name}
-cp -a dist/linux-unpacked/* %{buildroot}%{_datadir}/%{name}/
+# Install into datadir
+mkdir -p %{buildroot}%{_datadir}/%{name}
+cp -a app/* %{buildroot}%{_datadir}/%{name}/
 
-# Symlink binary
-install -d %{buildroot}%{_bindir}
-ln -s %{_datadir}/%{name}/%{name} %{buildroot}%{_bindir}/%{name}
+# Create executable wrapper
+mkdir -p %{buildroot}%{_bindir}
+cat > %{buildroot}%{_bindir}/%{name} << 'EOF'
+#!/bin/bash
+exec electron %{_datadir}/%{name} "$@"
+EOF
+chmod +x %{buildroot}%{_bindir}/%{name}
 
 # Install .desktop entry
 mkdir -p %{buildroot}%{_datadir}/applications
