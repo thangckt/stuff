@@ -5,9 +5,9 @@ Version: 0.4.21
 Release: 1%{?dist}
 Summary: GitHub Desktop Plus, a GUI client for Git and GitHub
 
-License: MIT
-URL: https://github.com/pol-rivero/github-desktop-plus
-Source0: %{url}/releases/tag/v%{version}/%{name}-%{version}.tar.gz
+License:    MIT
+URL:        https://github.com/pol-rivero/github-desktop-plus
+Source0:    %{url}/archive/tag/v%{version}/%{name}-%{version}.tar.gz
 
 # Disable debug package generation for binary packages
 %global debug_package %{nil}
