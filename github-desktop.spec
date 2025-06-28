@@ -7,7 +7,7 @@ Summary:        GitHub Desktop
 
 License:        MIT
 URL:            https://github.com/desktop/desktop
-Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
+Source0:        %{url}/archive/refs/tags/release-%{version}.tar.gz
 
 # Skip debug info for bundled Node code
 %global debug_package %{nil}
