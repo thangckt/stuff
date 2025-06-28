@@ -53,6 +53,7 @@ export npm_config_cache=/tmp/.npm
 
 pushd app
 npm pkg set dependencies.electron="^22.0.0"
+npm pkg set dependencies.node-addon-api="^7.0.0"
 npm install --legacy-peer-deps --omit=optional
 npm run build || :
 popd
