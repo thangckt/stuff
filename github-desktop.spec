@@ -75,7 +75,7 @@ export npm_config_cache=/tmp/.npm
 npm install --legacy-peer-deps --omit=optional
 
 # Install codemirror + extra language modes
-npm install codemirror@5
+npm install codemirror@5 --legacy-peer-deps
 npm install git+https://github.com/Roblox/codemirror-luau-mode.git || :
 npm install git+https://github.com/marzer/codemirror-mode-zig.git || :
 
