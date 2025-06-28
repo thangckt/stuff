@@ -28,6 +28,15 @@ git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit for build"
 
+
+%build
+# Set environment for Node.js build
+export PYTHON=/usr/bin/python3
+export NODE_OPTIONS="--max_old_space_size=4096"
+
+# Clean any existing node_modules and package-lock.json
+rm -rf node_modules package-lock.json app/node_modules app/package-lock.json
+
 # Install deps
 npm install --legacy-peer-deps
 
