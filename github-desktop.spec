@@ -1,9 +1,9 @@
 ### This code with the help by Claude and ChatGPT
 
 Name:           github-desktop
-Version:        0.4.21
+Version:        3.4.21
 Release:        1%{?dist}
-Summary:        GitHub Desktop Plus, a GUI client for Git and GitHub
+Summary:        GitHub Desktop
 
 License:        MIT
 URL:            https://github.com/desktop/desktop
@@ -16,7 +16,7 @@ BuildRequires:  nodejs npm git python3 gcc-c++ make chrpath libsecret-devel
 Requires:       git gcr3 gnome-keyring libsecret
 
 %description
-GitHub Desktop Plus is a graphical Git client for managing GitHub repositories easily.
+GitHub Desktop is a graphical Git client for managing GitHub repositories easily.
 
 %prep
 %autosetup -n %{name}-%{version}
@@ -69,13 +69,11 @@ if [ -d "%{buildroot}%{_datadir}/%{name}/node_modules/dugite/git/libexec/git-cor
 fi
 
 
-
-
 # Desktop entry
 mkdir -p %{buildroot}%{_datadir}/applications
 cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << EOF
 [Desktop Entry]
-Name=GitHub Desktop+
+Name=GitHub Desktop
 GenericName=Git GUI Client
 Exec=%{name}
 Icon=%{name}

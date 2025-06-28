@@ -3,7 +3,7 @@
 Name:           github-desktop-plus
 Version:        0.4.21
 Release:        1%{?dist}
-Summary:        GitHub Desktop Plus, a GUI client for Git and GitHub
+Summary:        GitHub Desktop Plus
 
 License:        MIT
 URL:            https://github.com/pol-rivero/github-desktop-plus
