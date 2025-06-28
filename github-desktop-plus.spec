@@ -1,9 +1,9 @@
 ### This code with the help by Claude
 
-Name: github-desktop-plus
-Version: 0.4.21
-Release: 1%{?dist}
-Summary: GitHub Desktop Plus, a GUI client for Git and GitHub
+Name:       github-desktop-plus
+Version:    0.4.21
+Release:    1%{?dist}
+Summary:    GitHub Desktop Plus, a GUI client for Git and GitHub
 
 License:    MIT
 URL:        https://github.com/pol-rivero/github-desktop-plus
