@@ -51,10 +51,8 @@ find app -type f -name '*.js' -exec sed -i '/desktop-notifications/d' {} \;
 export NODE_OPTIONS="--max_old_space_size=4096"
 export npm_config_cache=/tmp/.npm
 
-# Important: allow scripts (so Electron gets bundled), but skip optional deps
-echo '{"dependencies":{"electron":"^22.0.0"}}' > temp-electron.json
-npm pkg set dependencies.electron="^22.0.0" || :
-
+# Overwrite package.json to force Electron installation
+echo '{"dependencies":{"electron":"^22.0.0"}}' > package.json
 npm install --legacy-peer-deps --omit=optional
 npm run build || :
 
@@ -73,7 +71,7 @@ fi
 mkdir -p %{buildroot}%{_bindir}
 cat > %{buildroot}%{_bindir}/%{name} << 'EOF'
 #!/bin/bash
-exec /usr/share/github-desktop-plus/node_modules/electron/dist/electron /usr/share/github-desktop-plus "$@"
+exec %{_datadir}/%{name}/node_modules/electron/dist/electron %{_datadir}/%{name} "$@"
 EOF
 chmod +x %{buildroot}%{_bindir}/%{name}
 
