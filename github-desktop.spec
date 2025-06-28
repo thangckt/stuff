@@ -21,41 +21,48 @@ GitHub Desktop is a graphical Git client for managing GitHub repositories easily
 %prep
 %autosetup -n desktop-release-%{version}
 
-# Git setup (required by npm scripts)
+# Initialize dummy Git repo (required for some postinstall scripts)
 git init
 git config user.email "rpm@localhost"
 git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit"
 
-# Remove native modules not compatible with Linux
-rm -rf vendor/desktop-notifications vendor/windows-argv-parser node_modules/registry-js
+# Remove problematic native modules (Windows/macOS only)
+rm -rf vendor/desktop-notifications
+rm -rf vendor/windows-argv-parser
+rm -rf node_modules/registry-js
 
-# Clean dependencies
+# Remove unneeded postinstall hooks that may fail in CI
+npm pkg delete scripts.postinstall || :
+npm pkg delete dependencies.postinstall-postinstall || :
+rm -rf node_modules/postinstall-postinstall
+
+# Force compatible versions of AJV to avoid build error with ajv-keywords
+npm pkg set dependencies.ajv="^6.12.6" || :
+npm pkg set dependencies.ajv-keywords="^3.5.2" || :
+
+# Remove unused/broken dependencies
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete dependencies.windows-argv-parser || :
 npm pkg delete dependencies.registry-js || :
 npm pkg delete optionalDependencies.desktop-notifications || :
 npm pkg delete optionalDependencies.windows-argv-parser || :
-npm pkg delete dependencies.postinstall-postinstall || :
-npm pkg delete scripts.postinstall || :
+npm pkg delete optionalDependencies.registry-js || :
 
-# Force ajv v6 to avoid build crash
-npm install ajv@6.12.6 --save-exact --legacy-peer-deps
-rm -rf node_modules/ajv  # Remove any incompatible preinstalled version
-
-# Also patch inside app/, if necessary
+# Clean sub-package.json in app/
 pushd app
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete dependencies.windows-argv-parser || :
 npm pkg delete optionalDependencies.desktop-notifications || :
 npm pkg delete optionalDependencies.windows-argv-parser || :
-npm install ajv@6.12.6 --save-exact --legacy-peer-deps
-rm -rf node_modules/ajv
 popd
 
-# Remove `require` references from source
+# Remove import/require lines for problematic native modules
 find . -type f -name '*.js' -exec sed -i '/desktop-notifications/d;/windows-argv-parser/d;/registry-js/d' {} \;
+
+# Optionally remove package-lock.json to avoid dependency resolution conflicts
+rm -f package-lock.json
 
 %build
 export NODE_OPTIONS="--max_old_space_size=4096"
