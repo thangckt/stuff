@@ -21,40 +21,41 @@ GitHub Desktop is a graphical Git client for managing GitHub repositories easily
 %prep
 %autosetup -n desktop-release-%{version}
 
-# Initialize dummy Git repo (some scripts need it)
+# Git setup (required by npm scripts)
 git init
 git config user.email "rpm@localhost"
 git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit"
 
-# Remove broken/Windows-only native deps
+# Remove native modules not compatible with Linux
 rm -rf vendor/desktop-notifications vendor/windows-argv-parser node_modules/registry-js
 
-# Remove failing optional deps
+# Clean dependencies
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete dependencies.windows-argv-parser || :
 npm pkg delete dependencies.registry-js || :
 npm pkg delete optionalDependencies.desktop-notifications || :
 npm pkg delete optionalDependencies.windows-argv-parser || :
-
-# Remove postinstall
-npm pkg delete scripts.postinstall || :
 npm pkg delete dependencies.postinstall-postinstall || :
+npm pkg delete scripts.postinstall || :
 
-# Fix ajv incompatibility
-npm pkg set dependencies.ajv="^6.12.6" || :
-rm -rf node_modules/ajv
+# Force ajv v6 to avoid build crash
+npm install ajv@6.12.6 --save-exact --legacy-peer-deps
+rm -rf node_modules/ajv  # Remove any incompatible preinstalled version
 
-# Clean up in `app/` subdir
+# Also patch inside app/, if necessary
 pushd app
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete dependencies.windows-argv-parser || :
 npm pkg delete optionalDependencies.desktop-notifications || :
-npm pkg set dependencies.ajv="^6.12.6" || :
+npm pkg delete optionalDependencies.windows-argv-parser || :
+npm install ajv@6.12.6 --save-exact --legacy-peer-deps
 rm -rf node_modules/ajv
 popd
 
+# Remove `require` references from source
+find . -type f -name '*.js' -exec sed -i '/desktop-notifications/d;/windows-argv-parser/d;/registry-js/d' {} \;
 
 %build
 export NODE_OPTIONS="--max_old_space_size=4096"
