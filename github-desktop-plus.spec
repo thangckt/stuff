@@ -91,14 +91,14 @@ Categories=Development;RevisionControl;
 EOF
 
 # Icon (fallback to dummy if missing)
-mkdir -p %{buildroot}%{_datadir}/icons/hicolor/128x128/apps
-cp app/static/linux/logos/128x128.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png || :
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
+cp app/static/linux/logos/128x128.png %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.png || :
 
 %files
 %{_bindir}/%{name}
 %{_datadir}/%{name}/
 %{_datadir}/applications/%{name}.desktop
-%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
+%{_datadir}/icons/hicolor/scalable/apps/%{name}.png
 
 %changelog
 %autochangelog
