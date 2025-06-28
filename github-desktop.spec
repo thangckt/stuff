@@ -19,7 +19,7 @@ Requires:       git
 GitHub Desktop is a graphical Git client for managing GitHub repositories easily.
 
 %prep
-%autosetup -n release-%{version}
+%autosetup -n %{name}-release-%{version}
 
 # Initialize dummy git repo (npm postinstall scripts require it)
 git init
