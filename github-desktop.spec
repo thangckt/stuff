@@ -27,26 +27,40 @@ git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit"
 
-# Remove native modules that break build (not needed on Linux)
-rm -rf vendor/desktop-notifications
-rm -rf vendor/windows-argv-parser
+# === Remove native modules not used on Linux ===
 
-# Clean from package.json and app/package.json
+# desktop-notifications (Linux native, but breaks build)
+rm -rf vendor/desktop-notifications
 npm pkg delete dependencies.desktop-notifications || :
-npm pkg delete dependencies.windows-argv-parser || :
 npm pkg delete optionalDependencies.desktop-notifications || :
 
+# windows-argv-parser (Windows-only native module)
+rm -rf vendor/windows-argv-parser
+npm pkg delete dependencies.windows-argv-parser || :
+npm pkg delete optionalDependencies.windows-argv-parser || :
+
+# registry-js (Windows-only native module)
+npm pkg delete dependencies.registry-js || :
+npm pkg delete optionalDependencies.registry-js || :
+rm -rf node_modules/registry-js
+find . -type f -name '*.js' -exec sed -i '/registry-js/d' {} \;
+
+# Clean app/package.json as well
 pushd app
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete dependencies.windows-argv-parser || :
 npm pkg delete optionalDependencies.desktop-notifications || :
+npm pkg delete optionalDependencies.windows-argv-parser || :
+npm pkg delete dependencies.registry-js || :
+npm pkg delete optionalDependencies.registry-js || :
 popd
 
-# Remove require lines from source
+# Remove require/import statements for removed modules
 find app -type f -name '*.js' -exec sed -i '/desktop-notifications/d' {} \;
 find app -type f -name '*.js' -exec sed -i '/windows-argv-parser/d' {} \;
+find app -type f -name '*.js' -exec sed -i '/registry-js/d' {} \;
 
-# Remove postinstall-postinstall hook that breaks on CI
+# Remove postinstall hook that fails due to lack of .git metadata
 npm pkg delete scripts.postinstall || :
 npm pkg delete dependencies.postinstall-postinstall || :
 rm -rf node_modules/postinstall-postinstall
