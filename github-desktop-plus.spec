@@ -1,6 +1,6 @@
 ### This code with the help by Claude
 
-Name: github-desktop
+Name: github-desktop-plus
 Version: 0.4.21
 Release: 1%{?dist}
 Summary: GitHub Desktop Plus, a GUI client for Git and GitHub
