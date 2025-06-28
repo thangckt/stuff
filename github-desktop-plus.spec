@@ -21,7 +21,7 @@ GitHub Desktop Plus is a graphical Git client built on Electron for managing Git
 %prep
 %autosetup -n %{name}-%{version}
 
-# Initialize dummy git repo (some npm postinstall scripts depend on it)
+# Initialize dummy git repo (npm postinstall scripts require it)
 git init
 git config user.email "rpm@localhost"
 git config user.name "RPM Builder"
@@ -31,6 +31,7 @@ git commit -m "Initial commit"
 # Remove native module that breaks build
 rm -rf vendor/desktop-notifications
 
+# Clean desktop-notifications dependencies
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete optionalDependencies.desktop-notifications || :
 pushd app
@@ -38,14 +39,22 @@ npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete optionalDependencies.desktop-notifications || :
 popd
 
-# Remove runtime require calls if needed
+# Remove postinstall-postinstall to avoid .git error during npm install
+npm pkg delete scripts.postinstall || :
+npm pkg delete dependencies.postinstall-postinstall || :
+rm -rf node_modules/postinstall-postinstall
+
+# Remove require lines referencing desktop-notifications
 find app -type f -name '*.js' -exec sed -i '/desktop-notifications/d' {} \;
 
 %build
 export NODE_OPTIONS="--max_old_space_size=4096"
 export npm_config_cache=/tmp/.npm
 
-npm install --legacy-peer-deps --no-optional
+# Safer install: skip postinstall and optional deps
+npm install --legacy-peer-deps --no-optional --ignore-scripts
+
+# Run build if it exists, allow soft failure
 npm run build || :
 
 %install
@@ -66,6 +75,7 @@ cat > %{buildroot}%{_bindir}/%{name} << 'EOF'
 exec electron %{_datadir}/%{name} "$@"
 EOF
 chmod +x %{buildroot}%{_bindir}/%{name}
+
 
 # Desktop entry
 mkdir -p %{buildroot}%{_datadir}/applications
