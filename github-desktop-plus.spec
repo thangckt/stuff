@@ -72,7 +72,7 @@ fi
 mkdir -p %{buildroot}%{_bindir}
 cat > %{buildroot}%{_bindir}/%{name} << 'EOF'
 #!/bin/bash
-exec electron %{_datadir}/%{name} "$@"
+exec electron %{_datadir}/%{name}/main.js "$@"
 EOF
 chmod +x %{buildroot}%{_bindir}/%{name}
 
@@ -91,8 +91,8 @@ Categories=Development;RevisionControl;
 EOF
 
 # Icon (fallback to dummy if missing)
-mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
-cp app/static/linux/logos/128x128.png %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.png || :
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/128x128/apps
+cp app/static/linux/logos/128x128.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png || :
 
 %files
 %{_bindir}/%{name}

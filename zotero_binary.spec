@@ -53,13 +53,14 @@ MimeType=text/plain;
 EOF
 
 # Copy icon
-cp icons/icon128.png %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/zotero.png
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/128x128/apps
+cp icons/icon128.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/zotero.png
 
 %files
 /opt/zotero
 %{_bindir}/zotero
 %{_datadir}/applications/zotero.desktop
-%{_datadir}/icons/hicolor/scalable/apps/zotero.png
+%{_datadir}/icons/hicolor/128x128/apps/zotero.png
 
 %changelog
 %autochangelog

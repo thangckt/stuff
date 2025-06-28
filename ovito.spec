@@ -44,8 +44,8 @@ Categories=Science;Education;Graphics;
 EOF
 
 # Copy icon (since it is not included in the source)
-mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
-cp %{SOURCE1} %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/ovito.png
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/128x128/apps
+cp %{SOURCE1} %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/ovito.png
 
 # Clean up
 rm -f %{buildroot}%{_bindir}/ssh_askpass
@@ -54,7 +54,7 @@ rm -f %{buildroot}%{_bindir}/ssh_askpass
 %{_bindir}/ovito
 %{_datadir}/ovito/
 %{_datadir}/applications/ovito.desktop
-%{_datadir}/icons/hicolor/scalable/apps/ovito.png
+%{_datadir}/icons/hicolor/128x128/apps/ovito.png
 %{_prefix}/lib/ovito/
 
 %changelog
