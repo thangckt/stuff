@@ -21,19 +21,19 @@ GitHub Desktop is a graphical Git client for managing GitHub repositories easily
 %prep
 %autosetup -n desktop-release-%{version}
 
-# Initialize dummy Git repo for tooling that requires it
+# Initialize dummy Git repo
 git init
 git config user.email "rpm@localhost"
 git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit"
 
-# Remove problematic native modules (not for Linux)
+# Remove problematic native modules
 rm -rf vendor/desktop-notifications
 rm -rf vendor/windows-argv-parser
 rm -rf node_modules/registry-js
 
-# Clean dependencies from root package.json
+# Clean up root package.json
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete optionalDependencies.desktop-notifications || :
 npm pkg delete dependencies.windows-argv-parser || :
@@ -42,7 +42,7 @@ npm pkg delete dependencies.registry-js || :
 npm pkg delete dependencies.postinstall-postinstall || :
 npm pkg delete scripts.postinstall || :
 
-# Clean dependencies from app/package.json
+# Clean up app/package.json
 pushd app
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete optionalDependencies.desktop-notifications || :
@@ -50,22 +50,10 @@ npm pkg delete dependencies.windows-argv-parser || :
 npm pkg delete optionalDependencies.windows-argv-parser || :
 popd
 
-# Remove all import lines from JS files referring to deleted modules
+# Remove imports in source code for removed modules
 find . -type f -name '*.js' -exec sed -i '/desktop-notifications/d;/windows-argv-parser/d;/registry-js/d' {} \;
 
-# Ensure npm cache is clean
-rm -rf node_modules package-lock.json
-
-# Patch CodeMirror mode imports:
-# - Install CodeMirror 5 (GitHub Desktop still uses v5 syntax)
-# - Add stub 3rd-party modes (some are not on npm)
-npm install codemirror@5
-
-# Use GitHub if mode packages are not published to npm
-npm install git+https://github.com/Roblox/codemirror-luau-mode.git || :
-npm install git+https://github.com/marzer/codemirror-mode-zig.git || :  # Use working fork if needed
-
-# Add custom type stubs to avoid TS2307
+# Add custom type stubs
 mkdir -p types
 cat > types/custom.d.ts <<'EOF'
 // Stub modules missing type declarations
@@ -75,9 +63,7 @@ declare module 'codemirror-mode-elixir';
 EOF
 
 # Patch tsconfig to include type stubs
-sed -i '/"exclude": \[/a \    "types/custom.d.ts",' script/tsconfig.json
-
-# (optional) Prevent ts-loader failures by skipping lib checks
+sed -i '/"exclude": \[/a\    "types/custom.d.ts",' script/tsconfig.json
 sed -i 's/"strict": true/"strict": false/' script/tsconfig.json
 sed -i '/"target":/a\  "skipLibCheck": true,' script/tsconfig.json
 
@@ -85,7 +71,15 @@ sed -i '/"target":/a\  "skipLibCheck": true,' script/tsconfig.json
 export NODE_OPTIONS="--max_old_space_size=4096"
 export npm_config_cache=/tmp/.npm
 
+# Install all dependencies including CodeMirror + missing modes
 npm install --legacy-peer-deps --omit=optional
+
+# Install codemirror + extra language modes
+npm install codemirror@5
+npm install git+https://github.com/Roblox/codemirror-luau-mode.git || :
+npm install git+https://github.com/marzer/codemirror-mode-zig.git || :
+
+# Continue with build
 npm run build:prod
 
 %install
