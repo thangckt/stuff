@@ -29,13 +29,22 @@ git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit"
 
-# 🩹 Remove problematic native addon (desktop-notifications)
-rm -rf vendor/desktop-notifications
+# Cleanly remove desktop-notifications from both root and app
+rm -rf vendor/desktop-notifications app/node_modules/desktop-notifications
+
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete optionalDependencies.desktop-notifications || :
 
-# Disable postinstall hook if any
-npm pkg delete scripts.postinstall || :
+pushd app
+npm pkg delete dependencies.desktop-notifications || :
+npm pkg delete optionalDependencies.desktop-notifications || :
+popd
+
+# Patch out any import/require lines
+find app -type f \( -name '*.ts' -o -name '*.js' \) -exec sed -i '/desktop-notifications/d' {} \;
+
+# Optionally remove any node_modules that might cause rebuild
+rm -rf node_modules app/node_modules
 
 %build
 export PATH="/usr/libexec/nodejs20/bin:$PATH"
