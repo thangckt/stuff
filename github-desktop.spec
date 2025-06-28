@@ -73,7 +73,7 @@ fi
 mkdir -p %{buildroot}%{_bindir}
 cat > %{buildroot}%{_bindir}/%{name} << 'EOF'
 #!/bin/bash
-exec /usr/share/github-desktop-plus/node_modules/electron/dist/electron /usr/share/github-desktop-plus "$@"
+exec %{_datadir}/%{name}/node_modules/electron/dist/electron %{_datadir}/%{name} "$@"
 EOF
 chmod +x %{buildroot}%{_bindir}/%{name}
 
