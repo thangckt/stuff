@@ -71,15 +71,13 @@ sed -i '/"target":/a\  "skipLibCheck": true,' script/tsconfig.json
 export NODE_OPTIONS="--max_old_space_size=4096"
 export npm_config_cache=/tmp/.npm
 
-# Install all dependencies including CodeMirror + missing modes
-npm install --legacy-peer-deps --omit=optional
+# Fix ajv-keywords compatibility
+npm install --legacy-peer-deps \
+  ajv@^6 ajv-keywords@^3 \
+  codemirror@5 \
+  https://github.com/Roblox/codemirror-luau-mode/archive/refs/heads/master.tar.gz \
+  https://github.com/marzer/codemirror-mode-zig/archive/refs/heads/master.tar.gz
 
-# Install codemirror + extra language modes
-npm install codemirror@5 --legacy-peer-deps
-npm install git+https://github.com/Roblox/codemirror-luau-mode.git || :
-npm install git+https://github.com/marzer/codemirror-mode-zig.git || :
-
-# Continue with build
 npm run build:prod
 
 %install
