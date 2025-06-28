@@ -1,12 +1,12 @@
 ### This code with the help by Claude and ChatGPT
 
-Name:           github-desktop-plus
+Name:           github-desktop
 Version:        0.4.21
 Release:        1%{?dist}
 Summary:        GitHub Desktop Plus, a GUI client for Git and GitHub
 
 License:        MIT
-URL:            https://github.com/pol-rivero/github-desktop-plus
+URL:            https://github.com/desktop/desktop
 Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 
 # Skip debug info for bundled Node code
