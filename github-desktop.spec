@@ -21,19 +21,17 @@ GitHub Desktop is a graphical Git client for managing GitHub repositories easily
 %prep
 %autosetup -n desktop-release-%{version}
 
-# Initialize dummy Git repo
+# Initialize dummy Git repo for tooling that requires it
 git init
 git config user.email "rpm@localhost"
 git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit"
 
-# Remove problematic native modules
-rm -rf vendor/desktop-notifications
-rm -rf vendor/windows-argv-parser
-rm -rf node_modules/registry-js
+# Remove problematic native modules (not for Linux)
+rm -rf vendor/desktop-notifications vendor/windows-argv-parser node_modules/registry-js
 
-# Clean up root package.json
+# Clean dependencies from root package.json
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete optionalDependencies.desktop-notifications || :
 npm pkg delete dependencies.windows-argv-parser || :
@@ -42,7 +40,7 @@ npm pkg delete dependencies.registry-js || :
 npm pkg delete dependencies.postinstall-postinstall || :
 npm pkg delete scripts.postinstall || :
 
-# Clean up app/package.json
+# Clean dependencies from app/package.json
 pushd app
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete optionalDependencies.desktop-notifications || :
@@ -50,10 +48,21 @@ npm pkg delete dependencies.windows-argv-parser || :
 npm pkg delete optionalDependencies.windows-argv-parser || :
 popd
 
-# Remove imports in source code for removed modules
+# Remove all import lines from JS files referring to deleted modules
 find . -type f -name '*.js' -exec sed -i '/desktop-notifications/d;/windows-argv-parser/d;/registry-js/d' {} \;
 
-# Add custom type stubs
+# Download and unpack 3rd-party CodeMirror modes (not on npm)
+mkdir -p vendor
+
+wget -O codemirror-luau-mode.tar.gz https://github.com/Roblox/codemirror-luau-mode/archive/refs/heads/master.tar.gz
+mkdir -p vendor/codemirror-luau-mode
+tar -xzf codemirror-luau-mode.tar.gz -C vendor/codemirror-luau-mode --strip-components=1
+
+wget -O codemirror-mode-zig.tar.gz https://github.com/marzer/codemirror-mode-zig/archive/refs/heads/master.tar.gz
+mkdir -p vendor/codemirror-mode-zig
+tar -xzf codemirror-mode-zig.tar.gz -C vendor/codemirror-mode-zig --strip-components=1
+
+# Add custom type stubs to avoid TS2307 errors
 mkdir -p types
 cat > types/custom.d.ts <<'EOF'
 // Stub modules missing type declarations
@@ -62,8 +71,8 @@ declare module 'codemirror-mode-zig';
 declare module 'codemirror-mode-elixir';
 EOF
 
-# Patch tsconfig to include type stubs
-sed -i '/"exclude": \[/a\    "types/custom.d.ts",' script/tsconfig.json
+# Patch tsconfig to include stubs
+sed -i '/"exclude": \[/a \    "types/custom.d.ts",' script/tsconfig.json
 sed -i 's/"strict": true/"strict": false/' script/tsconfig.json
 sed -i '/"target":/a\  "skipLibCheck": true,' script/tsconfig.json
 
@@ -71,13 +80,15 @@ sed -i '/"target":/a\  "skipLibCheck": true,' script/tsconfig.json
 export NODE_OPTIONS="--max_old_space_size=4096"
 export npm_config_cache=/tmp/.npm
 
-# Fix ajv-keywords compatibility
+# Install with necessary compatibility and local 3rd-party modes
 npm install --legacy-peer-deps \
-  ajv@^6 ajv-keywords@^3 \
+  ajv@^6 \
+  ajv-keywords@^3 \
   codemirror@5 \
-  https://github.com/Roblox/codemirror-luau-mode/archive/refs/heads/master.tar.gz \
-  https://github.com/marzer/codemirror-mode-zig/archive/refs/heads/master.tar.gz
+  ./vendor/codemirror-luau-mode \
+  ./vendor/codemirror-mode-zig
 
+# Build the full app
 npm run build:prod
 
 %install
