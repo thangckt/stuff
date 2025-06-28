@@ -68,7 +68,13 @@ if [ -d "%{buildroot}%{_datadir}/%{name}/node_modules/dugite/git/libexec/git-cor
         -type f -exec chrpath --delete '{}' + 2>/dev/null || :
 fi
 
-
+# Wrapper script to run with system electron
+# mkdir -p %{buildroot}%{_bindir}
+# cat > %{buildroot}%{_bindir}/%{name} << 'EOF'
+# #!/bin/bash
+# exec electron %{_datadir}/%{name}/main.js "$@"
+# EOF
+# chmod +x %{buildroot}%{_bindir}/%{name}
 
 
 # Desktop entry
