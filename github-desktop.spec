@@ -73,11 +73,11 @@ pushd app
 # Electron version needed to run (downloaded via npm)
 npm pkg set dependencies.electron="^22.0.0"
 npm install --legacy-peer-deps --omit=optional
-npm run build || :
+npm run build
 popd
 
 %install
-# Install app files
+# Install app build files
 mkdir -p %{buildroot}%{_datadir}/%{name}
 cp -a app/* %{buildroot}%{_datadir}/%{name}/
 
@@ -90,11 +90,11 @@ if [ -d "$GIT_BIN_DIR" ]; then
         xargs -r chrpath -d 2>/dev/null || :
 fi
 
-# Create wrapper
+# Create launcher script
 mkdir -p %{buildroot}%{_bindir}
 cat > %{buildroot}%{_bindir}/%{name} << EOF
 #!/bin/bash
-exec %{_datadir}/%{name}/node_modules/electron/dist/electron %{_datadir}/%{name} "\$@"
+exec %{_datadir}/%{name}/node_modules/.bin/electron %{_datadir}/%{name}/dist "\$@"
 EOF
 chmod +x %{buildroot}%{_bindir}/%{name}
 
@@ -111,9 +111,8 @@ Terminal=false
 Categories=Development;RevisionControl;
 EOF
 
-# Icon
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
-cp app/static/linux/icon-logo.png %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.png || :
+cp app/static/linux/icon-logo.png %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.png
 
 %files
 %{_bindir}/%{name}
