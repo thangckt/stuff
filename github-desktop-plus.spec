@@ -7,7 +7,7 @@ Summary: GitHub Desktop Plus, a GUI client for Git and GitHub
 
 License: MIT
 URL: https://github.com/pol-rivero/github-desktop-plus
-Source0: %{url}/archive/refs/tags/v%{version}.tar.gz
+Source0: %{url}/releases/tag/v%{version}/%{name}-%{version}.tar.gz
 
 # Disable debug package generation for binary packages
 %global debug_package %{nil}
@@ -19,7 +19,7 @@ Requires: git
 GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, committing, and pull requests on Linux.
 
 %prep
-%autosetup -n %{name}-v%{version}
+%autosetup -n %{name}-%{version}
 
 # Install deps
 npm install --legacy-peer-deps
@@ -32,18 +32,10 @@ npx electron-builder --linux --dir
 mkdir -p %{buildroot}%{_datadir}/%{name}
 cp -a dist/linux-unpacked/* %{buildroot}%{_datadir}/%{name}/
 
-# Install launcher
-mkdir -p %{buildroot}%{_bindir}
-cat >%{buildroot}%{_bindir}/%{name} <<EOF
-#!/bin/bash
-exec %{_datadir}/%{name}/github-desktop "\$@"
-EOF
-chmod +x %{buildroot}%{_bindir}/%{name}
-
 # Install .desktop entry
 install -Dm644 /dev/stdin %{buildroot}%{_datadir}/applications/%{name}.desktop <<EOF
 [Desktop Entry]
-Name=GitHub Desktop
+Name=GitHub Desktop+
 Comment=GitHub Desktop Plus - A Git GUI client for GitHub
 GenericName=Git GUI Client
 Exec=%{name}
