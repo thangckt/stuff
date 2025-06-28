@@ -12,8 +12,8 @@ Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 # Skip debug info for bundled Node code
 %global debug_package %{nil}
 
-BuildRequires:  nodejs npm git python3 gcc-c++ make desktop-file-utils chrpath
-Requires:       git
+BuildRequires:  nodejs npm git python3 gcc-c++ make desktop-file-utils chrpath libsecret-devel gcr-devel libappindicator-gtk3-devel
+Requires:       git gcr3 gnome-keyring libsecret libappindicator-gtk3
 
 %description
 GitHub Desktop Plus is a graphical Git client for managing GitHub repositories easily.
@@ -93,7 +93,6 @@ EOF
 # Icon (fallback to dummy if missing)
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
 cp app/static/logos/icon-logo.ico %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.png || :
-touch %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.png
 
 %files
 %{_bindir}/%{name}
