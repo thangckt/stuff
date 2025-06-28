@@ -13,7 +13,7 @@ Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 %global debug_package %{nil}
 
 BuildRequires:  nodejs npm git python3 gcc-c++ make chrpath libsecret-devel
-Requires:       git gcr3 gnome-keyring libsecret
+Requires:       git gcr3 gnome-keyring libsecret electron
 
 %description
 GitHub Desktop Plus is a graphical Git client for managing GitHub repositories easily.
