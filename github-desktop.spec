@@ -67,13 +67,16 @@ popd
 mkdir -p %{buildroot}%{_datadir}/%{name}
 cp -a app/* %{buildroot}%{_datadir}/%{name}/
 
-# Fix RPATHs
-if [ -d "%{buildroot}%{_datadir}/%{name}/node_modules/dugite/git/libexec/git-core" ]; then
-    find %{buildroot}%{_datadir}/%{name}/node_modules/dugite/git/libexec/git-core \
-        -type f -exec chrpath --delete '{}' + 2>/dev/null || :
+# Remove broken RPATHs from dugite Git binaries
+GIT_BIN_DIR="%{buildroot}%{_datadir}/%{name}/node_modules/dugite/git/libexec/git-core"
+if [ -d "$GIT_BIN_DIR" ]; then
+    find "$GIT_BIN_DIR" -type f -exec file {} \; | \
+        grep 'ELF.*executable' | \
+        cut -d: -f1 | \
+        xargs -r chrpath -d 2>/dev/null || :
 fi
 
-# Launcher wrapper
+# Create wrapper
 mkdir -p %{buildroot}%{_bindir}
 cat > %{buildroot}%{_bindir}/%{name} << EOF
 #!/bin/bash
