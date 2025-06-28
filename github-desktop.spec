@@ -52,8 +52,8 @@ find . -type f -name '*.js' \
 # Use legacy-peer-deps to avoid dependency tree conflicts
 npm install codemirror@5.65.12 --legacy-peer-deps
 rm -rf vendor/codemirror-luau-mode vendor/codemirror-mode-zig
-git clone --depth 1 https://github.com/Roblox/codemirror-luau-mode.git vendor/codemirror-luau-mode
-git clone --depth 1 https://github.com/marzer/codemirror-mode-zig.git vendor/codemirror-mode-zig
+git clone --depth 1 git://github.com/Roblox/codemirror-luau-mode.git vendor/codemirror-luau-mode
+git clone --depth 1 git://github.com/marzer/codemirror-mode-zig.git vendor/codemirror-mode-zig
 
 
 # Add custom type stubs to avoid TS2307 errors
