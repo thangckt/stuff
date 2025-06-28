@@ -41,7 +41,7 @@ EOF
 chmod +x %{buildroot}%{_bindir}/zotero
 
 # Create desktop file
-cat > %{buildroot}%{_datadir}/applications/zotero.desktop << 'EOF'
+cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << 'EOF'
 [Desktop Entry]
 Name=Zotero
 Comment=Zotero Reference Manager
