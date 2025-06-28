@@ -29,7 +29,12 @@ git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit"
 
-# Remove problematic postinstall hook
+# 🩹 Remove problematic native addon (desktop-notifications)
+rm -rf vendor/desktop-notifications
+npm pkg delete dependencies.desktop-notifications || :
+npm pkg delete optionalDependencies.desktop-notifications || :
+
+# Disable postinstall hook if any
 npm pkg delete scripts.postinstall || :
 
 %build
