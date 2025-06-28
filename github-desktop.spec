@@ -13,13 +13,13 @@ Source0:        %{url}/archive/refs/tags/release-%{version}.tar.gz
 %global debug_package %{nil}
 
 BuildRequires:  nodejs npm git python3 gcc-c++ make chrpath libsecret-devel
-Requires:       git gcr3 gnome-keyring libsecret
+Requires:       git gcr3 gnome-keyring libsecret electron
 
 %description
 GitHub Desktop is a graphical Git client for managing GitHub repositories easily.
 
 %prep
-%autosetup
+%autosetup -n release-%{version}
 
 # Initialize dummy git repo (npm postinstall scripts require it)
 git init
