@@ -98,7 +98,7 @@ cp app/static/linux/logos/128x128.png %{buildroot}%{_datadir}/icons/hicolor/128x
 %{_bindir}/%{name}
 %{_datadir}/%{name}/
 %{_datadir}/applications/%{name}.desktop
-%{_datadir}/icons/hicolor/scalable/apps/%{name}.png
+%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
 
 %changelog
 %autochangelog
