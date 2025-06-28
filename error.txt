@@ -1,0 +1,21 @@
++ rm -rf vendor/desktop-notifications vendor/windows-argv-parser node_modules/registry-js
++ npm pkg delete dependencies.desktop-notifications
++ npm pkg delete optionalDependencies.desktop-notifications
++ npm pkg delete dependencies.windows-argv-parser
++ npm pkg delete optionalDependencies.windows-argv-parser
++ npm pkg delete dependencies.registry-js
++ npm pkg delete dependencies.postinstall-postinstall
++ npm pkg delete scripts.postinstall
++ pushd app
+~/build/BUILD/github-desktop-3.5.0-build/desktop-release-3.5.0/app ~/build/BUILD/github-desktop-3.5.0-build/desktop-release-3.5.0
++ npm pkg delete dependencies.desktop-notifications
++ npm pkg delete optionalDependencies.desktop-notifications
++ npm pkg delete dependencies.windows-argv-parser
++ npm pkg delete optionalDependencies.windows-argv-parser
++ popd
++ find . -type f -name '*.js' -exec sed -i '/desktop-notifications/d;/windows-argv-parser/d;/registry-js/d' '{}' ';'
+~/build/BUILD/github-desktop-3.5.0-build/desktop-release-3.5.0
++ mkdir -p vendor
++ wget -O codemirror-luau-mode.tar.gz https://github.com/Roblox/codemirror-luau-mode/archive/refs/heads/master.tar.gz
+[0] Downloading 'https://github.com/Roblox/codemirror-luau-mode/archive/refs/heads/master.tar.gz' ...
+HTTP ERROR response 404  [https://github.com/Roblox/codemirror-luau-mode/archive/refs/heads/master.tar.gz]
