@@ -13,10 +13,10 @@ Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 %global debug_package %{nil}
 
 BuildRequires:  nodejs npm git python3 gcc-c++ make desktop-file-utils chrpath
-Requires:       electron git
+Requires:       git
 
 %description
-GitHub Desktop Plus is a graphical Git client built on Electron for managing GitHub repositories easily.
+GitHub Desktop Plus is a graphical Git client for managing GitHub repositories easily.
 
 %prep
 %autosetup -n %{name}-%{version}
