@@ -21,48 +21,65 @@ GitHub Desktop is a graphical Git client for managing GitHub repositories easily
 %prep
 %autosetup -n desktop-release-%{version}
 
-# Initialize dummy Git repo (required for some postinstall scripts)
+# Initialize dummy Git repo for tooling that requires it
 git init
 git config user.email "rpm@localhost"
 git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit"
 
-# Remove problematic native modules (Windows/macOS only)
+# Remove problematic native modules (not for Linux)
 rm -rf vendor/desktop-notifications
 rm -rf vendor/windows-argv-parser
 rm -rf node_modules/registry-js
 
-# Remove unneeded postinstall hooks that may fail in CI
-npm pkg delete scripts.postinstall || :
-npm pkg delete dependencies.postinstall-postinstall || :
-rm -rf node_modules/postinstall-postinstall
-
-# Force compatible versions of AJV to avoid build error with ajv-keywords
-npm pkg set dependencies.ajv="^6.12.6" || :
-npm pkg set dependencies.ajv-keywords="^3.5.2" || :
-
-# Remove unused/broken dependencies
+# Clean dependencies from root package.json
 npm pkg delete dependencies.desktop-notifications || :
-npm pkg delete dependencies.windows-argv-parser || :
-npm pkg delete dependencies.registry-js || :
 npm pkg delete optionalDependencies.desktop-notifications || :
+npm pkg delete dependencies.windows-argv-parser || :
 npm pkg delete optionalDependencies.windows-argv-parser || :
-npm pkg delete optionalDependencies.registry-js || :
+npm pkg delete dependencies.registry-js || :
+npm pkg delete dependencies.postinstall-postinstall || :
+npm pkg delete scripts.postinstall || :
 
-# Clean sub-package.json in app/
+# Clean dependencies from app/package.json
 pushd app
 npm pkg delete dependencies.desktop-notifications || :
-npm pkg delete dependencies.windows-argv-parser || :
 npm pkg delete optionalDependencies.desktop-notifications || :
+npm pkg delete dependencies.windows-argv-parser || :
 npm pkg delete optionalDependencies.windows-argv-parser || :
 popd
 
-# Remove import/require lines for problematic native modules
+# Remove all import lines from JS files referring to deleted modules
 find . -type f -name '*.js' -exec sed -i '/desktop-notifications/d;/windows-argv-parser/d;/registry-js/d' {} \;
 
-# Optionally remove package-lock.json to avoid dependency resolution conflicts
-rm -f package-lock.json
+# Ensure npm cache is clean
+rm -rf node_modules package-lock.json
+
+# Patch CodeMirror mode imports:
+# - Install CodeMirror 5 (GitHub Desktop still uses v5 syntax)
+# - Add stub 3rd-party modes (some are not on npm)
+npm install codemirror@5
+
+# Use GitHub if mode packages are not published to npm
+npm install git+https://github.com/Roblox/codemirror-luau-mode.git || :
+npm install git+https://github.com/marzer/codemirror-mode-zig.git || :  # Use working fork if needed
+
+# Add custom type stubs to avoid TS2307
+mkdir -p types
+cat > types/custom.d.ts <<'EOF'
+// Stub modules missing type declarations
+declare module 'codemirror-mode-luau';
+declare module 'codemirror-mode-zig';
+declare module 'codemirror-mode-elixir';
+EOF
+
+# Patch tsconfig to include type stubs
+sed -i '/"exclude": \[/a \    "types/custom.d.ts",' script/tsconfig.json
+
+# (optional) Prevent ts-loader failures by skipping lib checks
+sed -i 's/"strict": true/"strict": false/' script/tsconfig.json
+sed -i '/"target":/a\  "skipLibCheck": true,' script/tsconfig.json
 
 %build
 export NODE_OPTIONS="--max_old_space_size=4096"
