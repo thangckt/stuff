@@ -36,14 +36,12 @@ cp -a dist/linux-unpacked/* %{buildroot}%{_datadir}/%{name}/
 install -Dm644 /dev/stdin %{buildroot}%{_datadir}/applications/%{name}.desktop <<EOF
 [Desktop Entry]
 Name=GitHub Desktop+
-Comment=GitHub Desktop Plus - A Git GUI client for GitHub
 GenericName=Git GUI Client
 Exec=%{name}
 Icon=%{name}
 Type=Application
 Terminal=false
 Categories=Development;RevisionControl;
-MimeType=x-scheme-handler/x-github-client;x-scheme-handler/x-github-desktop-auth;
 EOF
 
 # Install icon
