@@ -1,4 +1,5 @@
 ### This code revose with ChatGPT
+### The souce code is not supported Linux
 
 Name:           github-desktop
 Version:        3.5.0
@@ -20,47 +21,37 @@ GitHub Desktop is a graphical Git client for managing GitHub repositories easily
 %prep
 %autosetup -n desktop-release-%{version}
 
-# Initialize dummy git repo (for npm install)
+# Initialize dummy Git repo (some scripts need it)
 git init
 git config user.email "rpm@localhost"
 git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit"
 
-# === Remove native modules not used on Linux ===
-
-# desktop-notifications (Linux native, but breaks build)
+# Remove problematic native modules (non-Linux)
 rm -rf vendor/desktop-notifications
+rm -rf vendor/windows-argv-parser
+rm -rf node_modules/registry-js
+
+# Clean deps
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete optionalDependencies.desktop-notifications || :
-
-# windows-argv-parser (Windows-only native module)
-rm -rf vendor/windows-argv-parser
 npm pkg delete dependencies.windows-argv-parser || :
 npm pkg delete optionalDependencies.windows-argv-parser || :
-
-# registry-js (Windows-only native module)
 npm pkg delete dependencies.registry-js || :
-npm pkg delete optionalDependencies.registry-js || :
-rm -rf node_modules/registry-js
-find . -type f -name '*.js' -exec sed -i '/registry-js/d' {} \;
 
-# Clean app/package.json as well
+# Clean app subdir
 pushd app
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete dependencies.windows-argv-parser || :
 npm pkg delete optionalDependencies.desktop-notifications || :
 npm pkg delete optionalDependencies.windows-argv-parser || :
-npm pkg delete dependencies.registry-js || :
-npm pkg delete optionalDependencies.registry-js || :
 popd
 
-# Remove require/import statements for removed modules
-find app -type f -name '*.js' -exec sed -i '/desktop-notifications/d' {} \;
-find app -type f -name '*.js' -exec sed -i '/windows-argv-parser/d' {} \;
-find app -type f -name '*.js' -exec sed -i '/registry-js/d' {} \;
+# Remove import lines
+find . -type f -name '*.js' -exec sed -i '/desktop-notifications/d;/windows-argv-parser/d;/registry-js/d' {} \;
 
-# Remove postinstall hook that fails due to lack of .git metadata
+# Remove postinstall script that fails in CI
 npm pkg delete scripts.postinstall || :
 npm pkg delete dependencies.postinstall-postinstall || :
 rm -rf node_modules/postinstall-postinstall
@@ -69,32 +60,19 @@ rm -rf node_modules/postinstall-postinstall
 export NODE_OPTIONS="--max_old_space_size=4096"
 export npm_config_cache=/tmp/.npm
 
-pushd app
-# Electron version needed to run (downloaded via npm)
-npm pkg set dependencies.electron="^22.0.0"
 npm install --legacy-peer-deps --omit=optional
-npm run build
-popd
+npm run build:prod
 
 %install
-# Install app build files
+# Copy full app output
 mkdir -p %{buildroot}%{_datadir}/%{name}
-cp -a app/* %{buildroot}%{_datadir}/%{name}/
-
-# Remove broken RPATHs from dugite Git binaries
-GIT_BIN_DIR="%{buildroot}%{_datadir}/%{name}/node_modules/dugite/git/libexec/git-core"
-if [ -d "$GIT_BIN_DIR" ]; then
-    find "$GIT_BIN_DIR" -type f -exec file {} \; | \
-        grep 'ELF.*executable' | \
-        cut -d: -f1 | \
-        xargs -r chrpath -d 2>/dev/null || :
-fi
+cp -a out/* %{buildroot}%{_datadir}/%{name}/
 
 # Create launcher script
 mkdir -p %{buildroot}%{_bindir}
 cat > %{buildroot}%{_bindir}/%{name} << EOF
 #!/bin/bash
-exec %{_datadir}/%{name}/node_modules/.bin/electron %{_datadir}/%{name}/dist "\$@"
+exec %{_datadir}/%{name}/github-desktop "\$@"
 EOF
 chmod +x %{buildroot}%{_bindir}/%{name}
 
@@ -111,6 +89,7 @@ Terminal=false
 Categories=Development;RevisionControl;
 EOF
 
+# Icon
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
 cp app/static/linux/icon-logo.png %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.png
 
