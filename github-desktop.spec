@@ -1,7 +1,7 @@
 ### This code with the help by Claude and ChatGPT
 
 Name:           github-desktop
-Version:        3.4.21
+Version:        3.5.0
 Release:        1%{?dist}
 Summary:        GitHub Desktop
 
