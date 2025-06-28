@@ -51,8 +51,10 @@ find . -type f -name '*.js' \
 # Fetch CodeMirror 5 & third-party modes
 # Use legacy-peer-deps to avoid dependency tree conflicts
 npm install codemirror@5.65.12 --legacy-peer-deps
-curl -L https://github.com/Roblox/codemirror-luau-mode/archive/refs/heads/master.tar.gz | tar xz -C vendor
-curl -L https://github.com/marzer/codemirror-mode-zig/archive/refs/heads/master.tar.gz | tar xz -C vendor
+curl -L https://github.com/Roblox/codemirror-luau-mode/archive/5d642f1c8d40197b94e5fdd84fa9b682298e81e7.tar.gz | tar xz -C vendor
+mv vendor/codemirror-luau-mode-* vendor/codemirror-luau-mode
+curl -L https://github.com/marzer/codemirror-mode-zig/archive/04c447013ec9a08a1176f24e942eabf6ad70af8d.tar.gz | tar xz -C vendor
+mv vendor/codemirror-mode-zig-* vendor/codemirror-mode-zig
 
 
 # Add custom type stubs to avoid TS2307 errors
