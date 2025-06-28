@@ -13,7 +13,7 @@ Source0:        %{url}/archive/refs/tags/release-%{version}.tar.gz
 %global debug_package %{nil}
 
 BuildRequires:  nodejs npm git python3 gcc-c++ make chrpath libsecret-devel
-Requires:       git gcr3 gnome-keyring libsecret electron
+Requires:       git
 
 %description
 GitHub Desktop is a graphical Git client for managing GitHub repositories easily.
@@ -53,6 +53,7 @@ export npm_config_cache=/tmp/.npm
 
 # Important: allow scripts (so Electron gets bundled), but skip optional deps
 npm install --legacy-peer-deps --omit=optional
+npx --yes electron@22 install || :
 
 npm run build || :
 
