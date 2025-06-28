@@ -52,9 +52,10 @@ export NODE_OPTIONS="--max_old_space_size=4096"
 export npm_config_cache=/tmp/.npm
 
 # Important: allow scripts (so Electron gets bundled), but skip optional deps
-npm install --legacy-peer-deps --omit=optional
-npx --yes electron@22 install || :
+echo '{"dependencies":{"electron":"^22.0.0"}}' > temp-electron.json
+npm pkg set dependencies.electron="^22.0.0" || :
 
+npm install --legacy-peer-deps --omit=optional
 npm run build || :
 
 %install
