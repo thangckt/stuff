@@ -12,8 +12,8 @@ Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 # Skip debug info for bundled binary
 %global debug_package %{nil}
 
-BuildRequires:  npm git python3 gcc-c++ make desktop-file-utils
-BuildRequires:  nodejs = 20
+%global _module_build 1
+BuildRequires:  nodejs npm git python3 gcc-c++ make desktop-file-utils
 Requires:       electron git
 
 %description
@@ -28,6 +28,9 @@ git config user.email "rpm@localhost"
 git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit"
+
+# Remove problematic postinstall hook
+npm pkg delete scripts.postinstall || :
 
 %build
 export PATH="/usr/libexec/nodejs20/bin:$PATH"
