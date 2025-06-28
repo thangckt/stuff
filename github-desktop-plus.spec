@@ -21,10 +21,16 @@ GitHub Desktop Plus is a graphical Git client built on Electron for managing Git
 %prep
 %autosetup -n %{name}-%{version}
 
+# Initialize dummy git repo (some npm postinstall scripts depend on it)
+git init
+git config user.email "rpm@localhost"
+git config user.name "RPM Builder"
+git add .
+git commit -m "Initial commit"
+
 # Remove native module that breaks build
 rm -rf vendor/desktop-notifications
 
-# Remove its reference from package.json
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete optionalDependencies.desktop-notifications || :
 pushd app
