@@ -51,10 +51,9 @@ find app -type f -name '*.js' -exec sed -i '/desktop-notifications/d' {} \;
 export NODE_OPTIONS="--max_old_space_size=4096"
 export npm_config_cache=/tmp/.npm
 
-# Safer install: skip postinstall and optional deps
-npm install --legacy-peer-deps --no-optional --ignore-scripts
+# Important: allow scripts (so Electron gets bundled), but skip optional deps
+npm install --legacy-peer-deps --omit=optional
 
-# Run build if it exists, allow soft failure
 npm run build || :
 
 %install
@@ -68,14 +67,13 @@ if [ -d "%{buildroot}%{_datadir}/%{name}/node_modules/dugite/git/libexec/git-cor
         -type f -exec chrpath --delete '{}' + 2>/dev/null || :
 fi
 
-# Wrapper script to run with system electron
-# mkdir -p %{buildroot}%{_bindir}
-# cat > %{buildroot}%{_bindir}/%{name} << 'EOF'
-# #!/bin/bash
-# exec electron %{_datadir}/%{name}/main.js "$@"
-# EOF
-# chmod +x %{buildroot}%{_bindir}/%{name}
-
+# Wrapper script to use bundled Electron
+mkdir -p %{buildroot}%{_bindir}
+cat > %{buildroot}%{_bindir}/%{name} << 'EOF'
+#!/bin/bash
+exec /usr/share/github-desktop-plus/node_modules/electron/dist/electron /usr/share/github-desktop-plus "$@"
+EOF
+chmod +x %{buildroot}%{_bindir}/%{name}
 
 # Desktop entry
 mkdir -p %{buildroot}%{_datadir}/applications
@@ -90,7 +88,7 @@ Terminal=false
 Categories=Development;RevisionControl;
 EOF
 
-# Icon (fallback to dummy if missing)
+# Icon
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
 cp app/static/linux/logos/128x128.png %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.png || :
 
