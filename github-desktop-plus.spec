@@ -51,10 +51,11 @@ find app -type f -name '*.js' -exec sed -i '/desktop-notifications/d' {} \;
 export NODE_OPTIONS="--max_old_space_size=4096"
 export npm_config_cache=/tmp/.npm
 
-# Overwrite package.json to force Electron installation
-echo '{"dependencies":{"electron":"^22.0.0"}}' > package.json
+pushd app
+npm pkg set dependencies.electron="^22.0.0"
 npm install --legacy-peer-deps --omit=optional
 npm run build || :
+popd
 
 %install
 # Install app files
