@@ -1,4 +1,4 @@
-### This code with the help by Claude and ChatGPT
+### This code revose with ChatGPT
 
 Name:           github-desktop
 Version:        3.5.0
