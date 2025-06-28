@@ -1,4 +1,4 @@
-### This code revise by Claude
+### This code with the help by Claude
 
 Name: github-desktop
 Version: 0.4.21
@@ -19,7 +19,7 @@ Requires: git
 GitHub Desktop Plus provides a GUI for Git and GitHub, simplifying cloning, committing, and pull requests on Linux.
 
 %prep
-%autosetup -n %{name}-%{version}
+%autosetup -n %{name}-v%{version}
 
 # Install deps
 npm install --legacy-peer-deps
