@@ -1,21 +1,38 @@
+ create mode 100644 yarn.lock
 + rm -rf vendor/desktop-notifications vendor/windows-argv-parser node_modules/registry-js
-+ npm pkg delete dependencies.desktop-notifications
-+ npm pkg delete optionalDependencies.desktop-notifications
-+ npm pkg delete dependencies.windows-argv-parser
-+ npm pkg delete optionalDependencies.windows-argv-parser
-+ npm pkg delete dependencies.registry-js
++ npm pkg delete 'dependencies.desktop-notifications*'
++ npm pkg delete 'dependencies.windows-argv-parser*'
++ npm pkg delete 'dependencies.registry-js*'
 + npm pkg delete dependencies.postinstall-postinstall
 + npm pkg delete scripts.postinstall
 + pushd app
++ npm pkg delete 'dependencies.desktop-notifications*'
 ~/build/BUILD/github-desktop-3.5.0-build/desktop-release-3.5.0/app ~/build/BUILD/github-desktop-3.5.0-build/desktop-release-3.5.0
-+ npm pkg delete dependencies.desktop-notifications
-+ npm pkg delete optionalDependencies.desktop-notifications
-+ npm pkg delete dependencies.windows-argv-parser
-+ npm pkg delete optionalDependencies.windows-argv-parser
++ npm pkg delete 'dependencies.windows-argv-parser*'
 + popd
 + find . -type f -name '*.js' -exec sed -i '/desktop-notifications/d;/windows-argv-parser/d;/registry-js/d' '{}' ';'
 ~/build/BUILD/github-desktop-3.5.0-build/desktop-release-3.5.0
-+ mkdir -p vendor
-+ wget -O codemirror-luau-mode.tar.gz https://github.com/Roblox/codemirror-luau-mode/archive/refs/heads/master.tar.gz
-[0] Downloading 'https://github.com/Roblox/codemirror-luau-mode/archive/refs/heads/master.tar.gz' ...
-HTTP ERROR response 404  [https://github.com/Roblox/codemirror-luau-mode/archive/refs/heads/master.tar.gz]
++ npm install codemirror@5.65.12
+npm error code ERESOLVE
+npm error ERESOLVE unable to resolve dependency tree
+npm error
+npm error While resolving: undefined@undefined
+npm error Found: webpack@5.94.0
+npm error node_modules/webpack
+npm error   webpack@"^5.94.0" from the root project
+npm error
+npm error Could not resolve dependency:
+npm error peer webpack@"^1.12.9 || ^2.2.0 || ^3.x || ^4.x" from parallel-webpack@2.6.0
+npm error node_modules/parallel-webpack
+npm error   parallel-webpack@"^2.6.0" from the root project
+npm error
+npm error Fix the upstream dependency conflict, or retry
+npm error this command with --force or --legacy-peer-deps
+npm error to accept an incorrect (and potentially broken) dependency resolution.
+npm error
+npm error
+npm error For a full report see:
+npm error /builddir/.npm/_logs/2025-06-28T18_41_04_298Z-eresolve-report.txt
+npm error A complete log of this run can be found in: /builddir/.npm/_logs/2025-06-28T18_41_04_298Z-debug-0.log
+error: Bad exit status from /var/tmp/rpm-tmp.AA5rjs (%prep)
+    Bad exit status from /var/tmp/rpm-tmp.AA5rjs (%prep)
