@@ -1,10 +1,10 @@
 ### This code revose with ChatGPT
-### The souce code is not supported Linux
+### The souce code targets Windows/iOS, not Linux
 
 Name:           github-desktop
 Version:        3.5.0
 Release:        1%{?dist}
-Summary:        GitHub Desktop
+Summary:        GitHub Desktop (Linux-only build)
 
 License:        MIT
 URL:            https://github.com/desktop/desktop
@@ -16,74 +16,56 @@ BuildRequires:  nodejs npm yarnpkg git python3 gcc-c++ make chrpath libsecret-de
 Requires:       git
 
 %description
-GitHub Desktop is a graphical Git client for managing GitHub repositories easily.
+GitHub Desktop is a graphical Git client. This build is stripped down to work only on Linux.
 
 %prep
 %autosetup -n desktop-release-%{version}
 
-# Initialize dummy Git repo for tooling that requires it
 git init
-git config user.email "rpm@localhost"
-git config user.name "RPM Builder"
-git add .
-git commit -m "Initial commit"
+ git config user.email "rpm@localhost"
+ git config user.name "RPM Builder"
+ git add .
+ git commit -m "Initial commit"
 
-# Remove native or Windows/macOS-only modules
-rm -rf vendor/desktop-notifications vendor/windows-argv-parser node_modules/registry-js
-rm -f app/src/lib/editors/win32.ts app/src/lib/editors/darwin.ts
+# Remove native/non-Linux code
+rm -rf vendor/desktop-notifications vendor/windows-argv-parser vendor/registry-js \
+       app/src/lib/editors/darwin.ts \
+       app/src/lib/editors/win32.ts \
+       app/src/lib/custom-integration.ts \
+       app/src/lib/ipc-shared.ts \
+       app/src/lib/ipc-renderer.ts \
+       app/src/lib/path.ts \
+       app/src/lib/is-application-bundle.ts \
+       app/src/lib/git \
+       app/src/cli
 
-# Clean up root package.json
-npm pkg delete dependencies.desktop-notifications\*
-npm pkg delete dependencies.windows-argv-parser\*
-npm pkg delete dependencies.registry-js\*
-npm pkg delete dependencies.dugite\*
-npm pkg delete dependencies.app-path\*
-npm pkg delete dependencies.postinstall-postinstall
+# Clean dependencies from root and app package.json
+npm pkg delete dependencies.desktop-notifications dependencies.windows-argv-parser dependencies.registry-js dependencies.postinstall-postinstall
 npm pkg delete scripts.postinstall || :
-
-# Clean app package.json
 pushd app
-npm pkg delete dependencies.desktop-notifications\*
-npm pkg delete dependencies.windows-argv-parser\*
-npm pkg delete dependencies.app-path\*
-npm pkg delete dependencies.dugite\*
+npm pkg delete dependencies.desktop-notifications dependencies.windows-argv-parser
 popd
 
-# Remove imports referencing deleted modules
-find app/src -type f -name '*.ts' -exec sed -i \
-  -e "/desktop-notifications/d" \
-  -e "/windows-argv-parser/d" \
-  -e "/app-path/d" \
-  -e "/dugite/d" \
-  -e "/win32/d" \
-  -e "/darwin/d" '{}' \;
+# Patch tsconfig to disable strict and exclude removed files
+sed -i 's/"strict": true/"strict": false/' script/tsconfig.json
+sed -i '/"target":/a\  "skipLibCheck": true,\n  "noImplicitAny": false,' script/tsconfig.json
+sed -i '/"exclude": \[/a\    "app\/src\/cli",\n    "app\/src\/lib\/ipc-shared.ts",\n    "app\/src\/lib\/ipc-renderer.ts",\n    "app\/src\/lib\/custom-integration.ts",\n    "app\/src\/lib\/editors\/darwin.ts",\n    "app\/src\/lib\/editors\/win32.ts",\n    "app\/src\/lib\/is-application-bundle.ts",\n    "app\/src\/lib\/path.ts",\n    "app\/src\/lib\/git"' script/tsconfig.json
 
-# Fix broken multi-line import that causes build crash
-sed -i '/getNotificationsPermission.*initializeDesktopNotifications/d' app/src/lib/editors/win32.ts 2>/dev/null || :
-
-# Install CodeMirror + custom modes
-npm install codemirror@5.65.12 codemirror-mode-luau codemirror-mode-zig --legacy-peer-deps
-
-# Add type stubs
+# Create stub types
 mkdir -p types
 cat > types/custom.d.ts <<EOF
 declare module 'codemirror-mode-luau';
 declare module 'codemirror-mode-zig';
 EOF
 
-# Patch tsconfig
-sed -i '/"exclude": \[/a \    "types/custom.d.ts",' script/tsconfig.json
-sed -i 's/"strict": true/"strict": false/' script/tsconfig.json
-sed -i '/"target":/a\  "skipLibCheck": true,\n  "noImplicitAny": false,' script/tsconfig.json
+sed -i '/"exclude": \[/a\    "types\/custom.d.ts",' script/tsconfig.json
 
 %build
 export NODE_OPTIONS="--max_old_space_size=4096"
 export npm_config_cache=/tmp/.npm
 
-# Install only required deps (Linux-safe)
-npm install ajv@6 ajv-keywords@3 \
-  mem string-argv compare-versions dexie \
-  --legacy-peer-deps
+npm install ajv@6 ajv-keywords@3 mem string-argv \
+    compare-versions dexie codemirror@5.65.12 --legacy-peer-deps
 npm install --legacy-peer-deps --omit=optional
 npm run build:prod
 
