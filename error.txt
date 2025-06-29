@@ -1,3 +1,4 @@
+create mode 100644 yarn.lock
 + rm -rf vendor/desktop-notifications vendor/windows-argv-parser node_modules/registry-js
 + npm pkg delete 'dependencies.desktop-notifications*'
 + npm pkg delete 'dependencies.windows-argv-parser*'
@@ -5,8 +6,8 @@
 + npm pkg delete dependencies.postinstall-postinstall
 + npm pkg delete scripts.postinstall
 + pushd app
-+ npm pkg delete 'dependencies.desktop-notifications*'
 ~/build/BUILD/github-desktop-3.5.0-build/desktop-release-3.5.0/app ~/build/BUILD/github-desktop-3.5.0-build/desktop-release-3.5.0
++ npm pkg delete 'dependencies.desktop-notifications*'
 + npm pkg delete 'dependencies.windows-argv-parser*'
 + popd
 ~/build/BUILD/github-desktop-3.5.0-build/desktop-release-3.5.0
@@ -15,26 +16,26 @@
 npm warn deprecated glob@7.1.3: Glob versions prior to v9 are no longer supported
 npm warn deprecated debuglog@1.0.1: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 npm warn deprecated read-package-json@2.0.13: This package is no longer supported. Please use @npmcli/package-json instead.
+npm warn deprecated read-installed@4.0.3: This package is no longer supported.
 npm warn deprecated memfs@3.6.0: this will be v4
 npm warn deprecated readdir-scoped-modules@1.0.2: This functionality has been moved to @npmcli/fs
-npm warn deprecated read-installed@4.0.3: This package is no longer supported.
 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
-npm warn deprecated boolean@3.0.2: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 npm warn deprecated lodash.get@4.4.2: This package is deprecated. Use the optional chaining (?.) operator instead.
-npm warn deprecated @humanwhocodes/config-array@0.11.13: Use @eslint/config-array instead
+npm warn deprecated boolean@3.0.2: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 npm warn deprecated lodash.template@4.4.0: This package is deprecated. Use https://socket.dev/npm/package/eta instead.
+npm warn deprecated @humanwhocodes/config-array@0.11.13: Use @eslint/config-array instead
 npm warn deprecated @humanwhocodes/object-schema@2.0.1: Use @eslint/object-schema instead
 npm warn deprecated asar@2.0.1: Please use @electron/asar moving forward.  There is no API change, just a package name change
 npm warn deprecated mkdirp@0.5.1: Legacy versions of mkdirp are no longer supported. Please update to mkdirp 1.x. (Note that the API surface has changed to use Promises in 1.x.)
 npm warn deprecated electron-packager@17.1.1: Please use @electron/packager moving forward. There is no API change, just a package name change
-npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
 npm warn deprecated @types/electron-winstaller@4.0.0: This is a stub types definition. electron-winstaller provides its own type definitions, so you do not need this installed.
+npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
 npm warn deprecated rimraf@2.6.3: Rimraf versions prior to v4 are no longer supported
 npm warn deprecated glob@7.1.6: Glob versions prior to v9 are no longer supported
 npm warn deprecated glob@8.0.3: Glob versions prior to v9 are no longer supported
 npm warn deprecated eslint@8.55.0: This version is no longer supported. Please see https://eslint.org/version-support for other options.
 
-added 932 packages, and audited 933 packages in 35s
+added 932 packages, and audited 933 packages in 41s
 
 206 packages are looking for funding
   run `npm fund` for details
@@ -51,13 +52,8 @@ Some issues need review, and may require choosing
 a different dependency.
 
 Run `npm audit` for details.
-+ curl -L https://github.com/Roblox/codemirror-luau-mode/archive/refs/heads/master.tar.gz
-+ tar xz -C vendor
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100     9  100     9    0     0    230      0 --:--:-- --:--:-- --:--:--   230
-
-gzip: stdin: not in gzip format
-tar: Child returned status 1
-tar: Error is not recoverable: exiting now
-error: Bad exit status from /var/tmp/rpm-tmp.sNwbj8 (%prep)
++ rm -rf vendor/codemirror-luau-mode vendor/codemirror-mode-zig
++ git clone --depth 1 git://github.com/Roblox/codemirror-luau-mode.git vendor/codemirror-luau-mode
+Cloning into 'vendor/codemirror-luau-mode'...
+fatal: unable to connect to github.com:
+github.com[0: 140.82.113.3]: errno=Connection timed out
