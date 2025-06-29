@@ -68,11 +68,11 @@ sed -i '/"target":/a\  "skipLibCheck": true,' script/tsconfig.json
 export NODE_OPTIONS="--max_old_space_size=4096"
 export npm_config_cache=/tmp/.npm
 
+npm install ajv@6 ajv-keywords@3 --legacy-peer-deps
 npm install --legacy-peer-deps --omit=optional
 npm run build:prod
 
 %install
-
 # Copy full app output
 mkdir -p %{buildroot}%{_datadir}/%{name}
 cp -a out/* %{buildroot}%{_datadir}/%{name}/
