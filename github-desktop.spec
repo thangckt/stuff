@@ -48,6 +48,12 @@ popd
 find . -type f -name '*.js' \
   -exec sed -i '/desktop-notifications/d;/windows-argv-parser/d;/registry-js/d' '{}' \;
 
+# Strip out imports from Windows-only modules
+find app/src -type f -name '*.ts' -exec sed -i \
+  -e "/desktop-notifications/d" \
+  -e "/windows-argv-parser/d" \
+  -e "/registry-js/d" '{}' \;
+
 # Fetch CodeMirror 5 & third-party modes via npm
 npm install codemirror@5.65.12 codemirror-mode-luau codemirror-mode-zig --legacy-peer-deps
 
@@ -62,13 +68,14 @@ EOF
 # Patch tsconfig to include stubs
 sed -i '/"exclude": \[/a \    "types/custom.d.ts",' script/tsconfig.json
 sed -i 's/"strict": true/"strict": false/' script/tsconfig.json
-sed -i '/"target":/a\  "skipLibCheck": true,' script/tsconfig.json
+sed -i '/"target":/a\  "skipLibCheck": true,\n  "noImplicitAny": false,' script/tsconfig.json
 
 %build
 export NODE_OPTIONS="--max_old_space_size=4096"
 export npm_config_cache=/tmp/.npm
 
-npm install ajv@6 ajv-keywords@3 --legacy-peer-deps
+npm install ajv@6 ajv-keywords@3 mem string-argv \
+    compare-versions dexie --legacy-peer-deps
 npm install --legacy-peer-deps --omit=optional
 npm run build:prod
 
