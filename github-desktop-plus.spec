@@ -31,6 +31,11 @@ git commit -m "init"
 # Patch webpack config to skip highlighter target
 sed -i '/highlighter/d' app/webpack.production.ts
 
+pushd app
+yarn add --dev string-argv mem compare-versions
+yarn add --dev @types/string-argv @types/mem || :
+popd
+
 # Remove native modules that break build
 rm -rf vendor/desktop-notifications
 rm -rf node_modules/postinstall-postinstall
