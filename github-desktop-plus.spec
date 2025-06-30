@@ -21,6 +21,10 @@ GitHub Desktop Plus is a graphical Git client for managing GitHub repositories e
 %prep
 %autosetup -n %{name}-%{version}
 
+# Enable yarn early via corepack
+corepack enable
+corepack prepare yarn@1.22.19 --activate
+
 # Initialize dummy git repo (build expects one)
 git init
 git config user.email "rpm@localhost"
@@ -51,10 +55,6 @@ export NODE_OPTIONS="--max_old_space_size=4096"
 export NODE_ENV=production
 export TS_NODE_PROJECT=script/tsconfig.json
 export npm_config_cache=/tmp/.npm
-
-# Enable corepack and install yarn
-corepack enable
-corepack prepare yarn@1.22.19 --activate
 
 yarn install --ignore-optional --frozen-lockfile
 yarn build:prod
