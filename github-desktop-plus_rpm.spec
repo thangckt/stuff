@@ -35,6 +35,7 @@ done
 /usr/lib/github-desktop/**
 %{_datadir}/applications/github-desktop.desktop
 %{_datadir}/icons/hicolor/*/apps/github-desktop.png
+/usr/share/doc/github-desktop/copyright
 
 %changelog
 %autochangelog
