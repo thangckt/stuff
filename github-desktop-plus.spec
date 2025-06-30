@@ -12,7 +12,7 @@ Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 # Skip debug info for bundled Node code
 %global debug_package %{nil}
 
-BuildRequires: nodejs npm git python3 gcc-c++ make chrpath libsecret-devel
+BuildRequires: nodejs npm yarn git python3 gcc-c++ make chrpath libsecret-devel
 Requires:       git
 
 %description
