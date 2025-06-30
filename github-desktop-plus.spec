@@ -21,18 +21,19 @@ GitHub Desktop Plus is a graphical Git client for managing GitHub repositories e
 %prep
 %autosetup -n %{name}-%{version}
 
+# Required for build tools like ts-node and webpack to work
 git init
 git config user.email "rpm@localhost"
 git config user.name "RPM Builder"
 git add .
 git commit -m "init"
 
-# Remove native modules and install/postinstall junk
+# Clean problematic native or unneeded modules
 rm -rf vendor/desktop-notifications
 rm -rf node_modules/postinstall-postinstall
 rm -rf app/node_modules/desktop-notifications
 
-# Strip modules and postinstall scripts
+# Remove problematic package.json entries from root
 npm pkg delete optionalDependencies.desktop-notifications || :
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete dependencies.postinstall-postinstall || :
@@ -41,6 +42,7 @@ npm pkg delete scripts.preinstall || :
 npm pkg delete scripts.install || :
 npm pkg delete scripts.postinstall || :
 
+# Do the same in app/package.json
 pushd app
 npm pkg delete optionalDependencies.desktop-notifications || :
 npm pkg delete dependencies.desktop-notifications || :
@@ -48,12 +50,18 @@ npm pkg delete scripts.prepare || :
 npm pkg delete scripts.preinstall || :
 npm pkg delete scripts.install || :
 npm pkg delete scripts.postinstall || :
+
+# Set compatible Electron version
 npm pkg set devDependencies.electron="^22.0.0"
+
+# Fix "build:prod" script to not call yarn
+npm pkg set scripts.build:prod="npm run compile:prod && cross-env NODE_ENV=production ts-node -P script/tsconfig.json script/build.ts"
 popd
 
-# Remove any yarn-related calls from code
-find . -type f \( -name '*.js' -o -name '*.ts' \) -exec sed -i '/yarn/d' {} \;
+# Remove remaining yarn references in source code
+find . -type f \( -name '*.ts' -o -name '*.js' \) -exec sed -i '/yarn/d' {} \;
 
+# Disable telemetry
 echo "DESKTOP_DISABLE_TELEMETRY=1" > .env.production
 
 %build
