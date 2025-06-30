@@ -12,7 +12,7 @@ Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 # Skip debug info for bundled Node code
 %global debug_package %{nil}
 
-BuildRequires:  nodejs npm git python3 gcc-c++ make chrpath libsecret-devel
+BuildRequires:  nodejs yarn git python3 gcc-c++ make chrpath libsecret-devel
 Requires:       git
 
 %description
@@ -21,7 +21,7 @@ GitHub Desktop Plus is a graphical Git client for managing GitHub repositories e
 %prep
 %autosetup -n %{name}-%{version}
 
-# Initialize dummy git repo (npm postinstall scripts require it)
+# Initialize dummy git repo (build expects one)
 git init
 git config user.email "rpm@localhost"
 git config user.name "RPM Builder"
@@ -31,34 +31,31 @@ git commit -m "Initial commit"
 # Remove native module that breaks build
 rm -rf vendor/desktop-notifications
 
-# Clean desktop-notifications dependencies
-npm pkg delete dependencies.desktop-notifications || :
-npm pkg delete optionalDependencies.desktop-notifications || :
+# Remove all references to desktop-notifications
+yarn remove desktop-notifications || :
 pushd app
-npm pkg delete dependencies.desktop-notifications || :
-npm pkg delete optionalDependencies.desktop-notifications || :
+yarn remove desktop-notifications || :
+popd
+find app -type f -name '*.js' -exec sed -i '/desktop-notifications/d' {} \;
+
+# Ensure Electron version compatible with Fedora Node.js
+pushd app
+yarn add electron@22 --dev
 popd
 
-# Remove postinstall-postinstall to avoid .git error during npm install
-npm pkg delete scripts.postinstall || :
-npm pkg delete dependencies.postinstall-postinstall || :
-rm -rf node_modules/postinstall-postinstall
-
-# Remove require lines referencing desktop-notifications
-find app -type f -name '*.js' -exec sed -i '/desktop-notifications/d' {} \;
+# Create minimal .env.production if needed
+echo "DESKTOP_DISABLE_TELEMETRY=1" > .env.production
 
 %build
 export NODE_OPTIONS="--max_old_space_size=4096"
+export NODE_ENV=production
+export TS_NODE_PROJECT=script/tsconfig.json
 export npm_config_cache=/tmp/.npm
 
-pushd app
-npm pkg set dependencies.electron="^22.0.0"
-npm install --legacy-peer-deps --omit=optional
-npm run build || :
-popd
+yarn install --ignore-optional --frozen-lockfile
+yarn build:prod
 
 %install
-# Install app files
 mkdir -p %{buildroot}%{_datadir}/%{name}
 cp -a app/* %{buildroot}%{_datadir}/%{name}/
 
@@ -68,7 +65,7 @@ if [ -d "%{buildroot}%{_datadir}/%{name}/node_modules/dugite/git/libexec/git-cor
         -type f -exec chrpath --delete '{}' + 2>/dev/null || :
 fi
 
-# Wrapper script to use bundled Electron
+# Launcher script
 mkdir -p %{buildroot}%{_bindir}
 cat > %{buildroot}%{_bindir}/%{name} << 'EOF'
 #!/bin/bash
@@ -89,9 +86,10 @@ Terminal=false
 Categories=Development;RevisionControl;
 EOF
 
-# Icon (fallback to dummy if missing)
+# Icon
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
-cp app/static/linux/logos/128x128.png %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.png || :
+cp app/static/linux/logos/128x128.png %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.png || \
+    convert -size 128x128 xc:gray %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/%{name}.png
 
 %files
 %{_bindir}/%{name}
