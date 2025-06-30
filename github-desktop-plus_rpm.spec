@@ -23,15 +23,18 @@ GitHub Desktop Plus (prebuilt binary). This package simply repackages the RPM fo
 mkdir -p %{buildroot}
 rpm2cpio %{SOURCE0} | cpio -idmv -D %{buildroot}
 
-# Strip invalid RPATHs
+# Strip invalid RPATHs from embedded git binaries
 for bin in %{buildroot}/usr/lib/github-desktop/resources/app/git/libexec/git-core/git-*; do
-    if chrpath -l "$bin" | grep -q '/tmp/build'; then
+    if file "$bin" | grep -q ELF && chrpath -l "$bin" | grep -q '/tmp/build'; then
         chrpath -d "$bin"
     fi
 done
 
 %files
-/usr/*
+%license %{_prefix}/lib/github-desktop/LICENSE
+%{_prefix}/lib/github-desktop/
+%{_datadir}/applications/github-desktop.desktop
+%{_datadir}/icons/hicolor/*/apps/github-desktop.png
 
 %changelog
 %autochangelog
