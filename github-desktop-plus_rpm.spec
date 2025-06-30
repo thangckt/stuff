@@ -31,8 +31,8 @@ for bin in %{buildroot}/usr/lib/github-desktop/resources/app/git/libexec/git-cor
 done
 
 %files
-%license %{_prefix}/lib/github-desktop/LICENSE
-%{_prefix}/lib/github-desktop/
+%{_bindir}/github-desktop
+%{_libdir}/github-desktop/**
 %{_datadir}/applications/github-desktop.desktop
 %{_datadir}/icons/hicolor/*/apps/github-desktop.png
 
