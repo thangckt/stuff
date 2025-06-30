@@ -28,8 +28,8 @@ git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit"
 
-# Install yarn locally using npm (as a dev dependency)
-npm install yarn@1.22.19 --no-save
+# Install yarn locally in project (avoid global and corepack)
+npm install yarn@1.22.19 --legacy-peer-deps --no-save
 
 # Remove native module that breaks build
 rm -rf vendor/desktop-notifications
@@ -56,7 +56,7 @@ export TS_NODE_PROJECT=script/tsconfig.json
 export npm_config_cache=/tmp/.npm
 
 # Use local yarn binary
-./node_modules/.bin/yarn install --ignore-optional --frozen-lockfile
+./node_modules/.bin/yarn install --ignore-optional --frozen-lockfile --legacy-peer-deps
 ./node_modules/.bin/yarn build:prod
 
 %install
