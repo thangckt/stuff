@@ -32,7 +32,7 @@ done
 
 %files
 %{_bindir}/github-desktop
-%{_libdir}/github-desktop/**
+/usr/lib/github-desktop/**
 %{_datadir}/applications/github-desktop.desktop
 %{_datadir}/icons/hicolor/*/apps/github-desktop.png
 
