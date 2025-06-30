@@ -21,34 +21,39 @@ GitHub Desktop Plus is a graphical Git client for managing GitHub repositories e
 %prep
 %autosetup -n %{name}-%{version}
 
-# Required by build scripts
 git init
 git config user.email "rpm@localhost"
 git config user.name "RPM Builder"
 git add .
 git commit -m "init"
 
-# Remove problematic native modules
+# Remove native modules and install/postinstall junk
 rm -rf vendor/desktop-notifications
 rm -rf node_modules/postinstall-postinstall
 rm -rf app/node_modules/desktop-notifications
 
-# Strip from package.json so npm doesn't reinstall them
+# Strip modules and postinstall scripts
 npm pkg delete optionalDependencies.desktop-notifications || :
 npm pkg delete dependencies.desktop-notifications || :
 npm pkg delete dependencies.postinstall-postinstall || :
+npm pkg delete scripts.prepare || :
+npm pkg delete scripts.preinstall || :
+npm pkg delete scripts.install || :
 npm pkg delete scripts.postinstall || :
 
 pushd app
 npm pkg delete optionalDependencies.desktop-notifications || :
 npm pkg delete dependencies.desktop-notifications || :
+npm pkg delete scripts.prepare || :
+npm pkg delete scripts.preinstall || :
+npm pkg delete scripts.install || :
+npm pkg delete scripts.postinstall || :
 npm pkg set devDependencies.electron="^22.0.0"
 popd
 
-# Remove all imports that break the build
-find app -type f \( -name '*.ts' -o -name '*.js' \) -exec sed -i '/desktop-notifications/d' {} \;
+# Remove any yarn-related calls from code
+find . -type f \( -name '*.js' -o -name '*.ts' \) -exec sed -i '/yarn/d' {} \;
 
-# Avoid telemetry
 echo "DESKTOP_DISABLE_TELEMETRY=1" > .env.production
 
 %build
@@ -57,7 +62,6 @@ export NODE_ENV=production
 export TS_NODE_PROJECT=script/tsconfig.json
 export npm_config_cache=/tmp/.npm
 
-# npm only - no yarn at all
 npm install --legacy-peer-deps --omit=optional
 npm run build:prod
 
