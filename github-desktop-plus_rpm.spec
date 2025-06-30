@@ -7,9 +7,7 @@ License:        MIT
 URL:            https://github.com/pol-rivero/github-desktop-plus
 Source0:        %{url}/releases/download/v%{version}/GitHubDesktopPlus-v%{version}-linux-x86_64.rpm
 
-BuildArch:      noarch
 ExclusiveArch:  x86_64
-
 BuildRequires: chrpath
 
 %description
