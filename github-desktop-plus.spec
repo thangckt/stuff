@@ -21,9 +21,6 @@ GitHub Desktop Plus is a graphical Git client for managing GitHub repositories e
 %prep
 %autosetup -n %{name}-%{version}
 
-# Install yarn globally via npm
-npm install -g yarn@1.22.19
-
 # Initialize dummy git repo (build expects one)
 git init
 git config user.email "rpm@localhost"
@@ -31,24 +28,26 @@ git config user.name "RPM Builder"
 git add .
 git commit -m "Initial commit"
 
+# Install yarn locally using npm (as a dev dependency)
+npm install yarn@1.22.19 --no-save
+
 # Remove native module that breaks build
 rm -rf vendor/desktop-notifications
 
 # Remove all references to desktop-notifications
-yarn remove desktop-notifications || :
+./node_modules/.bin/yarn remove desktop-notifications || :
 pushd app
-yarn remove desktop-notifications || :
+../node_modules/.bin/yarn remove desktop-notifications || :
 popd
 find app -type f -name '*.js' -exec sed -i '/desktop-notifications/d' {} \;
 
 # Ensure Electron version compatible with Fedora Node.js
 pushd app
-yarn add electron@22 --dev
+../node_modules/.bin/yarn add electron@22 --dev
 popd
 
 # Create minimal .env.production if needed
 echo "DESKTOP_DISABLE_TELEMETRY=1" > .env.production
-
 
 %build
 export NODE_OPTIONS="--max_old_space_size=4096"
@@ -56,8 +55,9 @@ export NODE_ENV=production
 export TS_NODE_PROJECT=script/tsconfig.json
 export npm_config_cache=/tmp/.npm
 
-yarn install --ignore-optional --frozen-lockfile
-yarn build:prod
+# Use local yarn binary
+./node_modules/.bin/yarn install --ignore-optional --frozen-lockfile
+./node_modules/.bin/yarn build:prod
 
 %install
 mkdir -p %{buildroot}%{_datadir}/%{name}
