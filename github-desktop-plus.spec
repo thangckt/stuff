@@ -1,7 +1,7 @@
 ### This code with the help by Claude and ChatGPT
 
 Name:           github-desktop-plus
-Version:        0.4.21
+Version:        3.5.0
 Release:        1%{?dist}
 Summary:        GitHub Desktop Plus
 
@@ -12,7 +12,7 @@ Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 # Skip debug info for bundled Node code
 %global debug_package %{nil}
 
-BuildRequires:  nodejs yarn git python3 gcc-c++ make chrpath libsecret-devel
+BuildRequires:  nodejs git python3 gcc-c++ make chrpath libsecret-devel
 Requires:       git
 
 %description
@@ -51,6 +51,10 @@ export NODE_OPTIONS="--max_old_space_size=4096"
 export NODE_ENV=production
 export TS_NODE_PROJECT=script/tsconfig.json
 export npm_config_cache=/tmp/.npm
+
+# Enable corepack and install yarn
+corepack enable
+corepack prepare yarn@1.22.19 --activate
 
 yarn install --ignore-optional --frozen-lockfile
 yarn build:prod
