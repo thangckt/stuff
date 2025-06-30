@@ -28,6 +28,9 @@ git config user.name "RPM Builder"
 git add .
 git commit -m "init"
 
+# Patch webpack config to skip highlighter target
+sed -i '/highlighter/d' app/webpack.production.ts
+
 # Remove native modules that break build
 rm -rf vendor/desktop-notifications
 rm -rf node_modules/postinstall-postinstall
