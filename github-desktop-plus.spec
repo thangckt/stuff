@@ -12,7 +12,7 @@ Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 # Skip debug info for bundled Node code
 %global debug_package %{nil}
 
-BuildRequires:  nodejs git python3 gcc-c++ make chrpath libsecret-devel
+BuildRequires: nodejs npm git python3 gcc-c++ make chrpath libsecret-devel
 Requires:       git
 
 %description
@@ -21,9 +21,8 @@ GitHub Desktop Plus is a graphical Git client for managing GitHub repositories e
 %prep
 %autosetup -n %{name}-%{version}
 
-# Enable yarn early via corepack
-corepack enable
-corepack prepare yarn@1.22.19 --activate
+# Install yarn globally via npm
+npm install -g yarn@1.22.19
 
 # Initialize dummy git repo (build expects one)
 git init
@@ -49,6 +48,7 @@ popd
 
 # Create minimal .env.production if needed
 echo "DESKTOP_DISABLE_TELEMETRY=1" > .env.production
+
 
 %build
 export NODE_OPTIONS="--max_old_space_size=4096"
