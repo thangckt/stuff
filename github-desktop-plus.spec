@@ -21,45 +21,47 @@ GitHub Desktop Plus is a graphical Git client for managing GitHub repositories e
 %prep
 %autosetup -n %{name}-%{version}
 
-# Required for build tools like ts-node and webpack to work
+# Required dummy repo
 git init
 git config user.email "rpm@localhost"
 git config user.name "RPM Builder"
 git add .
 git commit -m "init"
 
-# Clean problematic native or unneeded modules
+# Remove native modules that break build
 rm -rf vendor/desktop-notifications
 rm -rf node_modules/postinstall-postinstall
 rm -rf app/node_modules/desktop-notifications
 
-# Remove problematic package.json entries from root
-npm pkg delete optionalDependencies.desktop-notifications || :
-npm pkg delete dependencies.desktop-notifications || :
-npm pkg delete dependencies.postinstall-postinstall || :
-npm pkg delete scripts.prepare || :
-npm pkg delete scripts.preinstall || :
-npm pkg delete scripts.install || :
-npm pkg delete scripts.postinstall || :
+# Remove from root package.json
+sed -i '/"desktop-notifications"/d' package.json
+sed -i '/"postinstall-postinstall"/d' package.json
+sed -i '/"postinstall":/d' package.json
+sed -i '/"prepare":/d' package.json
+sed -i '/"preinstall":/d' package.json
+sed -i '/"install":/d' package.json
 
-# Do the same in app/package.json
+# Remove build:prod references to yarn
+sed -i 's/yarn compile:prod/npm run compile:prod/' package.json
+sed -i 's/yarn/npm run/g' package.json
+
+# Same fix in app/package.json
 pushd app
-npm pkg delete optionalDependencies.desktop-notifications || :
-npm pkg delete dependencies.desktop-notifications || :
-npm pkg delete scripts.prepare || :
-npm pkg delete scripts.preinstall || :
-npm pkg delete scripts.install || :
-npm pkg delete scripts.postinstall || :
+sed -i '/"desktop-notifications"/d' package.json
+sed -i '/"postinstall-postinstall"/d' package.json
+sed -i '/"postinstall":/d' package.json
+sed -i '/"prepare":/d' package.json
+sed -i '/"preinstall":/d' package.json
+sed -i '/"install":/d' package.json
+sed -i 's/yarn compile:prod/npm run compile:prod/' package.json
+sed -i 's/yarn/npm run/g' package.json
 
-# Set compatible Electron version
-npm pkg set devDependencies.electron="^22.0.0"
-
-# Fix "build:prod" script to not call yarn
-npm pkg set scripts.build:prod="npm run compile:prod && cross-env NODE_ENV=production ts-node -P script/tsconfig.json script/build.ts"
+# Set safe electron version
+sed -i 's#"electron":.*#"electron": "^22.0.0",#' package.json
 popd
 
-# Remove remaining yarn references in source code
-find . -type f \( -name '*.ts' -o -name '*.js' \) -exec sed -i '/yarn/d' {} \;
+# Remove all yarn calls in TS/JS files
+find . -type f \( -name '*.js' -o -name '*.ts' \) -exec sed -i '/yarn/d' {} \;
 
 # Disable telemetry
 echo "DESKTOP_DISABLE_TELEMETRY=1" > .env.production
