@@ -1,5 +1,5 @@
 Name:           rustdesk
-Version:        1.4.0
+Version:        Error:
 Release:        1%{?dist}
 Summary:        GitHub Desktop Plus
 
