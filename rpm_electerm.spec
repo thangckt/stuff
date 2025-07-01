@@ -1,5 +1,5 @@
 Name:           electerm
-Version:        Error:
+Version:        1.0
 Release:        1%{?dist}
 Summary:        GitHub Desktop Plus
 
