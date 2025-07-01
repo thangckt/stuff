@@ -9,6 +9,7 @@ function fetch_github_version() {
     local repo_url="$1"
     new_version=$(curl -sL "${repo_url}/releases/latest" | sed -nE 's|.*href="[^"]*/tag/v?([0-9]+(\.[0-9]+)*)".*|\1|p' | head -n1)
     if [[ -z "$new_version" ]]; then
+        echo "0.0"
         echo "Error: Unable to fetch the latest version from $repo_url"
         exit 1
     fi
