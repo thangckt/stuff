@@ -1,10 +1,10 @@
 ### NOTE: schedule-strigger only run on default branch
 name: Download multiple RPMs
 
-on:  # Trigger manually or on a schedule (e.g., weekly)
-  workflow_dispatch: # Manual trigger
-  schedule:
-    - cron: '0 0 * * 0' # Weekly on Sunday at midnight
+# on:  # Trigger manually or on a schedule (e.g., weekly)
+#   workflow_dispatch: # Manual trigger
+#   schedule:
+#     - cron: '0 0 * * 0' # Weekly on Sunday at midnight
 
 jobs:
   update-repo:
