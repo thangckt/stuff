@@ -24,18 +24,21 @@ mkdir -p %{buildroot}
 rpm2cpio %{SOURCE0} | cpio -idmv -D %{buildroot}
 
 # Strip invalid RPATHs from embedded git binaries
-for bin in %{buildroot}/usr/lib/github-desktop/resources/app/git/libexec/git-core/git-*; do
+for bin in %{buildroot}/usr/lib/%{name}/resources/app/git/libexec/git-core/git-*; do
     if file "$bin" | grep -q ELF && chrpath -l "$bin" | grep -q '/tmp/build'; then
         chrpath -d "$bin"
     fi
 done
 
+# See what to put in files
+find %{buildroot}
+
 %files
-%{_bindir}/github-desktop
-/usr/lib/github-desktop/**
-%{_datadir}/applications/github-desktop.desktop
-%{_datadir}/icons/hicolor/*/apps/github-desktop.png
-/usr/share/doc/github-desktop/copyright
+%{_bindir}/%{name}
+/usr/lib/%{name}/**
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/icons/hicolor/*/apps/%{name}.png
+/usr/share/doc/%{name}/copyright
 
 %changelog
 %autochangelog
