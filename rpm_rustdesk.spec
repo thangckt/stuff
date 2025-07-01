@@ -5,7 +5,7 @@ Summary:        GitHub Desktop Plus
 
 License:        GNU General Public License v3.0
 URL:            https://github.com/rustdesk/rustdesk
-Source0:        %{url}/releases/download/%{version}/rustdesk-%{version}-0.x86_64.rpm
+Source0:        %{url}/releases/download/%{version}/%{name}-%{version}-0.x86_64.rpm
 
 ExclusiveArch:  x86_64
 BuildRequires: chrpath

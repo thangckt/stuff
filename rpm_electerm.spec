@@ -1,5 +1,5 @@
 Name:           electerm
-Version:        1.4.0
+Version:        1.100.8
 Release:        1%{?dist}
 Summary:        GitHub Desktop Plus
 
