@@ -9,8 +9,8 @@ function fetch_github_version() {
     local repo_url="$1"
     new_version=$(curl -sL "${repo_url}/releases/latest" | sed -nE 's|.*href="[^"]*/tag/v?([0-9]+(\.[0-9]+)*)".*|\1|p' | head -n1)
     if [[ -z "$new_version" ]]; then
-        echo "Error: Unable to fetch the latest version from $repo_url" >&2
-        return 1
+        echo "Failed to get version for $repo_url" >&2
+        exit 1
     fi
     echo "$new_version"
 }
@@ -34,26 +34,20 @@ function update_spec_version() {
 repo_url="https://github.com/rustdesk/rustdesk"
 spec_files="rpm_rustdesk.spec"
 
-new_version=$(fetch_github_version "$repo_url") || {
-    echo "Failed to get version for $repo_url" && exit 1
-}
+new_version=$(fetch_github_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
 ##### ANCHOR: electerm
-repo_url="httpEs://github.com/electerm/electerm"
+repo_url="https://github.com/electerm/electerm"
 spec_files="rpm_electerm.spec"
 
-new_version=$(fetch_github_version "$repo_url") || {
-    echo "Failed to get version for $repo_url" && exit 1
-}
+new_version=$(fetch_github_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
 ##### ANCHOR: github-desktop
 repo_url="https://github.com/pol-rivero/github-desktop-plus"
 spec_files="rpm_github-desktop-plus.spec"
 
-new_version=$(fetch_github_version "$repo_url") || {
-    echo "Failed to get version for $repo_url" && exit 1
-}
+new_version=$(fetch_github_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 ##### !SECTION
