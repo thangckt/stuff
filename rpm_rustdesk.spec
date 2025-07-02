@@ -35,7 +35,7 @@ find %{buildroot} -type f \( -name '*.so' -o -perm -111 \) | while read -r bin; 
 done
 
 %files
-%{_datadir}/rustdesk/*
+%{_datadir}/rustdesk/
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.svg
 
