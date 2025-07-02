@@ -34,8 +34,13 @@ find %{buildroot} -type f \( -name '*.so' -o -perm -111 \) | while read -r bin; 
     fi
 done
 
+# Symlink .desktop file to applications directory (since it is not in the expected location)
+mkdir -p %{buildroot}%{_datadir}/applications
+cp %{buildroot}%{_datadir}/rustdesk/files/rustdesk.desktop %{buildroot}%{_datadir}/applications/rustdesk.desktop
+
 %files
-%{_datadir}/rustdesk/
+%{_datadir}/rustdesk/**
+%{_datadir}/applications/rustdesk.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.svg
 
