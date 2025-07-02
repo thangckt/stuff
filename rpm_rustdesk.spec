@@ -37,6 +37,7 @@ done
 %files
 %{_datadir}/rustdesk/*
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
+%{_datadir}/icons/hicolor/*/apps/%{name}.svg
 
 %changelog
 %autochangelog
