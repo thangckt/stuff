@@ -24,12 +24,18 @@ RuskDesk (prebuilt binary). This package simply repackages the RPM for distribut
 mkdir -p %{buildroot}
 rpm2cpio %{SOURCE0} | cpio -idmv -D %{buildroot}
 
-# Strip invalid RPATHs from embedded git binaries
-for bin in %{buildroot}/usr/lib/%{name}/resources/app/git/libexec/git-core/git-*; do
-    if file "$bin" | grep -q ELF && chrpath -l "$bin" | grep -q '/tmp/build'; then
-        chrpath -d "$bin"
+# Strip invalid RPATHs from all ELF binaries (shared objects and executables)
+find %{buildroot} -type f \( -name '*.so' -o -perm -111 \) | while read -r bin; do
+    if file "$bin" | grep -q ELF; then
+        if chrpath -l "$bin" 2>/dev/null | grep -q '/workspace/'; then
+            echo "Stripping RPATH from $bin"
+            chrpath -d "$bin"
+        fi
     fi
 done
+
+# (Optional) See files in the buildroot (for debug only — remove this in final version)
+#find %{buildroot}
 
 %post
 alternatives --install %{_bindir}/%{name} %{name} /opt/%{name}/%{name} 100
@@ -38,9 +44,6 @@ alternatives --install %{_bindir}/%{name} %{name} /opt/%{name}/%{name} 100
 if [ -x %{_bindir}/%{name} ] && alternatives --display %{name} &>/dev/null; then
     alternatives --remove %{name} %{_bindir}/%{name}
 fi
-
-# See files in the buildroot (to know what to put in files section)
-find %{buildroot}
 
 %files
 %dir /opt/electerm

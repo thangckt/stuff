@@ -31,6 +31,9 @@ for bin in %{buildroot}/usr/lib/%{name}/resources/app/git/libexec/git-core/git-*
     fi
 done
 
+# (Optional) See files in the buildroot (for debug only — remove this in final version)
+#find %{buildroot}
+
 %post
 alternatives --install %{_bindir}/%{name} %{name} /opt/%{name}/%{name} 100
 
@@ -38,9 +41,6 @@ alternatives --install %{_bindir}/%{name} %{name} /opt/%{name}/%{name} 100
 if [ -x %{_bindir}/%{name} ] && alternatives --display %{name} &>/dev/null; then
     alternatives --remove %{name} %{_bindir}/%{name}
 fi
-
-# See files in the buildroot (to know what to put in files section)
-find %{buildroot}
 
 %files
 %dir /opt/electerm
