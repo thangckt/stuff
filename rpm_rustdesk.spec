@@ -30,7 +30,7 @@ for bin in %{buildroot}/usr/lib/%{name}/resources/app/git/libexec/git-core/git-*
     fi
 done
 
-# See what to put in files
+# To see location of files in the buildroot
 find %{buildroot}
 
 %files

@@ -31,15 +31,14 @@ for bin in %{buildroot}/usr/lib/%{name}/resources/app/git/libexec/git-core/git-*
     fi
 done
 
-# See what to put in files
+# To see location of files in the buildroot
 find %{buildroot}
 
 %files
-%{_bindir}/%{name}
-/usr/lib/%{name}/**
+%license /opt/electerm/LICENSE.electron.txt
+/opt/electerm
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
-/usr/share/doc/%{name}/copyright
 
 %changelog
 %autochangelog
