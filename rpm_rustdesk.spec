@@ -36,7 +36,6 @@ done
 
 %files
 %{_datadir}/rustdesk/*
-%{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 
 %changelog
