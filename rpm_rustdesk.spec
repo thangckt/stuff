@@ -46,11 +46,9 @@ if [ -x %{_bindir}/%{name} ] && alternatives --display %{name} &>/dev/null; then
 fi
 
 %files
-%dir /opt/electerm
-/opt/electerm/*
+%{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
-/usr/lib/.build-id/*
 
 %changelog
 %autochangelog
