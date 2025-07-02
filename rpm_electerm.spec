@@ -35,10 +35,11 @@ done
 find %{buildroot}
 
 %files
-%license /opt/electerm/LICENSE.electron.txt
-/opt/electerm
+%dir /opt/electerm
+/opt/electerm/*
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
+%{_libdir}/.build-id/*
 
 %changelog
 %autochangelog
