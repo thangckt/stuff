@@ -31,7 +31,7 @@ OVITO is a scientific data visualization and analysis software for atomistic, mo
 %cmake_install
 
 # Install .desktop file
-cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << 'EOF'
+cat > %{buildroot}/%{_datadir}/applications/%{name}.desktop << 'EOF'
 [Desktop Entry]
 Name=OVITO
 GenericName=Scientific Visualization Tool

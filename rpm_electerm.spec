@@ -5,7 +5,8 @@ Summary:        GitHub Desktop Plus
 
 License:        GNU General Public License v3.0
 URL:            https://github.com/electerm/electerm
-Source0:        %{url}/releases/download/%{version}/electerm-%{version}-0.x86_64.rpm
+Source0:        %{url}/releases/download/v%{version}/electerm-%{version}-linux-x86_64.rpm
+
 
 ExclusiveArch:  x86_64
 BuildRequires: chrpath
