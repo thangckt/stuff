@@ -34,11 +34,15 @@ find %{buildroot} -type f \( -name '*.so' -o -perm -111 \) | while read -r bin; 
     fi
 done
 
-# Symlink .desktop file to applications directory (since it is not in the expected location)
+# The .desktop file is not in `applications` directory (not found in applications menu)
 mkdir -p %{buildroot}%{_datadir}/applications
 cp %{buildroot}%{_datadir}/rustdesk/files/rustdesk.desktop %{buildroot}%{_datadir}/applications/rustdesk.desktop
 
+# the executable file rustdesk is not in the PATH — like /usr/bin (not in %{_bindir})
+ln -s %{_datadir}/rustdesk/rustdesk %{buildroot}%{_bindir}/rustdesk
+
 %files
+%{_bindir}/rustdesk
 %{_datadir}/rustdesk/**
 %{_datadir}/applications/rustdesk.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
