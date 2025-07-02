@@ -34,11 +34,7 @@ find %{buildroot} -type f \( -name '*.so' -o -perm -111 \) | while read -r bin; 
     fi
 done
 
-# (Optional) See files in the buildroot (for debug only — remove this in final version)
-find %{buildroot}
-
 %files
-%{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 

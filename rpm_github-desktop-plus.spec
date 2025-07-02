@@ -30,9 +30,6 @@ for bin in %{buildroot}/usr/lib/%{name}/resources/app/git/libexec/git-core/git-*
     fi
 done
 
-# See files in the buildroot (to know what to put in files section)
-#find %{buildroot}
-
 %files
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
