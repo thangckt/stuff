@@ -37,14 +37,6 @@ done
 # (Optional) See files in the buildroot (for debug only — remove this in final version)
 find %{buildroot}
 
-%post
-alternatives --install %{_bindir}/%{name} %{name} /opt/%{name}/%{name} 100
-
-%postun
-if [ -x %{_bindir}/%{name} ] && alternatives --display %{name} &>/dev/null; then
-    alternatives --remove %{name} %{_bindir}/%{name}
-fi
-
 %files
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop

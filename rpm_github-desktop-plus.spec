@@ -31,13 +31,13 @@ for bin in %{buildroot}/usr/lib/%{name}/resources/app/git/libexec/git-core/git-*
 done
 
 # See files in the buildroot (to know what to put in files section)
-find %{buildroot}
+#find %{buildroot}
 
 %files
 %{_bindir}/%{name}
-/usr/lib/%{name}/**
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
+/usr/lib/%{name}/**
 /usr/share/doc/%{name}/copyright
 
 %changelog
