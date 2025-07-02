@@ -35,7 +35,7 @@ find %{buildroot} -type f \( -name '*.so' -o -perm -111 \) | while read -r bin; 
 done
 
 # (Optional) See files in the buildroot (for debug only — remove this in final version)
-#find %{buildroot}
+find %{buildroot}
 
 %post
 alternatives --install %{_bindir}/%{name} %{name} /opt/%{name}/%{name} 100
