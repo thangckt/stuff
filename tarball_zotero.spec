@@ -41,7 +41,7 @@ EOF
 chmod +x %{buildroot}%{_bindir}/zotero
 
 # Create desktop file
-cat > %{buildroot}/%{_datadir}/applications/%{name}.desktop << 'EOF'
+cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << 'EOF'
 [Desktop Entry]
 Name=Zotero
 Comment=Zotero Reference Manager
@@ -59,7 +59,7 @@ cp icons/icon128.png %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/zotero.
 %files
 /opt/zotero
 %{_bindir}/zotero
-%{_datadir}/applications/zotero.desktop
+%{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/scalable/apps/zotero.png
 
 %changelog
