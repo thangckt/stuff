@@ -31,6 +31,7 @@ OVITO is a scientific data visualization and analysis software for atomistic, mo
 %cmake_install
 
 # Install .desktop file
+mkdir -p %{buildroot}%{_datadir}/applications
 cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << 'EOF'
 [Desktop Entry]
 Name=OVITO
@@ -53,8 +54,8 @@ rm -f %{buildroot}%{_bindir}/ssh_askpass
 %files
 %{_bindir}/ovito
 %{_datadir}/ovito/
-%{_datadir}/applications/%{name}.desktop
-%{_datadir}/icons/hicolor/scalable/apps/%{name}.png
+%{_datadir}/applications/ovito.desktop
+%{_datadir}/icons/hicolor/scalable/apps/ovito.png
 %{_prefix}/lib/ovito/
 
 %changelog
