@@ -7,6 +7,7 @@ License:        GNU General Public License v3.0
 URL:            https://github.com/rustdesk/rustdesk
 Source0:        %{url}/releases/download/%{version}/%{name}-%{version}-0.x86_64.rpm
 
+
 ExclusiveArch:  x86_64
 BuildRequires: chrpath
 
@@ -30,15 +31,14 @@ for bin in %{buildroot}/usr/lib/%{name}/resources/app/git/libexec/git-core/git-*
     fi
 done
 
-# To see location of files in the buildroot
+# See files in the buildroot (to know what to put in files section)
 find %{buildroot}
 
 %files
-%{_bindir}/%{name}
-/usr/lib/%{name}/**
+%license /opt/rustdesk/LICENSE.electron.txt
+/opt/rustdesk
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
-/usr/share/doc/%{name}/copyright
 
 %changelog
 %autochangelog
