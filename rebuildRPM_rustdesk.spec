@@ -20,7 +20,7 @@ RuskDesk (prebuilt binary). This package simply repackages the RPM for distribut
 # Nothing to do
 
 %build
-# Nothing to build
+# Nothing to do
 
 %install
 mkdir -p %{buildroot}
