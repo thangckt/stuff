@@ -9,7 +9,7 @@ Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
 BuildRequires:  qt5-qtbase-devel qt5-qtwebkit-devel qt5-qtsvg-devel qt5-qtx11extras-devel qt5-qttools-devel qt5-qttools
 BuildRequires:  qt5-qtmultimedia-devel ffmpeg-free-devel hunspell-devel zlib-devel libvorbis-devel libXtst-devel
-BuildRequires:  lzo-devel bzip2-devel libao-devel libtiff-devel gcc-c++ make pkgconfig git
+BuildRequires:  lzo-devel bzip2-devel libao-devel libtiff-devel gcc-c++ make pkgconfig git eb-devel
 Requires:       ffmpeg-free hunspell translate-shell mpg123
 
 %description
@@ -34,8 +34,6 @@ cp -a goldendict-%{version}/. ./
 rm -rf goldendict-%{version}
 
 %build
-grep -r 'window\.cc' .
-# Use Qt5 qmake
 qmake-qt5 goldendict.pro CONFIG+=release
 make -j%{?_smp_build_ncpus}
 
