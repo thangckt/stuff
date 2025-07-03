@@ -23,8 +23,8 @@ Wikipedia, and various offline/online resources.
 
 %build
 # Use Qt5 qmake
-qmake-qt5 CONFIG+=release
-make %{?_smp_mflags}
+qmake-qt5 goldendict.pro CONFIG+=release
+make clean && make -j%{?_smp_build_ncpus}
 
 %install
 mkdir -p %{buildroot}%{_bindir}
