@@ -42,11 +42,10 @@ cp %{buildroot}%{_datadir}/rustdesk/files/rustdesk.desktop %{buildroot}%{_datadi
 
 # the executable file rustdesk is not in the PATH: /usr/bin (not in %{_bindir})
 mkdir -p %{buildroot}%{_bindir}
-ln -s %{_datadir}/rustdesk/rustdesk %{buildroot}%{_bindir}/rustdesk
+ln -s %{buildroot}%{_datadir}/rustdesk/rustdesk %{buildroot}%{_bindir}/rustdesk
 
 # Move the service file to the correct systemd location
-mkdir -p %{buildroot}%{_unitdir}
-cp %{buildroot}%{_datadir}/rustdesk/files/rustdesk.service %{buildroot}%{_unitdir}/rustdesk.service
+cp %{buildroot}%{_datadir}/rustdesk/files/rustdesk.service %{buildroot}%{_libdir}/systemd/system/rustdesk.service
 
 %files
 %{_bindir}/rustdesk
@@ -54,7 +53,7 @@ cp %{buildroot}%{_datadir}/rustdesk/files/rustdesk.service %{buildroot}%{_unitdi
 %{_datadir}/applications/rustdesk.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.svg
-%{_unitdir}/rustdesk.service
+%{_libdir}/systemd/system/rustdesk.service
 
 %changelog
 %autochangelog
