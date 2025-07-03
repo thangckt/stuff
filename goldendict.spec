@@ -7,8 +7,8 @@ License:        GPL-3.0-or-later
 URL:            https://github.com/goldendict/goldendict
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
-BuildRequires:  qt5-qtbase-devel qt5-qtwebkit-devel qt5-qtsvg-devel qt5-qtx11extras-devel qt5-qthelp-devel
-BuildRequires:  qt5-qtmultimedia-devel ffmpeg-free-devel hunspell-devel zlib-devel libvorbis-devel libXtst-devel
+BuildRequires:  qt6-qtbase-devel qt6-qtwebkit-devel qt6-qtsvg-devel qt6-qtx11extras-devel qt6-qthelp-devel
+BuildRequires:  qt6-qtmultimedia-devel ffmpeg-free-devel hunspell-devel zlib-devel libvorbis-devel libXtst-devel
 BuildRequires:  lzo-devel bzip2-devel libao-devel libtiff-devel gcc-c++ make pkgconfig git
 Requires:       ffmpeg-free hunspell translate-shell mpg123
 
@@ -21,8 +21,8 @@ Wikipedia, and various offline/online resources.
 %autosetup -n %{name}-%{version}
 
 %build
-# Use Qt5 qmake
-qmake-qt5 goldendict.pro CONFIG+=release
+# Use qt6 qmake
+qmake-qt6 goldendict.pro CONFIG+=release
 make clean && make -j%{?_smp_build_ncpus}
 
 %install
