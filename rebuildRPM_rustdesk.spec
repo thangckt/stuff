@@ -40,9 +40,9 @@ done
 mkdir -p %{buildroot}%{_datadir}/applications
 cp %{buildroot}%{_datadir}/rustdesk/files/rustdesk.desktop %{buildroot}%{_datadir}/applications/rustdesk.desktop
 
-# the executable file rustdesk is not in the PATH: /usr/bin (not in %{_bindir})
+# the executable file rustdesk is not in the PATH, e.g., /usr/bin (not in %{_bindir})
 mkdir -p %{buildroot}%{_bindir}
-ln -s %{buildroot}%{_datadir}/rustdesk/rustdesk %{buildroot}%{_bindir}/rustdesk
+ln -s %{_datadir}/rustdesk/rustdesk %{buildroot}%{_bindir}/rustdesk
 
 # Move the service file to the correct systemd location
 mkdir -p %{buildroot}/usr/lib/systemd/system
