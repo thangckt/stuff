@@ -28,10 +28,16 @@ git submodule update --init --recursive
 # patch to remove 'help' from the command line options
 sed -i 's/ help//' goldendict.pro
 
+# Move source to expected build directory root
+cd ..
+mv goldendict-%{version}/* .
+mv goldendict-%{version}/.git . || true
+rmdir goldendict-%{version}
+
 %build
 # Use Qt5 qmake
 qmake-qt5 goldendict.pro CONFIG+=release
-make clean && make -j%{?_smp_build_ncpus}
+make -j%{?_smp_build_ncpus}
 
 %install
 mkdir -p %{buildroot}%{_bindir}
