@@ -45,6 +45,7 @@ mkdir -p %{buildroot}%{_bindir}
 ln -s %{buildroot}%{_datadir}/rustdesk/rustdesk %{buildroot}%{_bindir}/rustdesk
 
 # Move the service file to the correct systemd location
+mkdir -p %{buildroot}/usr/lib/systemd/system
 cp %{buildroot}%{_datadir}/rustdesk/files/rustdesk.service %{buildroot}/usr/lib/systemd/system/rustdesk.service
 
 %files
