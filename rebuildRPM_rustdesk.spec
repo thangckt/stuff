@@ -58,7 +58,3 @@ cp %{buildroot}%{_datadir}/rustdesk/files/rustdesk.service %{buildroot}/usr/lib/
 
 %changelog
 %autochangelog
-
-
-
-###ERROR: not show tray icon
