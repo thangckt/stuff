@@ -1,3 +1,5 @@
+### This script just copies the original RPM file to the build directory. Should only be used for testing purposes or simple app.
+
 Name:           rustdesk
 Version:        1.4.0
 Release:        1%{?dist}
