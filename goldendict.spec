@@ -5,7 +5,7 @@ Summary:        Feature-rich dictionary lookup program
 
 License:        GPL-3.0-or-later
 URL:            https://github.com/goldendict/goldendict
-Source0:        goldendict-%{version}.tar.gz
+Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
 BuildRequires:  qt5-qtbase-devel qt5-qtwebkit-devel qt5-qtsvg-devel qt5-qtx11extras-devel qt5-qttools-devel qt5-qttools
 BuildRequires:  qt5-qtmultimedia-devel ffmpeg-free-devel hunspell-devel zlib-devel libvorbis-devel libXtst-devel
@@ -18,7 +18,13 @@ including Babylon, StarDict, Dictd, and others. It provides a modern Qt interfac
 Wikipedia, and various offline/online resources.
 
 %prep
-%autosetup -n goldendict-%{version}
+%autosetup -n
+# Clone the repository with submodules
+git clone --recurse-submodules %{url}.git goldendict-%{version}
+cd goldendict-%{version}
+git tag
+git checkout %{version}
+git submodule update --init --recursive
 
 # patch to remove 'help' from the command line options
 sed -i 's/ help//' goldendict.pro
