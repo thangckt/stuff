@@ -11,9 +11,9 @@ BuildRequires:  cmake ninja-build gcc-c++
 BuildRequires:  qt6-qtbase-devel qt6-qtsvg-devel qt6-qttools-devel
 BuildRequires:  boost-devel libvorbis-devel zlib-devel libzip-devel
 BuildRequires:  hunspell-devel libXtst-devel libX11-devel
-BuildRequires:  ffmpeg-libs-devel libao-devel libsamplerate-devel
+BuildRequires:  libao-devel libsamplerate-devel
 
-Requires:       qt6-qtbase qt6-qtsvg boost hunspell libvorbis translate-shell mpg123
+Requires:       qt6-qtbase qt6-qtsvg boost hunspell libvorbis libavcodec libavformat libavutil translate-shell mpg123
 
 %description
 GoldenDict is a feature-rich dictionary lookup program supporting multiple dictionary formats,
