@@ -30,7 +30,8 @@ sed -i 's/ help//' goldendict.pro
 
 # Move source to expected build directory root
 cd ..
-rsync -a goldendict-%{version}/ ./
+mv goldendict-%{version}/* .
+mv goldendict-%{version}/.git . || true
 rm -rf goldendict-%{version}
 
 %build
