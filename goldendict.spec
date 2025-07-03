@@ -21,8 +21,8 @@ Wikipedia, and various offline/online resources.
 # Clone the repository with submodules
 git clone --recurse-submodules %{url}.git goldendict-%{version}
 cd goldendict-%{version}
-git tag
-git checkout %{version}
+#git tag
+#git checkout %{version}
 git submodule update --init --recursive
 
 # patch to remove 'help' from the command line options
@@ -30,8 +30,7 @@ sed -i 's/ help//' goldendict.pro
 
 # Move source to expected build directory root
 cd ..
-mv goldendict-%{version}/* .
-mv goldendict-%{version}/.git . || true
+cp -a goldendict-%{version}/. ./
 rm -rf goldendict-%{version}
 
 %build
