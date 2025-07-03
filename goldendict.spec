@@ -35,7 +35,7 @@ rm -rf goldendict-%{version}
 
 %build
 # Use Qt5 qmake
-qmake-qt5 goldendict.pro CONFIG+=release
+qmake-qt5 goldendict.pro CONFIG+=Release
 make -j%{?_smp_build_ncpus}
 
 %install
