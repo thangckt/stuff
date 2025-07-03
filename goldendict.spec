@@ -7,13 +7,11 @@ License:        GPL-3.0-or-later
 URL:            https://github.com/goldendict/goldendict
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
-BuildRequires:  cmake ninja-build gcc-c++
-BuildRequires:  qt6-qtbase-devel qt6-qtsvg-devel qt6-qttools-devel
-BuildRequires:  boost-devel libvorbis-devel zlib-devel libzip-devel
-BuildRequires:  hunspell-devel libXtst-devel libX11-devel
-BuildRequires:  libao-devel libsamplerate-devel
+BuildRequires:  qt5-qtbase-devel qt5-qtwebkit-devel qt5-qtsvg-devel qt5-qtx11extras-devel
+BuildRequires:  qt5-qtmultimedia-devel hunspell-devel zlib-devel libvorbis-devel libXtst-devel
+BuildRequires:  lzo-devel bzip2-devel libao-devel libtiff-devel edict gcc-c++ make pkgconfig
 
-Requires:       qt6-qtbase qt6-qtsvg boost hunspell libvorbis libavcodec libavformat libavutil translate-shell mpg123
+Requires:       hunspell translate-shell mpg123
 
 %description
 GoldenDict is a feature-rich dictionary lookup program supporting multiple dictionary formats,
@@ -24,11 +22,17 @@ Wikipedia, and various offline/online resources.
 %autosetup -n %{name}-%{version}
 
 %build
-%cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DUSE_QT6=ON
-%cmake_build
+# Use Qt5 qmake
+qmake-qt5 CONFIG+=release
+make %{?_smp_mflags}
 
 %install
-%cmake_install
+mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_datadir}/applications
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/128x128/apps
+
+# Install binary
+install -m 0755 goldendict %{buildroot}%{_bindir}/goldendict
 
 # Install .desktop file
 mkdir -p %{buildroot}%{_datadir}/applications
@@ -45,13 +49,12 @@ EOF
 
 # Install icon manually (SVG preferred if available)
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/64x64/apps
-cp desktop/goldendict.png %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/goldendict.png
+cp icons/programicon.png %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/goldendict.png
 
 %files
 %{_bindir}/goldendict
 %{_datadir}/applications/goldendict.desktop
 %{_datadir}/icons/hicolor/64x64/apps/goldendict.png
-%license COPYING
 
 %changelog
 %autochangelog
