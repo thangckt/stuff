@@ -5,7 +5,7 @@ Summary:        Feature-rich dictionary lookup program
 
 License:        GPL-3.0-or-later
 URL:            https://github.com/goldendict/goldendict
-Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
+Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
 BuildRequires:  cmake ninja-build gcc-c++
 BuildRequires:  qt6-qtbase-devel qt6-qtsvg-devel qt6-qttools-devel
@@ -13,7 +13,7 @@ BuildRequires:  boost-devel libvorbis-devel zlib-devel libzip-devel
 BuildRequires:  hunspell-devel libXtst-devel libX11-devel
 BuildRequires:  ffmpeg-libs-devel libao-devel libsamplerate-devel
 
-Requires:       qt6-qtbase qt6-qtsvg boost hunspell libvorbis
+Requires:       qt6-qtbase qt6-qtsvg boost hunspell libvorbis translate-shell mpg123
 
 %description
 GoldenDict is a feature-rich dictionary lookup program supporting multiple dictionary formats,
