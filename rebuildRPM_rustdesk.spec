@@ -45,7 +45,7 @@ mkdir -p %{buildroot}%{_bindir}
 ln -s %{buildroot}%{_datadir}/rustdesk/rustdesk %{buildroot}%{_bindir}/rustdesk
 
 # Move the service file to the correct systemd location
-cp %{buildroot}%{_datadir}/rustdesk/files/rustdesk.service %{buildroot}%{_libdir}/systemd/system/rustdesk.service
+cp %{buildroot}%{_datadir}/rustdesk/files/rustdesk.service %{buildroot}/usr/lib/systemd/system/rustdesk.service
 
 %files
 %{_bindir}/rustdesk
@@ -53,7 +53,7 @@ cp %{buildroot}%{_datadir}/rustdesk/files/rustdesk.service %{buildroot}%{_libdir
 %{_datadir}/applications/rustdesk.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_datadir}/icons/hicolor/*/apps/%{name}.svg
-%{_libdir}/systemd/system/rustdesk.service
+/usr/lib/systemd/system/rustdesk.service
 
 %changelog
 %autochangelog
