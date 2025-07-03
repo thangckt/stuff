@@ -11,6 +11,8 @@ Source0:        %{url}/releases/download/%{version}/%{name}-%{version}-0.x86_64.
 ExclusiveArch:  x86_64
 BuildRequires: chrpath
 
+Requires: libappindicator-gtk3 libayatana-appindicator
+
 %description
 RuskDesk (prebuilt binary). This package simply repackages the RPM for distribution via Copr.
 
