@@ -1,5 +1,3 @@
-#!/bin/bash
-
 ### release tarball does not include submodules, so must clone with --recurse-submodules. And spec file does not allow to use git clone, then must use this script to create the tarball.
 
 version="1.5.1"
