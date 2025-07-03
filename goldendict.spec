@@ -10,7 +10,7 @@ Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 BuildRequires:  qt5-qtbase-devel qt5-qtwebkit-devel qt5-qtsvg-devel qt5-qtx11extras-devel qt5-qttools-devel qt5-qttools
 BuildRequires:  qt5-qtmultimedia-devel ffmpeg-free-devel hunspell-devel zlib-devel libvorbis-devel libXtst-devel
 BuildRequires:  lzo-devel bzip2-devel libao-devel libtiff-devel gcc-c++ make pkgconfig git eb-devel
-Requires:       ffmpeg-free hunspell translate-shell mpg123
+Requires:       hunspell translate-shell mpg123
 
 %description
 GoldenDict is a feature-rich dictionary lookup program supporting multiple dictionary formats,
