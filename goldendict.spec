@@ -19,7 +19,7 @@ Wikipedia, and various offline/online resources.
 
 %prep
 # Clone the repository with submodules
-git clone --recurse-submodules %{url}.git goldendict-%{version}
+git clone --recurse-submodules https://github.com/goldendict/goldendict.git goldendict-%{version}
 cd goldendict-%{version}
 #git tag
 #git checkout %{version}
@@ -34,6 +34,7 @@ cp -a goldendict-%{version}/. ./
 rm -rf goldendict-%{version}
 
 %build
+grep -r 'window\.cc' .
 # Use Qt5 qmake
 qmake-qt5 goldendict.pro CONFIG+=release
 make -j%{?_smp_build_ncpus}
