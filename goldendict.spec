@@ -22,11 +22,11 @@ Wikipedia, and various offline/online resources.
 git clone --recurse-submodules https://github.com/goldendict/goldendict.git goldendict-%{version}
 cd goldendict-%{version}
 #git tag
-#git checkout %{version}
+git checkout %{version}
 git submodule update --init --recursive
 
-# patch to remove 'help' from the command line options
-sed -i 's/ help//' goldendict.pro
+# Remove the QT help module line entirely (without touching filenames)
+sed -i '/^QT\s*+=.*help/d' goldendict.pro
 
 # Move source to expected build directory root
 cd ..
