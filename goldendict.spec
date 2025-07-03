@@ -30,9 +30,8 @@ sed -i 's/ help//' goldendict.pro
 
 # Move source to expected build directory root
 cd ..
-mv goldendict-%{version}/* .
-mv goldendict-%{version}/.git . || true
-rmdir goldendict-%{version}
+rsync -a goldendict-%{version}/ ./
+rm -rf goldendict-%{version}
 
 %build
 # Use Qt5 qmake
