@@ -18,7 +18,6 @@ including Babylon, StarDict, Dictd, and others. It provides a modern Qt interfac
 Wikipedia, and various offline/online resources.
 
 %prep
-%autosetup -n
 # Clone the repository with submodules
 git clone --recurse-submodules %{url}.git goldendict-%{version}
 cd goldendict-%{version}
