@@ -53,3 +53,7 @@ ln -s %{_datadir}/rustdesk/rustdesk %{buildroot}%{_bindir}/rustdesk
 
 %changelog
 %autochangelog
+
+
+
+###ERROR: not show tray icon
