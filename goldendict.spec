@@ -7,9 +7,10 @@ License:        GPL-3.0-or-later
 URL:            https://github.com/goldendict/goldendict
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
-BuildRequires:  qt5-qtbase-devel qt5-qtwebkit-devel qt5-qtsvg-devel qt5-qtx11extras-devel qt5-qttools-devel qt5-qttools
-BuildRequires:  qt5-qtmultimedia-devel ffmpeg-free-devel hunspell-devel zlib-devel libvorbis-devel libXtst-devel
-BuildRequires:  lzo-devel bzip2-devel libao-devel libtiff-devel gcc-c++ make pkgconfig git eb-devel
+BuildRequires:  qt5-qtbase-devel qt5-qtwebkit-devel qt5-qtsvg-devel qt5-qtx11extras-devel
+BuildRequires:  qt5-qtmultimedia-devel hunspell-devel zlib-devel libvorbis-devel libXtst-devel
+BuildRequires:  qt5-qttools-devel qt5-qttools python3-sphinxcontrib-qthelp eb-devel ffmpeg-free-devel
+BuildRequires:  lzo-devel bzip2-devel libao-devel libtiff-devel gcc-c++ make pkgconfig git
 Requires:       hunspell translate-shell mpg123
 
 %description
@@ -26,7 +27,7 @@ git checkout %{version}
 git submodule update --init --recursive
 
 # Remove the QT help module line entirely (without touching filenames)
-sed -i '/^QT\s*+=.*help/d' goldendict.pro
+# sed -i '/^QT\s*+=.*help/d' goldendict.pro
 
 # Move source to expected build directory root
 cd ..
