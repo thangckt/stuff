@@ -64,6 +64,8 @@ cp icons/programicon.png %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/golden
 %{_bindir}/goldendict
 %{_datadir}/applications/goldendict.desktop
 %{_datadir}/icons/hicolor/64x64/apps/goldendict.png
+%{_datadir}/goldendict/doc/
+%{_datadir}/goldendict/locale/
 
 %changelog
 %autochangelog
