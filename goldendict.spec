@@ -26,9 +26,6 @@ cd goldendict-%{version}
 git checkout %{version}
 git submodule update --init --recursive
 
-# Remove the QT help module line entirely (without touching filenames)
-# sed -i '/^QT\s*+=.*help/d' goldendict.pro
-
 # Move source to expected build directory root
 cd ..
 cp -a goldendict-%{version}/. ./
