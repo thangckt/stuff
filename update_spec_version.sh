@@ -32,22 +32,33 @@ function update_spec_version() {
 ##### SECTION: From GitHub
 ##### ANCHOR: rustdesk
 repo_url="https://github.com/rustdesk/rustdesk"
-spec_files="rpm_rustdesk.spec"
+spec_files="rebuildRPM_rustdesk.spec"
 
 new_version=$(fetch_github_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
 ##### ANCHOR: electerm
 repo_url="https://github.com/electerm/electerm"
-spec_files="rpm_electerm.spec"
+spec_files="rebuildRPM_electerm.spec"
 
 new_version=$(fetch_github_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
 ##### ANCHOR: github-desktop
 repo_url="https://github.com/pol-rivero/github-desktop-plus"
-spec_files="rpm_github-desktop-plus.spec"
+spec_files="rebuildRPM_github-desktop-plus.spec"
 
 new_version=$(fetch_github_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
+
+##### ANCHOR: goldendict
+repo_url="https://github.com/goldendict/goldendict"
+spec_files="goldendict.spec"
+
+new_version=$(fetch_github_version "$repo_url")
+update_spec_version "$spec_files" "$new_version"
+
+##### ANCHOR: Ovito
+
+##### ANCHOR: Zotero
 ##### !SECTION
