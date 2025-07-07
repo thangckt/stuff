@@ -10,9 +10,9 @@ URL:            https://github.com/rustdesk/rustdesk
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
 
-BuildRequires:  gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang \
-                libxcb-devel libxdo-devel libXfixes-devel pulseaudio-libs-devel \
-                cmake alsa-lib-devel openssl-devel pkgconfig rust cargo
+BuildRequires:  gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang
+BuildRequires:  libxcb-devel libxdo-devel libXfixes-devel pulseaudio-libs-devel
+BuildRequires:  cmake alsa-lib-devel openssl-devel pkgconfig rust cargo
 
 Requires:       hicolor-icon-theme
 
