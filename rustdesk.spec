@@ -14,6 +14,7 @@ BuildRequires: gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang
 BuildRequires: libxcb-devel libxdo-devel libXfixes-devel pulseaudio-libs-devel
 BuildRequires: cmake alsa-lib-devel openssl-devel pkgconfig rust cargo
 BuildRequires: gstreamer1-devel gstreamer1-plugins-base-devel libvpx-devel
+BuildRequires: rust cargo gcc-c++ pkgconfig libvpx-devel
 
 Requires:      hicolor-icon-theme
 
@@ -26,42 +27,37 @@ RuskDesk is a remote desktop software that allows you to access and control comp
 # Clone the repository with submodules
 git clone --recurse-submodules https://github.com/rustdesk/rustdesk.git rustdesk
 cd rustdesk
-
-# Optionally checkout a specific version (commented for now)
-# git checkout %{version}
 git submodule update --init --recursive
 
 # Download libsciter runtime
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 
-# Move project to build root
+# Patch vendored webm-sys
+sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' vendor/webm-sys/build.rs
+sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' vendor/webm-sys/build.rs
+
+# Move to build root
 cd ..
 cp -a rustdesk/. ./
 rm -rf rustdesk
 
 %build
-# Step 1: Set compiler flags
 export CXXFLAGS="%{optflags} -fexceptions -frtti"
 export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
 
-# Step 2: Trigger release build to unpack webm-sys
-cargo build --release || true
+# Configure cargo to use vendor dir
+mkdir .cargo
+cat > .cargo/config <<EOF
+[source.crates-io]
+replace-with = "vendored-sources"
 
-# Step 3: Patch webm-sys build.rs (now under release path)
-WEBM_BUILD_RS=$(find target/release -type f -path '*/webm-sys-*/build.rs' | grep -m1 '')
-if [ -f "$WEBM_BUILD_RS" ]; then
-  echo "⚙️  Patching $WEBM_BUILD_RS to remove -fno-exceptions and -fno-rtti"
-  sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' "$WEBM_BUILD_RS"
-  sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' "$WEBM_BUILD_RS"
-else
-  echo "❌ ERROR: Could not find webm-sys build.rs under release build!"
-  find target -type f -name build.rs | grep webm-sys || true
-  exit 1
-fi
+[source.vendored-sources]
+directory = "vendor"
+EOF
 
-# Step 4: Rebuild now that patch is applied
-cargo build --release
+# Now build with vendored sources
+cargo build --release --frozen
 
 %install
 install -Dm755 target/release/rustdesk %{buildroot}%{_bindir}/rustdesk
