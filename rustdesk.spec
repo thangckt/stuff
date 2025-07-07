@@ -82,6 +82,8 @@ rm -rf rustdesk
 %build
 export CXXFLAGS="%{optflags} -fexceptions -frtti"
 export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
+export PKG_CONFIG_PATH="%{_libdir}/pkgconfig"
+export PKG_CONFIG_ALLOW_CROSS=1
 
 # Build with vendored sources and patched webm-sys
 cargo build --release --offline
