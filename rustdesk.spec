@@ -17,6 +17,8 @@ BuildRequires: gstreamer1-devel gstreamer1-plugins-base-devel
 
 Requires:      hicolor-icon-theme
 
+ExclusiveArch:  x86_64
+
 %description
 RuskDesk is a remote desktop software that allows you to access and control computers remotely.
 
@@ -39,13 +41,15 @@ cp -a rustdesk/. ./
 rm -rf rustdesk
 
 %build
-# Fetch crates (webm-sys etc.)
-cargo fetch
+# Step 1: Set safe flags
+export CXXFLAGS="%{optflags} -fexceptions -frtti"
+export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
 
-# Patch the downloaded webm-sys build script
-WEBM_DIR=$(find target -type d -path '*/webm-sys-*' | grep -m1 '')
-WEBM_BUILD_RS="$WEBM_DIR/build.rs"
+# Step 2: Trigger initial build so that build scripts unpack sources
+cargo check || true
 
+# Step 3: Locate and patch webm-sys build.rs
+WEBM_BUILD_RS=$(find target -type f -path '*/webm-sys-*/build.rs' | grep -m1 '')
 if [ -f "$WEBM_BUILD_RS" ]; then
   echo "⚙️  Patching $WEBM_BUILD_RS to remove -fno-exceptions and -fno-rtti"
   sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' "$WEBM_BUILD_RS"
@@ -56,11 +60,7 @@ else
   exit 1
 fi
 
-# Set safe compiler flags
-export CXXFLAGS="%{optflags} -fexceptions -frtti"
-export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
-
-# Build in release mode
+# Step 4: Final build
 cargo build --release
 
 %install
