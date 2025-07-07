@@ -15,10 +15,9 @@ BuildRequires: libxcb-devel libxdo-devel libXfixes-devel pulseaudio-libs-devel
 BuildRequires: cmake alsa-lib-devel openssl-devel pkgconfig rust cargo
 BuildRequires: gstreamer1-devel gstreamer1-plugins-base-devel libvpx-devel
 BuildRequires: rust cargo gcc-c++ pkgconfig libvpx-devel pam-devel
+BuildRequires: opus-devel
 
-Requires:      hicolor-icon-theme
-
-ExclusiveArch:  x86_64
+ExclusiveArch: x86_64
 
 %description
 RuskDesk is a remote desktop software that allows you to access and control computers remotely.
