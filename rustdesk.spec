@@ -49,8 +49,10 @@ rm -rf rustdesk
 export CXXFLAGS="%{optflags} -fexceptions -frtti"
 export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
 
-# Configure cargo to use vendor dir
-mkdir .cargo
+# Create .cargo directory if it doesn't exist
+mkdir -p .cargo
+
+# Write config to force use of vendor
 cat > .cargo/config <<EOF
 [source.crates-io]
 replace-with = "vendored-sources"
@@ -59,7 +61,7 @@ replace-with = "vendored-sources"
 directory = "vendor"
 EOF
 
-# Now build with vendored sources
+# Build with vendored sources
 cargo build --release --frozen
 
 %install
