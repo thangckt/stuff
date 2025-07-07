@@ -49,10 +49,10 @@ rm -rf rustdesk
 export CXXFLAGS="%{optflags} -fexceptions -frtti"
 export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
 
-# Set this to use system libvpx instead of compiling libwebm
+# 👇 tell webm-sys to use system libvpx (avoid compiling libwebm)
 export WEBM_SYS_USE_PKG_CONFIG=1
 
-# Create .cargo/config if needed
+# create cargo config for offline/vendor use
 mkdir -p .cargo
 cat > .cargo/config <<EOF
 [source.crates-io]
@@ -62,7 +62,10 @@ replace-with = "vendored-sources"
 directory = "vendor"
 EOF
 
-# Build with vendored sources + system libvpx
+# vendor crates if not already done in %prep
+cargo vendor vendor
+
+# build
 cargo build --release --frozen
 
 %install
