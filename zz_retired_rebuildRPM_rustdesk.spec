@@ -1,7 +1,7 @@
 Name:           rustdesk
 Version:        1.4.0
 Release:        1%{?dist}
-Summary:        GitHub Desktop Plus
+Summary:        Remote desktop software
 
 License:        GNU General Public License v3.0
 URL:            https://github.com/rustdesk/rustdesk

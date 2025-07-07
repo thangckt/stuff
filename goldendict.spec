@@ -20,16 +20,16 @@ Wikipedia, and various offline/online resources.
 
 %prep
 # Clone the repository with submodules
-git clone --recurse-submodules https://github.com/goldendict/goldendict.git goldendict-%{version}
-cd goldendict-%{version}
+git clone --recurse-submodules https://github.com/goldendict/goldendict.git goldendict
+cd goldendict
 #git tag
 git checkout %{version}
 git submodule update --init --recursive
 
 # Move source to expected build directory root
 cd ..
-cp -a goldendict-%{version}/. ./
-rm -rf goldendict-%{version}
+cp -a goldendict/. ./
+rm -rf goldendict
 
 %build
 qmake-qt5 goldendict.pro CONFIG+=release
