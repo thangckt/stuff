@@ -24,6 +24,8 @@ RuskDesk is a remote desktop software that allows you to access and control comp
 # Clone the repository with submodules
 git clone --recurse-submodules https://github.com/rustdesk/rustdesk.git rustdesk
 cd rustdesk
+
+# Optionally checkout a specific version (commented for now)
 # git checkout %{version}
 git submodule update --init --recursive
 
@@ -31,24 +33,34 @@ git submodule update --init --recursive
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 
-# Fix -fno-exceptions and -fno-rtti in webm-sys build script
-WEBM_BUILD_RS="vendor/webm-sys/build.rs"
-if [ -f "$WEBM_BUILD_RS" ]; then
-  echo "Patching $WEBM_BUILD_RS to remove -fno-exceptions and -fno-rtti"
-  sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' "$WEBM_BUILD_RS"
-  sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' "$WEBM_BUILD_RS"
-else
-  echo "❌ ERROR: $WEBM_BUILD_RS not found!"
-  exit 1
-fi
-
-# Move source to expected build directory root
+# Move project to build root
 cd ..
 cp -a rustdesk/. ./
 rm -rf rustdesk
 
 %build
+# Fetch crates (webm-sys etc.)
+cargo fetch
+
+# Patch the downloaded webm-sys build script
+WEBM_DIR=$(find target -type d -path '*/webm-sys-*' | grep -m1 '')
+WEBM_BUILD_RS="$WEBM_DIR/build.rs"
+
+if [ -f "$WEBM_BUILD_RS" ]; then
+  echo "⚙️  Patching $WEBM_BUILD_RS to remove -fno-exceptions and -fno-rtti"
+  sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' "$WEBM_BUILD_RS"
+  sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' "$WEBM_BUILD_RS"
+else
+  echo "❌ ERROR: Could not find webm-sys build.rs!"
+  find target -type f -name build.rs | grep webm-sys || true
+  exit 1
+fi
+
+# Set safe compiler flags
+export CXXFLAGS="%{optflags} -fexceptions -frtti"
 export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
+
+# Build in release mode
 cargo build --release
 
 %install
