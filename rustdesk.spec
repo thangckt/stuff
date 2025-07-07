@@ -33,6 +33,9 @@ git submodule update --init --recursive
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 
+# Vendor dependencies locally
+cargo vendor vendor
+
 # Patch vendored webm-sys
 sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' vendor/webm-sys/build.rs
 sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' vendor/webm-sys/build.rs
