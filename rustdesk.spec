@@ -31,11 +31,15 @@ git submodule update --init --recursive
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 
-# Patch: Disable -fno-exceptions in webm-sys build.rs
+# Fix -fno-exceptions and -fno-rtti in webm-sys build script
 WEBM_BUILD_RS="vendor/webm-sys/build.rs"
-if grep -q '\-fno-exceptions' "$WEBM_BUILD_RS"; then
-    echo "Patching $WEBM_BUILD_RS to remove -fno-exceptions"
-    sed -i 's/.*-fno-exceptions.*/\/\/ removed -fno-exceptions for RPM build/' "$WEBM_BUILD_RS"
+if [ -f "$WEBM_BUILD_RS" ]; then
+  echo "Patching $WEBM_BUILD_RS to remove -fno-exceptions and -fno-rtti"
+  sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' "$WEBM_BUILD_RS"
+  sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' "$WEBM_BUILD_RS"
+else
+  echo "❌ ERROR: $WEBM_BUILD_RS not found!"
+  exit 1
 fi
 
 # Move source to expected build directory root
