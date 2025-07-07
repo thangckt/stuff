@@ -32,6 +32,9 @@ git submodule update --init --recursive
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 
+# Dummy build to unpack crates (esp. webm-sys)
+cargo check || true
+
 # Generate .cargo/config before vendoring
 mkdir -p .cargo
 cat > .cargo/config.toml <<EOF
@@ -42,10 +45,10 @@ replace-with = "vendored-sources"
 directory = "vendor"
 EOF
 
-# Vendor dependencies
+# Vendor dependencies now that crates are unpacked
 cargo vendor vendor
 
-# Patch webm-sys build.rs to avoid -fno-rtti / -fno-exceptions
+# Patch webm-sys build.rs after vendoring
 WEBM_RS=vendor/webm-sys/build.rs
 if [ -f "$WEBM_RS" ]; then
   echo "⚙️ Patching $WEBM_RS"
@@ -54,6 +57,7 @@ if [ -f "$WEBM_RS" ]; then
   sed -i 's/^.*let use_pkg_config = .*;/let use_pkg_config = true; \/\/ force system libvpx/' "$WEBM_RS"
 else
   echo "❌ $WEBM_RS not found"
+  find vendor -name build.rs | grep webm-sys || true
   exit 1
 fi
 
@@ -66,7 +70,7 @@ rm -rf rustdesk
 export CXXFLAGS="%{optflags} -fexceptions -frtti"
 export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
 
-# Build with vendored sources, frozen lockfile
+# Build with vendored sources
 cargo build --release --frozen
 
 %install
