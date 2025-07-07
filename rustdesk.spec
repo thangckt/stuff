@@ -45,22 +45,22 @@ rm -rf rustdesk
 export CXXFLAGS="%{optflags} -fexceptions -frtti"
 export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
 
-# Step 2: Trigger a dummy build to extract crates
-cargo check || true
+# Step 2: Trigger release build to unpack webm-sys
+cargo build --release || true
 
-# Step 3: Patch webm-sys to enable building with libvpx
-WEBM_BUILD_RS=$(find target -type f -path '*/webm-sys-*/build.rs' | grep -m1 '')
+# Step 3: Patch webm-sys build.rs (now under release path)
+WEBM_BUILD_RS=$(find target/release -type f -path '*/webm-sys-*/build.rs' | grep -m1 '')
 if [ -f "$WEBM_BUILD_RS" ]; then
   echo "⚙️  Patching $WEBM_BUILD_RS to remove -fno-exceptions and -fno-rtti"
   sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' "$WEBM_BUILD_RS"
   sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' "$WEBM_BUILD_RS"
 else
-  echo "❌ ERROR: Could not find webm-sys build.rs!"
+  echo "❌ ERROR: Could not find webm-sys build.rs under release build!"
   find target -type f -name build.rs | grep webm-sys || true
   exit 1
 fi
 
-# Step 4: Build with release profile
+# Step 4: Rebuild now that patch is applied
 cargo build --release
 
 %install
