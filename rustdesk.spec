@@ -31,6 +31,13 @@ git submodule update --init --recursive
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 
+# Patch: Disable -fno-exceptions in webm-sys build.rs
+WEBM_BUILD_RS="vendor/webm-sys/build.rs"
+if grep -q '\-fno-exceptions' "$WEBM_BUILD_RS"; then
+    echo "Patching $WEBM_BUILD_RS to remove -fno-exceptions"
+    sed -i 's/.*-fno-exceptions.*/\/\/ removed -fno-exceptions for RPM build/' "$WEBM_BUILD_RS"
+fi
+
 # Move source to expected build directory root
 cd ..
 cp -a rustdesk/. ./
