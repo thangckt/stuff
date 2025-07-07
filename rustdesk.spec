@@ -24,23 +24,19 @@ ExclusiveArch:  x86_64
 RuskDesk is a remote desktop software that allows you to access and control computers remotely.
 
 %prep
-# Clone the repository with submodules
 git clone --recurse-submodules https://github.com/rustdesk/rustdesk.git rustdesk
 cd rustdesk
 git submodule update --init --recursive
 
-# Download libsciter runtime
+# Get libsciter
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 
-# Vendor dependencies locally
-cargo vendor vendor
-
-# Patch vendored webm-sys
+# Patch webm-sys to force system libvpx
+sed -i 's/^.*let use_pkg_config = .*;/let use_pkg_config = true; \/\/ forced for system libvpx/' vendor/webm-sys/build.rs
 sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' vendor/webm-sys/build.rs
 sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' vendor/webm-sys/build.rs
 
-# Move to build root
 cd ..
 cp -a rustdesk/. ./
 rm -rf rustdesk
@@ -49,10 +45,7 @@ rm -rf rustdesk
 export CXXFLAGS="%{optflags} -fexceptions -frtti"
 export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
 
-# 👇 tell webm-sys to use system libvpx (avoid compiling libwebm)
-export WEBM_SYS_USE_PKG_CONFIG=1
-
-# create cargo config for offline/vendor use
+# Use vendored crates
 mkdir -p .cargo
 cat > .cargo/config <<EOF
 [source.crates-io]
@@ -62,10 +55,7 @@ replace-with = "vendored-sources"
 directory = "vendor"
 EOF
 
-# vendor crates if not already done in %prep
 cargo vendor vendor
-
-# build
 cargo build --release --frozen
 
 %install
