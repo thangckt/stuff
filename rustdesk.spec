@@ -28,17 +28,11 @@ git clone --recurse-submodules https://github.com/rustdesk/rustdesk.git rustdesk
 cd rustdesk
 git submodule update --init --recursive
 
-# Get libsciter
+# Download libsciter
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 
-# Prevent Git-based webm-sys from being used
-sed -i '/webm-sys/{N;N;d}' Cargo.toml
-
-# Dummy build to extract crates (especially webm-sys)
-cargo check || true
-
-# Setup vendoring
+# Generate .cargo config for vendoring
 mkdir -p .cargo
 cat > .cargo/config.toml <<EOF
 [source.crates-io]
@@ -48,9 +42,10 @@ replace-with = "vendored-sources"
 directory = "vendor"
 EOF
 
+# Vendor dependencies
 cargo vendor vendor
 
-# Patch vendored webm-sys
+# Patch webm-sys in vendor
 WEBM_RS=vendor/webm-sys/build.rs
 if [ -f "$WEBM_RS" ]; then
   echo "⚙️ Patching $WEBM_RS"
@@ -63,14 +58,14 @@ else
   exit 1
 fi
 
-# Force local path override for webm-sys
+# Force local override even for Git-based dependency
 cat >> Cargo.toml <<EOF
 
-[patch.crates-io]
+[patch."https://github.com/rustdesk-org/rust-webm"]
 webm-sys = { path = "vendor/webm-sys" }
 EOF
 
-# Move to build root
+# Move to RPM build root
 cd ..
 cp -a rustdesk/. ./
 rm -rf rustdesk
@@ -79,8 +74,8 @@ rm -rf rustdesk
 export CXXFLAGS="%{optflags} -fexceptions -frtti"
 export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
 
-# Build with frozen lockfile and vendored sources
-cargo build --release --frozen
+# Build with vendored sources and patched webm-sys
+cargo build --release --offline
 
 %install
 install -Dm755 target/release/rustdesk %{buildroot}%{_bindir}/rustdesk
