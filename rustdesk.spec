@@ -58,6 +58,16 @@ else
   exit 1
 fi
 
+# Patch libwebm/mkvparser/mkvparser.cc to include <cstdint>
+MKVPARSER=vendor/webm-sys/libwebm/mkvparser/mkvparser.cc
+if grep -q 'common/webmids.h' "$MKVPARSER"; then
+  echo "🔧 Patching mkvparser.cc to include <cstdint>"
+  sed -i '/common\/webmids\.h/a #include <cstdint>' "$MKVPARSER"
+else
+  echo "❌ Could not patch mkvparser.cc - include line not found"
+  exit 1
+fi
+
 # Force local override even for Git-based dependency
 cat >> Cargo.toml <<EOF
 
