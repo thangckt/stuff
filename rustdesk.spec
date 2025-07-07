@@ -24,28 +24,16 @@ ExclusiveArch:  x86_64
 RuskDesk is a remote desktop software that allows you to access and control computers remotely.
 
 %prep
+# Clone with submodules
 git clone --recurse-submodules https://github.com/rustdesk/rustdesk.git rustdesk
 cd rustdesk
 git submodule update --init --recursive
 
-# Get libsciter
+# Download libsciter
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 
-# Patch webm-sys to force system libvpx
-sed -i 's/^.*let use_pkg_config = .*;/let use_pkg_config = true; \/\/ forced for system libvpx/' vendor/webm-sys/build.rs
-sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' vendor/webm-sys/build.rs
-sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' vendor/webm-sys/build.rs
-
-cd ..
-cp -a rustdesk/. ./
-rm -rf rustdesk
-
-%build
-export CXXFLAGS="%{optflags} -fexceptions -frtti"
-export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
-
-# Use vendored crates
+# Prepare for cargo vendor
 mkdir -p .cargo
 cat > .cargo/config <<EOF
 [source.crates-io]
@@ -55,7 +43,32 @@ replace-with = "vendored-sources"
 directory = "vendor"
 EOF
 
+# Vendor dependencies now so we can patch them
 cargo vendor vendor
+
+# Patch webm-sys build script to use system libvpx
+WEBM_RS=vendor/webm-sys/build.rs
+if [ -f "$WEBM_RS" ]; then
+  echo "⚙️  Patching $WEBM_RS"
+  sed -i 's/^.*let use_pkg_config = .*;/let use_pkg_config = true; \/\/ forced for system libvpx/' "$WEBM_RS"
+  sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' "$WEBM_RS"
+  sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' "$WEBM_RS"
+else
+  echo "❌ ERROR: $WEBM_RS not found!"
+  find vendor -name build.rs | grep webm-sys || true
+  exit 1
+fi
+
+# Move source to RPM build dir
+cd ..
+cp -a rustdesk/. ./
+rm -rf rustdesk
+
+%build
+export CXXFLAGS="%{optflags} -fexceptions -frtti"
+export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
+
+# Use already vendored crates
 cargo build --release --frozen
 
 %install
