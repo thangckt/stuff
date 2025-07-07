@@ -67,6 +67,16 @@ else
   exit 1
 fi
 
+# Patch magnum-opus build.rs to force pkg-config
+MAGNUM_RS=vendor/magnum-opus/build.rs
+if [ -f "$MAGNUM_RS" ]; then
+  echo "⚙️  Patching $MAGNUM_RS to force pkg-config"
+  sed -i 's/^\s*panic!.*VCPKG_ROOT.*/pkg_config::probe_library("opus").unwrap();/' "$MAGNUM_RS"
+else
+  echo "❌ $MAGNUM_RS not found"
+  exit 1
+fi
+
 # Force local override even for Git-based dependency
 cat >> Cargo.toml <<EOF
 
