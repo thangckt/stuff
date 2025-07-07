@@ -14,7 +14,7 @@ BuildRequires: gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang
 BuildRequires: libxcb-devel libxdo-devel libXfixes-devel pulseaudio-libs-devel
 BuildRequires: cmake alsa-lib-devel openssl-devel pkgconfig rust cargo
 BuildRequires: gstreamer1-devel gstreamer1-plugins-base-devel libvpx-devel
-BuildRequires: rust cargo gcc-c++ pkgconfig libvpx-devel
+BuildRequires: rust cargo gcc-c++ pkgconfig libvpx-devel pam-devel
 
 Requires:      hicolor-icon-theme
 
