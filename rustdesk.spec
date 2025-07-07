@@ -24,18 +24,17 @@ ExclusiveArch:  x86_64
 RuskDesk is a remote desktop software that allows you to access and control computers remotely.
 
 %prep
-# Clone with submodules
 git clone --recurse-submodules https://github.com/rustdesk/rustdesk.git rustdesk
 cd rustdesk
 git submodule update --init --recursive
 
-# Download libsciter
+# Get libsciter
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 
-# Prepare for cargo vendor
+# Generate .cargo/config before vendoring
 mkdir -p .cargo
-cat > .cargo/config <<EOF
+cat > .cargo/config.toml <<EOF
 [source.crates-io]
 replace-with = "vendored-sources"
 
@@ -43,23 +42,22 @@ replace-with = "vendored-sources"
 directory = "vendor"
 EOF
 
-# Vendor dependencies now so we can patch them
+# Vendor dependencies
 cargo vendor vendor
 
-# Patch webm-sys build script to use system libvpx
+# Patch webm-sys build.rs to avoid -fno-rtti / -fno-exceptions
 WEBM_RS=vendor/webm-sys/build.rs
 if [ -f "$WEBM_RS" ]; then
-  echo "⚙️  Patching $WEBM_RS"
-  sed -i 's/^.*let use_pkg_config = .*;/let use_pkg_config = true; \/\/ forced for system libvpx/' "$WEBM_RS"
+  echo "⚙️ Patching $WEBM_RS"
   sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' "$WEBM_RS"
   sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' "$WEBM_RS"
+  sed -i 's/^.*let use_pkg_config = .*;/let use_pkg_config = true; \/\/ force system libvpx/' "$WEBM_RS"
 else
-  echo "❌ ERROR: $WEBM_RS not found!"
-  find vendor -name build.rs | grep webm-sys || true
+  echo "❌ $WEBM_RS not found"
   exit 1
 fi
 
-# Move source to RPM build dir
+# Move to RPM root
 cd ..
 cp -a rustdesk/. ./
 rm -rf rustdesk
@@ -68,7 +66,7 @@ rm -rf rustdesk
 export CXXFLAGS="%{optflags} -fexceptions -frtti"
 export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
 
-# Use already vendored crates
+# Build with vendored sources, frozen lockfile
 cargo build --release --frozen
 
 %install
