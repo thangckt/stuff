@@ -13,7 +13,7 @@ Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 BuildRequires: gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang
 BuildRequires: libxcb-devel libxdo-devel libXfixes-devel pulseaudio-libs-devel
 BuildRequires: cmake alsa-lib-devel openssl-devel pkgconfig rust cargo
-BuildRequires: gstreamer1-devel gstreamer1-plugins-base-devel
+BuildRequires: gstreamer1-devel gstreamer1-plugins-base-devel libvpx-devel
 
 Requires:      hicolor-icon-theme
 
@@ -41,14 +41,14 @@ cp -a rustdesk/. ./
 rm -rf rustdesk
 
 %build
-# Step 1: Set safe flags
+# Step 1: Set compiler flags
 export CXXFLAGS="%{optflags} -fexceptions -frtti"
 export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
 
-# Step 2: Trigger initial build so that build scripts unpack sources
+# Step 2: Trigger a dummy build to extract crates
 cargo check || true
 
-# Step 3: Locate and patch webm-sys build.rs
+# Step 3: Patch webm-sys to enable building with libvpx
 WEBM_BUILD_RS=$(find target -type f -path '*/webm-sys-*/build.rs' | grep -m1 '')
 if [ -f "$WEBM_BUILD_RS" ]; then
   echo "⚙️  Patching $WEBM_BUILD_RS to remove -fno-exceptions and -fno-rtti"
@@ -60,7 +60,7 @@ else
   exit 1
 fi
 
-# Step 4: Final build
+# Step 4: Build with release profile
 cargo build --release
 
 %install
