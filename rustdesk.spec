@@ -10,11 +10,12 @@ URL:            https://github.com/rustdesk/rustdesk
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
 
-BuildRequires:  gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang
-BuildRequires:  libxcb-devel libxdo-devel libXfixes-devel pulseaudio-libs-devel
-BuildRequires:  cmake alsa-lib-devel openssl-devel pkgconfig rust cargo
+BuildRequires: gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang
+BuildRequires: libxcb-devel libxdo-devel libXfixes-devel pulseaudio-libs-devel
+BuildRequires: cmake alsa-lib-devel openssl-devel pkgconfig rust cargo
+BuildRequires: gstreamer1-devel gstreamer1-plugins-base-devel
 
-Requires:       hicolor-icon-theme
+Requires:      hicolor-icon-theme
 
 %description
 RuskDesk is a remote desktop software that allows you to access and control computers remotely.
