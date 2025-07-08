@@ -27,26 +27,30 @@ mkdir -p %{buildroot}
 rpm2cpio %{SOURCE0} | cpio -idmv -D %{buildroot}
 
 # Strip invalid RPATHs from all ELF binaries (shared objects and executables)
-find %{buildroot} -type f \( -name '*.so' -o -perm -111 \) | while read -r bin; do
-    if file "$bin" | grep -q ELF; then
-        if chrpath -l "$bin" 2>/dev/null | grep -q '/workspace/'; then
+find %{buildroot} -type f \( -name '*.so' -o -perm -111 \) -exec sh -c '
+    for bin; do
+        if file "$bin" | grep -q ELF && chrpath -l "$bin" 2>/dev/null | grep -q "/workspace/"; then
             echo "Stripping RPATH from $bin"
             chrpath -d "$bin"
         fi
-    fi
-done
+    done
+' sh {} +
+
+# Strip debug symbols to reduce binary size
+find %{buildroot} -type f -name '*.so' -exec strip --strip-unneeded {} +
+find %{buildroot} -type f -perm -111 -exec strip --strip-unneeded {} +
 
 # The .desktop file is not in `applications` directory (not found in applications menu)
 mkdir -p %{buildroot}%{_datadir}/applications
-cp %{buildroot}%{_datadir}/rustdesk/files/rustdesk.desktop %{buildroot}%{_datadir}/applications/rustdesk.desktop
+install -m 644 %{buildroot}%{_datadir}/rustdesk/files/rustdesk.desktop %{buildroot}%{_datadir}/applications/rustdesk.desktop
 
-# the executable file rustdesk is not in the PATH, e.g., /usr/bin (not in %{_bindir})
+# The executable file rustdesk is not in the PATH, e.g., /usr/bin (not in %{_bindir})
 mkdir -p %{buildroot}%{_bindir}
 ln -s %{_datadir}/rustdesk/rustdesk %{buildroot}%{_bindir}/rustdesk
 
 # Move the service file to the correct systemd location
 mkdir -p %{buildroot}/usr/lib/systemd/system
-cp %{buildroot}%{_datadir}/rustdesk/files/rustdesk.service %{buildroot}/usr/lib/systemd/system/rustdesk.service
+install -m 644 %{buildroot}%{_datadir}/rustdesk/files/rustdesk.service %{buildroot}/usr/lib/systemd/system/rustdesk.service
 
 %files
 %{_bindir}/rustdesk
