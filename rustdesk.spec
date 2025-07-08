@@ -63,12 +63,25 @@ else
   exit 1
 fi
 
+# Patch magnum-opus build.rs to use pkg-config
 MAGNUM_RS=vendor/magnum-opus/build.rs
 if [ -f "$MAGNUM_RS" ]; then
+  echo "⚙️  Patching $MAGNUM_RS to use pkg-config"
   sed -i 's/^\s*panic!.*VCPKG_ROOT.*/pkg_config::probe_library("opus").unwrap();/' "$MAGNUM_RS"
 else
   echo "❌ $MAGNUM_RS not found"
   exit 1
+fi
+
+# Ensure pkg-config is a build-dependency
+MAGNUM_TOML=vendor/magnum-opus/Cargo.toml
+if ! grep -q '\[build-dependencies\]' "$MAGNUM_TOML"; then
+  echo "📦 Adding build-dependency on pkg-config to magnum-opus"
+  cat >> "$MAGNUM_TOML" <<EOF
+
+[build-dependencies]
+pkg-config = "0.3"
+EOF
 fi
 
 # Step 3: NOW override the patch sources after vendoring
