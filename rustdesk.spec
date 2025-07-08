@@ -23,12 +23,12 @@ ExclusiveArch: x86_64
 RuskDesk is a remote desktop software that allows you to access and control computers remotely.
 
 %prep
-# Clone the main repo with submodules
+# Clone the RustDesk repo with submodules
 git clone --recurse-submodules https://github.com/rustdesk/rustdesk.git rustdesk
 cd rustdesk
 git submodule update --init --recursive
 
-# Download prebuilt Sciter library
+# Download libsciter
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 
@@ -42,13 +42,14 @@ replace-with = "vendored-sources"
 directory = "vendor"
 EOF
 
-# Step 1: Vendor dependencies BEFORE patching
+# Step 1: Vendor all dependencies (before patching)
 cargo vendor vendor
 
-# --- Patch webm-sys ---
+# Step 2: Patch vendored crates
+
+# --- Patch webm-sys to use system libvpx and avoid forbidden flags
 WEBM_RS=vendor/webm-sys/build.rs
 if [ -f "$WEBM_RS" ]; then
-  echo "⚙️ Patching $WEBM_RS"
   sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' "$WEBM_RS"
   sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' "$WEBM_RS"
   sed -i 's/^.*let use_pkg_config = .*;/let use_pkg_config = true; \/\/ force system libvpx/' "$WEBM_RS"
@@ -57,22 +58,21 @@ else
   exit 1
 fi
 
-# Fix missing #include <cstdint> in webm-sys C++ source
+# --- Fix missing <cstdint> include in mkvparser.cc
 MKVPARSER=vendor/webm-sys/libwebm/mkvparser/mkvparser.cc
 if grep -q 'common/webmids.h' "$MKVPARSER"; then
-  echo "🔧 Patching mkvparser.cc to include <cstdint>"
   sed -i '/common\/webmids\.h/a #include <cstdint>' "$MKVPARSER"
 else
   echo "❌ mkvparser.cc patch failed"
   exit 1
 fi
 
-# --- Patch magnum-opus ---
+# --- Patch magnum-opus to use pkg-config instead of VCPKG
 MAGNUM_RS=vendor/magnum-opus/build.rs
 MAGNUM_TOML=vendor/magnum-opus/Cargo.toml
 
 if [ -f "$MAGNUM_RS" ]; then
-  echo "⚙️  Patching $MAGNUM_RS to use pkg-config"
+  echo "⚙️  Patching $MAGNUM_RS"
   sed -i 's/^\s*panic!.*VCPKG_ROOT.*/pkg_config::probe_library("opus").unwrap();/' "$MAGNUM_RS"
 
   grep -q '^extern crate pkg_config;' "$MAGNUM_RS" || \
@@ -82,23 +82,22 @@ else
   exit 1
 fi
 
-# Inject correct build-dependency for pkg-config
 if [ -f "$MAGNUM_TOML" ]; then
-  echo "📦 Fixing Cargo.toml for pkg-config"
+  echo "📦 Fixing Cargo.toml for magnum-opus"
 
-  # Delete any existing pkg-config entry
-  sed -i '/pkg-config\s*=.*/d' "$MAGNUM_TOML"
+  # Remove broken TOML headers or duplicate entries
+  sed -i '/^\[build-dependencies\.pkg-config\]/,+1d' "$MAGNUM_TOML"
+  sed -i '/pkg-config\s*=\s*".*"/d' "$MAGNUM_TOML"
 
-  # Add under [build-dependencies] or create the section
+  # Add proper [build-dependencies] entry
   if grep -q '^\[build-dependencies\]' "$MAGNUM_TOML"; then
     sed -i '/^\[build-dependencies\]/a pkg-config = "0.3"' "$MAGNUM_TOML"
   else
     echo -e '\n[build-dependencies]\npkg-config = "0.3"' >> "$MAGNUM_TOML"
   fi
 
-  # Ensure dummy feature if rustdesk requests it
-  if grep -q 'linux-pkg-config' Cargo.toml; then
-    echo "🔧 Adding dummy 'linux-pkg-config' feature"
+  # Add dummy feature `linux-pkg-config` to avoid resolver failure
+  if grep -q 'linux-pkg-config' ../Cargo.toml; then
     if ! grep -q '^\[features\]' "$MAGNUM_TOML"; then
       echo -e '\n[features]\nlinux-pkg-config = []' >> "$MAGNUM_TOML"
     elif ! grep -q '^linux-pkg-config' "$MAGNUM_TOML"; then
@@ -110,7 +109,7 @@ else
   exit 1
 fi
 
-# Step 3: Override patch sources AFTER vendoring
+# Step 3: Patch dependencies in Cargo.toml
 cat >> Cargo.toml <<EOF
 
 [patch."https://github.com/rustdesk-org/rust-webm"]
@@ -120,7 +119,7 @@ webm-sys = { path = "vendor/webm-sys" }
 magnum-opus = { path = "vendor/magnum-opus" }
 EOF
 
-# Final step: move out of subdir for RPM root
+# Step 4: Move to top-level RPM build root
 cd ..
 cp -a rustdesk/. ./
 rm -rf rustdesk
