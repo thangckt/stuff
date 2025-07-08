@@ -43,15 +43,15 @@ directory = "vendor"
 EOF
 
 # Step 1: Vendor dependencies (before patching)
-cargo vendor vendor
+cargo vendor vendor || { echo "❌ Failed to vendor dependencies"; exit 1; }
 
 # Step 2: Patch webm-sys to use system libvpx and allow RTTI
 WEBM_RS=vendor/webm-sys/build.rs
 if [ -f "$WEBM_RS" ]; then
   echo "⚙️ Patching $WEBM_RS"
-  sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' "$WEBM_RS"
-  sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' "$WEBM_RS"
-  sed -i 's/^.*let use_pkg_config = .*;/let use_pkg_config = true; \/\/ force system libvpx/' "$WEBM_RS"
+  sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' "$WEBM_RS" || { echo "❌ Failed to patch -fno-exceptions"; exit 1; }
+  sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' "$WEBM_RS" || { echo "❌ Failed to patch -fno-rtti"; exit 1; }
+  sed -i 's/^.*let use_pkg_config = .*;/let use_pkg_config = true; \/\/ force system libvpx/' "$WEBM_RS" || { echo "❌ Failed to force system libvpx"; exit 1; }
 else
   echo "❌ $WEBM_RS not found"
   exit 1
@@ -59,11 +59,16 @@ fi
 
 # Fix missing <cstdint> in mkvparser.cc
 MKVPARSER=vendor/webm-sys/libwebm/mkvparser/mkvparser.cc
-if grep -q 'common/webmids.h' "$MKVPARSER"; then
-  echo "🔧 Patching mkvparser.cc to include <cstdint>"
-  sed -i '/common\/webmids\.h/a #include <cstdint>' "$MKVPARSER"
+if [ -f "$MKVPARSER" ]; then
+  if grep -q 'common/webmids.h' "$MKVPARSER"; then
+    echo "🔧 Patching mkvparser.cc to include <cstdint>"
+    sed -i '/common\/webmids\.h/a #include <cstdint>' "$MKVPARSER" || { echo "❌ Failed to patch mkvparser.cc"; exit 1; }
+  else
+    echo "❌ Could not patch mkvparser.cc - include line not found"
+    exit 1
+  fi
 else
-  echo "❌ Could not patch mkvparser.cc - include line not found"
+  echo "❌ $MKVPARSER not found"
   exit 1
 fi
 
@@ -72,9 +77,9 @@ MAGNUM_RS=vendor/magnum-opus/build.rs
 MAGNUM_TOML=vendor/magnum-opus/Cargo.toml
 
 if [ -f "$MAGNUM_RS" ]; then
-  echo "⚙️  Patching $MAGNUM_RS to use pkg-config"
-  sed -i 's/^\s*panic!.*VCPKG_ROOT.*/pkg_config::probe_library("opus").unwrap();/' "$MAGNUM_RS"
-  grep -q '^extern crate pkg_config;' "$MAGNUM_RS" || sed -i '1i extern crate pkg_config;' "$MAGNUM_RS"
+  echo "⚙️ Patching $MAGNUM_RS to use pkg-config"
+  sed -i 's/^\s*panic!.*VCPKG_ROOT.*/pkg_config::probe_library("opus").unwrap();/' "$MAGNUM_RS" || { echo "❌ Failed to patch $MAGNUM_RS"; exit 1; }
+  grep -q '^extern crate pkg_config;' "$MAGNUM_RS" || sed -i '1i extern crate pkg_config;' "$MAGNUM_RS" || { echo "❌ Failed to add pkg_config crate"; exit 1; }
 else
   echo "❌ $MAGNUM_RS not found"
   exit 1
@@ -82,18 +87,12 @@ fi
 
 # Fix magnum-opus Cargo.toml to declare pkg-config as optional
 if [ -f "$MAGNUM_TOML" ]; then
-  echo "📦 Fixing $MAGNUM_TOML for optional pkg-config feature"
-
-  # Clean up any prior bad definitions
-  sed -i '/^\[build-dependencies\]/,/^\[.*\]/ {/pkg-config/d}' "$MAGNUM_TOML"
-  sed -i '/pkg-config\s*=.*/d' "$MAGNUM_TOML"
-  sed -i '/optional\s*=\s*true/d' "$MAGNUM_TOML"
-
-  # Ensure [dependencies] exists
+  echo "⚙️ Patching $MAGNUM_TOML"
+  sed -i '/^\[build-dependencies\]/,/^\[.*\]/ {/pkg-config/d}' "$MAGNUM_TOML" || { echo "❌ Failed to clean up build-dependencies"; exit 1; }
+  sed -i '/pkg-config\s*=.*/d' "$MAGNUM_TOML" || { echo "❌ Failed to remove pkg-config"; exit 1; }
+  sed -i '/optional\s*=\s*true/d' "$MAGNUM_TOML" || { echo "❌ Failed to remove optional flag"; exit 1; }
   grep -q '^\[dependencies\]' "$MAGNUM_TOML" || echo '[dependencies]' >> "$MAGNUM_TOML"
   grep -q '^pkg-config' "$MAGNUM_TOML" || echo 'pkg-config = { version = "0.3", optional = true }' >> "$MAGNUM_TOML"
-
-  # Ensure [features] and linux-pkg-config exists
   grep -q '^\[features\]' "$MAGNUM_TOML" || echo '[features]' >> "$MAGNUM_TOML"
   grep -q '^linux-pkg-config' "$MAGNUM_TOML" || echo 'linux-pkg-config = ["pkg-config"]' >> "$MAGNUM_TOML"
 else
@@ -142,6 +141,12 @@ fi
 
 %files
 %{_bindir}/rustdesk
+%{_datadir}/applications/rustdesk.desktop
+%{_datadir}/icons/hicolor/*/apps/%{name}.*
+%{_unitdir}/rustdesk.service
+
+%changelog
+%autochangelog
 %{_datadir}/applications/rustdesk.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.*
 %{_unitdir}/rustdesk.service
