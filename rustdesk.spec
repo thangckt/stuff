@@ -23,7 +23,6 @@ ExclusiveArch: x86_64
 RuskDesk is a remote desktop software that allows you to access and control computers remotely.
 
 %prep
-# Clone the main repo with submodules
 git clone --recurse-submodules https://github.com/rustdesk/rustdesk.git rustdesk
 cd rustdesk
 git submodule update --init --recursive
@@ -32,17 +31,7 @@ git submodule update --init --recursive
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 
-# Add patch directives to Cargo.toml for webm-sys and magnum-opus
-cat >> Cargo.toml <<EOF
-
-[patch."https://github.com/rustdesk-org/rust-webm"]
-webm-sys = { path = "vendor/webm-sys" }
-
-[patch."https://github.com/rustdesk-org/magnum-opus"]
-magnum-opus = { path = "vendor/magnum-opus" }
-EOF
-
-# Generate .cargo config for vendoring
+# Set up cargo config for vendoring
 mkdir -p .cargo
 cat > .cargo/config.toml <<EOF
 [source.crates-io]
@@ -52,45 +41,47 @@ replace-with = "vendored-sources"
 directory = "vendor"
 EOF
 
-# Vendor all dependencies including Git ones
+# Step 1: Vendor normally — WITHOUT patch
 cargo vendor vendor
 
-# === Patching starts AFTER vendoring ===
-
-# Patch webm-sys to avoid -fno-rtti/-fno-exceptions and use system libvpx
+# Step 2: Patch the vendored crates
 WEBM_RS=vendor/webm-sys/build.rs
 if [ -f "$WEBM_RS" ]; then
-  echo "⚙️ Patching $WEBM_RS"
   sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' "$WEBM_RS"
   sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' "$WEBM_RS"
   sed -i 's/^.*let use_pkg_config = .*;/let use_pkg_config = true; \/\/ force system libvpx/' "$WEBM_RS"
 else
   echo "❌ $WEBM_RS not found"
-  find vendor -name build.rs | grep webm-sys || true
   exit 1
 fi
 
-# Fix missing <cstdint> in mkvparser.cc
 MKVPARSER=vendor/webm-sys/libwebm/mkvparser/mkvparser.cc
 if grep -q 'common/webmids.h' "$MKVPARSER"; then
-  echo "🔧 Patching mkvparser.cc to include <cstdint>"
   sed -i '/common\/webmids\.h/a #include <cstdint>' "$MKVPARSER"
 else
-  echo "❌ Could not patch mkvparser.cc - include line not found"
+  echo "❌ mkvparser.cc patch failed"
   exit 1
 fi
 
-# Patch magnum-opus to use pkg-config instead of VCPKG/HOMEBREW
 MAGNUM_RS=vendor/magnum-opus/build.rs
 if [ -f "$MAGNUM_RS" ]; then
-  echo "⚙️  Patching $MAGNUM_RS to use pkg-config"
   sed -i 's/^\s*panic!.*VCPKG_ROOT.*/pkg_config::probe_library("opus").unwrap();/' "$MAGNUM_RS"
 else
   echo "❌ $MAGNUM_RS not found"
   exit 1
 fi
 
-# Move source tree to top-level for RPM
+# Step 3: NOW override the patch sources after vendoring
+cat >> Cargo.toml <<EOF
+
+[patch."https://github.com/rustdesk-org/rust-webm"]
+webm-sys = { path = "vendor/webm-sys" }
+
+[patch."https://github.com/rustdesk-org/magnum-opus"]
+magnum-opus = { path = "vendor/magnum-opus" }
+EOF
+
+# Move out of source tree
 cd ..
 cp -a rustdesk/. ./
 rm -rf rustdesk
