@@ -32,6 +32,12 @@ git submodule update --init --recursive
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 
+# Prepare placeholder crates for patching before vendoring
+mkdir -p vendor/webm-sys
+touch vendor/webm-sys/Cargo.toml
+mkdir -p vendor/magnum-opus
+touch vendor/magnum-opus/Cargo.toml
+
 # Force patched versions of webm-sys and magnum-opus
 cat >> Cargo.toml <<EOF
 
@@ -92,6 +98,7 @@ fi
 cd ..
 cp -a rustdesk/. ./
 rm -rf rustdesk
+
 
 %build
 export CXXFLAGS="%{optflags} -fexceptions -frtti"
