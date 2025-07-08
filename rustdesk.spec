@@ -32,7 +32,7 @@ git submodule update --init --recursive
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 
-# Set up cargo config for vendoring
+# Create .cargo config to use vendored sources
 mkdir -p .cargo
 cat > .cargo/config.toml <<EOF
 [source.crates-io]
@@ -45,71 +45,52 @@ EOF
 # Step 1: Vendor all dependencies (before patching)
 cargo vendor vendor
 
-# Step 2: Patch vendored crates
-
-# --- Patch webm-sys to use system libvpx and avoid forbidden flags
+# --- PATCH webm-sys ---
 WEBM_RS=vendor/webm-sys/build.rs
 if [ -f "$WEBM_RS" ]; then
   sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' "$WEBM_RS"
   sed -i 's/build.flag_if_supported("-fno-rtti");/\/\/ removed -fno-rtti/' "$WEBM_RS"
   sed -i 's/^.*let use_pkg_config = .*;/let use_pkg_config = true; \/\/ force system libvpx/' "$WEBM_RS"
-else
-  echo "❌ $WEBM_RS not found"
-  exit 1
 fi
 
-# --- Fix missing <cstdint> include in mkvparser.cc
 MKVPARSER=vendor/webm-sys/libwebm/mkvparser/mkvparser.cc
 if grep -q 'common/webmids.h' "$MKVPARSER"; then
   sed -i '/common\/webmids\.h/a #include <cstdint>' "$MKVPARSER"
-else
-  echo "❌ mkvparser.cc patch failed"
-  exit 1
 fi
 
-# --- Patch magnum-opus to use pkg-config instead of VCPKG
+# --- PATCH magnum-opus ---
 MAGNUM_RS=vendor/magnum-opus/build.rs
 MAGNUM_TOML=vendor/magnum-opus/Cargo.toml
 
+# Fix build.rs to use pkg-config
 if [ -f "$MAGNUM_RS" ]; then
-  echo "⚙️  Patching $MAGNUM_RS"
   sed -i 's/^\s*panic!.*VCPKG_ROOT.*/pkg_config::probe_library("opus").unwrap();/' "$MAGNUM_RS"
-
-  grep -q '^extern crate pkg_config;' "$MAGNUM_RS" || \
+  grep -q 'extern crate pkg_config;' "$MAGNUM_RS" || \
     sed -i '1i extern crate pkg_config;' "$MAGNUM_RS"
-else
-  echo "❌ $MAGNUM_RS not found"
-  exit 1
 fi
 
+# Fix Cargo.toml for magnum-opus
 if [ -f "$MAGNUM_TOML" ]; then
-  echo "📦 Fixing Cargo.toml for magnum-opus"
-
-  # Remove broken TOML headers or duplicate entries
+  # 🔥 Remove any invalid or previously added optional/pkg-config junk
   sed -i '/^\[build-dependencies\.pkg-config\]/,+1d' "$MAGNUM_TOML"
   sed -i '/pkg-config\s*=\s*".*"/d' "$MAGNUM_TOML"
+  sed -i '/optional\s*=\s*true/d' "$MAGNUM_TOML"
 
-  # Add proper [build-dependencies] entry
+  # ✅ Add clean [build-dependencies] section
   if grep -q '^\[build-dependencies\]' "$MAGNUM_TOML"; then
     sed -i '/^\[build-dependencies\]/a pkg-config = "0.3"' "$MAGNUM_TOML"
   else
     echo -e '\n[build-dependencies]\npkg-config = "0.3"' >> "$MAGNUM_TOML"
   fi
 
-  # Add dummy feature `linux-pkg-config` to avoid resolver failure
+  # Dummy feature for compatibility
   if grep -q 'linux-pkg-config' ../Cargo.toml; then
-    if ! grep -q '^\[features\]' "$MAGNUM_TOML"; then
-      echo -e '\n[features]\nlinux-pkg-config = []' >> "$MAGNUM_TOML"
-    elif ! grep -q '^linux-pkg-config' "$MAGNUM_TOML"; then
-      sed -i '/^\[features\]/a linux-pkg-config = []' "$MAGNUM_TOML"
-    fi
+    grep -q '^\[features\]' "$MAGNUM_TOML" || echo -e '\n[features]' >> "$MAGNUM_TOML"
+    grep -q '^linux-pkg-config' "$MAGNUM_TOML" || echo 'linux-pkg-config = []' >> "$MAGNUM_TOML"
   fi
-else
-  echo "❌ $MAGNUM_TOML not found"
-  exit 1
 fi
 
-# Step 3: Patch dependencies in Cargo.toml
+# Step 2: Patch Cargo.toml for path override
 cat >> Cargo.toml <<EOF
 
 [patch."https://github.com/rustdesk-org/rust-webm"]
@@ -119,7 +100,7 @@ webm-sys = { path = "vendor/webm-sys" }
 magnum-opus = { path = "vendor/magnum-opus" }
 EOF
 
-# Step 4: Move to top-level RPM build root
+# Copy source to top level
 cd ..
 cp -a rustdesk/. ./
 rm -rf rustdesk
