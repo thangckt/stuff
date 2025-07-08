@@ -23,6 +23,7 @@ ExclusiveArch: x86_64
 RuskDesk is a remote desktop software that allows you to access and control computers remotely.
 
 %prep
+# Clone the main repo with submodules
 git clone --recurse-submodules https://github.com/rustdesk/rustdesk.git rustdesk
 cd rustdesk
 git submodule update --init --recursive
@@ -30,6 +31,16 @@ git submodule update --init --recursive
 # Download libsciter
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
+
+# Force patched versions of webm-sys and magnum-opus
+cat >> Cargo.toml <<EOF
+
+[patch."https://github.com/rustdesk-org/rust-webm"]
+webm-sys = { path = "vendor/webm-sys" }
+
+[patch."https://github.com/rustdesk-org/magnum-opus"]
+magnum-opus = { path = "vendor/magnum-opus" }
+EOF
 
 # Generate .cargo config for vendoring
 mkdir -p .cargo
@@ -41,10 +52,10 @@ replace-with = "vendored-sources"
 directory = "vendor"
 EOF
 
-# Vendor dependencies
+# Vendor all dependencies (including Git)
 cargo vendor vendor
 
-# Patch webm-sys in vendor
+# Patch webm-sys to avoid -fno-rtti/-fno-exceptions and use system libvpx
 WEBM_RS=vendor/webm-sys/build.rs
 if [ -f "$WEBM_RS" ]; then
   echo "⚙️ Patching $WEBM_RS"
@@ -57,7 +68,7 @@ else
   exit 1
 fi
 
-# Patch libwebm/mkvparser/mkvparser.cc to include <cstdint>
+# Fix missing <cstdint> in mkvparser.cc
 MKVPARSER=vendor/webm-sys/libwebm/mkvparser/mkvparser.cc
 if grep -q 'common/webmids.h' "$MKVPARSER"; then
   echo "🔧 Patching mkvparser.cc to include <cstdint>"
@@ -67,24 +78,17 @@ else
   exit 1
 fi
 
-# Patch magnum-opus build.rs to force pkg-config
+# Patch magnum-opus to use pkg-config instead of VCPKG/HOMEBREW
 MAGNUM_RS=vendor/magnum-opus/build.rs
 if [ -f "$MAGNUM_RS" ]; then
-  echo "⚙️  Patching $MAGNUM_RS to force pkg-config"
+  echo "⚙️  Patching $MAGNUM_RS to use pkg-config"
   sed -i 's/^\s*panic!.*VCPKG_ROOT.*/pkg_config::probe_library("opus").unwrap();/' "$MAGNUM_RS"
 else
   echo "❌ $MAGNUM_RS not found"
   exit 1
 fi
 
-# Force local override even for Git-based dependency
-cat >> Cargo.toml <<EOF
-
-[patch."https://github.com/rustdesk-org/rust-webm"]
-webm-sys = { path = "vendor/webm-sys" }
-EOF
-
-# Move to RPM build root
+# Move to top-level RPM build dir
 cd ..
 cp -a rustdesk/. ./
 rm -rf rustdesk
