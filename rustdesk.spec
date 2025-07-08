@@ -72,8 +72,9 @@ MAGNUM_RS=vendor/magnum-opus/build.rs
 MAGNUM_TOML=vendor/magnum-opus/Cargo.toml
 
 if [ -f "$MAGNUM_RS" ]; then
-  echo "⚙️  Patching $MAGNUM_RS"
+  echo "⚙️  Patching $MAGNUM_RS to use pkg-config"
   sed -i 's/^\s*panic!.*VCPKG_ROOT.*/pkg_config::probe_library("opus").unwrap();/' "$MAGNUM_RS"
+
   grep -q '^extern crate pkg_config;' "$MAGNUM_RS" || \
     sed -i '1i extern crate pkg_config;' "$MAGNUM_RS"
 else
@@ -81,21 +82,28 @@ else
   exit 1
 fi
 
-# Ensure pkg-config is declared as build dependency
+# Inject correct build-dependency for pkg-config
 if [ -f "$MAGNUM_TOML" ]; then
-  echo "📦 Ensuring build-dependency on pkg-config"
-  sed -i '/pkg-config = /d' "$MAGNUM_TOML"
+  echo "📦 Fixing Cargo.toml for pkg-config"
+
+  # Delete any existing pkg-config entry
+  sed -i '/pkg-config\s*=.*/d' "$MAGNUM_TOML"
+
+  # Add under [build-dependencies] or create the section
   if grep -q '^\[build-dependencies\]' "$MAGNUM_TOML"; then
     sed -i '/^\[build-dependencies\]/a pkg-config = "0.3"' "$MAGNUM_TOML"
   else
     echo -e '\n[build-dependencies]\npkg-config = "0.3"' >> "$MAGNUM_TOML"
   fi
 
-  # Declare the dummy feature "linux-pkg-config"
-  if ! grep -q '^\[features\]' "$MAGNUM_TOML"; then
-    echo -e '\n[features]\nlinux-pkg-config = []' >> "$MAGNUM_TOML"
-  elif ! grep -q '^linux-pkg-config' "$MAGNUM_TOML"; then
-    sed -i '/^\[features\]/a linux-pkg-config = []' "$MAGNUM_TOML"
+  # Ensure dummy feature if rustdesk requests it
+  if grep -q 'linux-pkg-config' Cargo.toml; then
+    echo "🔧 Adding dummy 'linux-pkg-config' feature"
+    if ! grep -q '^\[features\]' "$MAGNUM_TOML"; then
+      echo -e '\n[features]\nlinux-pkg-config = []' >> "$MAGNUM_TOML"
+    elif ! grep -q '^linux-pkg-config' "$MAGNUM_TOML"; then
+      sed -i '/^\[features\]/a linux-pkg-config = []' "$MAGNUM_TOML"
+    fi
   fi
 else
   echo "❌ $MAGNUM_TOML not found"
