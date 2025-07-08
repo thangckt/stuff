@@ -45,6 +45,8 @@ EOF
 cargo vendor vendor
 
 # Step 2: Patch the vendored crates
+
+# -- webm-sys
 WEBM_RS=vendor/webm-sys/build.rs
 if [ -f "$WEBM_RS" ]; then
   sed -i 's/build.flag_if_supported("-fno-exceptions");/\/\/ removed -fno-exceptions/' "$WEBM_RS"
@@ -63,25 +65,28 @@ else
   exit 1
 fi
 
-# Patch magnum-opus build.rs to use pkg-config
+# -- magnum-opus
 MAGNUM_RS=vendor/magnum-opus/build.rs
 if [ -f "$MAGNUM_RS" ]; then
   echo "⚙️  Patching $MAGNUM_RS to use pkg-config"
   sed -i 's/^\s*panic!.*VCPKG_ROOT.*/pkg_config::probe_library("opus").unwrap();/' "$MAGNUM_RS"
+  grep -q 'extern crate pkg_config;' "$MAGNUM_RS" || \
+    sed -i '1i extern crate pkg_config;' "$MAGNUM_RS"
 else
   echo "❌ $MAGNUM_RS not found"
   exit 1
 fi
 
-# Ensure pkg-config is a build-dependency
+# Add pkg-config as a build-dependency in magnum-opus
 MAGNUM_TOML=vendor/magnum-opus/Cargo.toml
-if ! grep -q '\[build-dependencies\]' "$MAGNUM_TOML"; then
-  echo "📦 Adding build-dependency on pkg-config to magnum-opus"
-  cat >> "$MAGNUM_TOML" <<EOF
-
-[build-dependencies]
-pkg-config = "0.3"
-EOF
+if [ -f "$MAGNUM_TOML" ]; then
+  grep -q '\[build-dependencies\]' "$MAGNUM_TOML" || \
+    echo '[build-dependencies]' >> "$MAGNUM_TOML"
+  grep -q 'pkg-config' "$MAGNUM_TOML" || \
+    echo 'pkg-config = "0.3"' >> "$MAGNUM_TOML"
+else
+  echo "❌ $MAGNUM_TOML not found"
+  exit 1
 fi
 
 # Step 3: NOW override the patch sources after vendoring
@@ -94,7 +99,7 @@ webm-sys = { path = "vendor/webm-sys" }
 magnum-opus = { path = "vendor/magnum-opus" }
 EOF
 
-# Move out of source tree
+# Move to top-level
 cd ..
 cp -a rustdesk/. ./
 rm -rf rustdesk
