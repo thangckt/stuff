@@ -65,11 +65,15 @@ else
   exit 1
 fi
 
-# -- magnum-opus
+# Patch magnum-opus to use pkg-config instead of VCPKG/HOMEBREW
 MAGNUM_RS=vendor/magnum-opus/build.rs
+MAGNUM_TOML=vendor/magnum-opus/Cargo.toml
+
 if [ -f "$MAGNUM_RS" ]; then
   echo "⚙️  Patching $MAGNUM_RS to use pkg-config"
   sed -i 's/^\s*panic!.*VCPKG_ROOT.*/pkg_config::probe_library("opus").unwrap();/' "$MAGNUM_RS"
+
+  # Ensure pkg_config is imported
   grep -q 'extern crate pkg_config;' "$MAGNUM_RS" || \
     sed -i '1i extern crate pkg_config;' "$MAGNUM_RS"
 else
@@ -77,13 +81,14 @@ else
   exit 1
 fi
 
-# Add pkg-config as a build-dependency in magnum-opus
-MAGNUM_TOML=vendor/magnum-opus/Cargo.toml
 if [ -f "$MAGNUM_TOML" ]; then
-  grep -q '\[build-dependencies\]' "$MAGNUM_TOML" || \
-    echo '[build-dependencies]' >> "$MAGNUM_TOML"
-  grep -q 'pkg-config' "$MAGNUM_TOML" || \
+  echo "📦 Ensuring pkg-config = 0.3 is in build-dependencies"
+  if ! grep -q '\[build-dependencies\]' "$MAGNUM_TOML"; then
+    echo -e '\n[build-dependencies]' >> "$MAGNUM_TOML"
+  fi
+  if ! grep -q '^pkg-config' "$MAGNUM_TOML"; then
     echo 'pkg-config = "0.3"' >> "$MAGNUM_TOML"
+  fi
 else
   echo "❌ $MAGNUM_TOML not found"
   exit 1
@@ -111,7 +116,6 @@ export RUSTFLAGS="-C link-arg=-Wl,-rpath=%{_libdir}"
 export PKG_CONFIG_PATH="%{_libdir}/pkgconfig"
 export PKG_CONFIG_ALLOW_CROSS=1
 
-# Build with vendored sources and patched webm-sys
 cargo build --release --offline
 
 %install
