@@ -32,13 +32,7 @@ git submodule update --init --recursive
 mkdir -p target/debug
 wget -O target/debug/libsciter-gtk.so https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
 
-# Prepare placeholder crates for patching before vendoring
-mkdir -p vendor/webm-sys
-touch vendor/webm-sys/Cargo.toml
-mkdir -p vendor/magnum-opus
-touch vendor/magnum-opus/Cargo.toml
-
-# Force patched versions of webm-sys and magnum-opus
+# Add patch directives to Cargo.toml for webm-sys and magnum-opus
 cat >> Cargo.toml <<EOF
 
 [patch."https://github.com/rustdesk-org/rust-webm"]
@@ -58,8 +52,10 @@ replace-with = "vendored-sources"
 directory = "vendor"
 EOF
 
-# Vendor all dependencies (including Git)
+# Vendor all dependencies including Git ones
 cargo vendor vendor
+
+# === Patching starts AFTER vendoring ===
 
 # Patch webm-sys to avoid -fno-rtti/-fno-exceptions and use system libvpx
 WEBM_RS=vendor/webm-sys/build.rs
@@ -94,7 +90,7 @@ else
   exit 1
 fi
 
-# Move to top-level RPM build dir
+# Move source tree to top-level for RPM
 cd ..
 cp -a rustdesk/. ./
 rm -rf rustdesk
