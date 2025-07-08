@@ -147,9 +147,3 @@ fi
 
 %changelog
 %autochangelog
-%{_datadir}/applications/rustdesk.desktop
-%{_datadir}/icons/hicolor/*/apps/%{name}.*
-%{_unitdir}/rustdesk.service
-
-%changelog
-%autochangelog
