@@ -94,7 +94,8 @@ if [ -f "$MAGNUM_TOML" ]; then
   grep -q '^\[dependencies\]' "$MAGNUM_TOML" || echo '[dependencies]' >> "$MAGNUM_TOML"
   grep -q '^pkg-config' "$MAGNUM_TOML" || echo 'pkg-config = { version = "0.3", optional = true }' >> "$MAGNUM_TOML"
   grep -q '^\[features\]' "$MAGNUM_TOML" || echo '[features]' >> "$MAGNUM_TOML"
-  grep -q '^linux-pkg-config' "$MAGNUM_TOML" || echo 'linux-pkg-config = ["pkg-config"]' >> "$MAGNUM_TOML"
+  sed -i '/^linux-pkg-config/d' "$MAGNUM_TOML" || { echo "❌ Failed to remove invalid linux-pkg-config"; exit 1; }
+  echo 'linux-pkg-config = "pkg-config"' >> "$MAGNUM_TOML"
 else
   echo "❌ $MAGNUM_TOML not found"
   exit 1
