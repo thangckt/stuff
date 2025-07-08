@@ -12,10 +12,10 @@ Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
 BuildRequires: gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang
 BuildRequires: libxcb-devel libxdo-devel libXfixes-devel pulseaudio-libs-devel
-BuildRequires: cmake alsa-lib-devel openssl-devel pkgconfig rust cargo
+BuildRequires: cmake alsa-lib-devel openssl-devel rust cargo
 BuildRequires: gstreamer1-devel gstreamer1-plugins-base-devel libvpx-devel
-BuildRequires: rust cargo gcc-c++ pkgconfig libvpx-devel pam-devel
-BuildRequires: opus-devel libyuv-devel
+BuildRequires: rust cargo gcc-c++ libvpx-devel pam-devel
+BuildRequires: opus-devel libyuv-devel pkgconfig
 
 ExclusiveArch: x86_64
 
@@ -65,29 +65,37 @@ else
   exit 1
 fi
 
-# Patch magnum-opus build.rs to use pkg-config
+# Patch magnum-opus to use system pkg-config for opus
 MAGNUM_RS=vendor/magnum-opus/build.rs
 MAGNUM_TOML=vendor/magnum-opus/Cargo.toml
 
 if [ -f "$MAGNUM_RS" ]; then
-  echo "⚙️  Patching $MAGNUM_RS to use pkg-config"
+  echo "⚙️  Patching $MAGNUM_RS"
 
-  # Replace panic line with pkg_config logic
+  # Replace panic with pkg-config probe
   sed -i 's/^\s*panic!.*VCPKG_ROOT.*/pkg_config::probe_library("opus").unwrap();/' "$MAGNUM_RS"
 
-  # Insert extern crate if missing
-  grep -q 'extern crate pkg_config;' "$MAGNUM_RS" || \
+  # Ensure extern crate line
+  grep -q '^extern crate pkg_config;' "$MAGNUM_RS" || \
     sed -i '1i extern crate pkg_config;' "$MAGNUM_RS"
 else
   echo "❌ $MAGNUM_RS not found"
   exit 1
 fi
 
-# Ensure build-dependency in magnum-opus Cargo.toml
+# Fix Cargo.toml to add pkg-config in build-dependencies
 if [ -f "$MAGNUM_TOML" ]; then
-  echo "📦 Ensuring pkg-config = 0.3 is in [build-dependencies]"
-  grep -q '^\[build-dependencies\]' "$MAGNUM_TOML" || echo '[build-dependencies]' >> "$MAGNUM_TOML"
-  grep -q '^pkg-config' "$MAGNUM_TOML" || echo 'pkg-config = "0.3"' >> "$MAGNUM_TOML"
+  echo "📦 Ensuring build-dependency on pkg-config"
+
+  # Remove any bad/inline [dependencies] entry if needed
+  sed -i '/pkg-config = /d' "$MAGNUM_TOML"
+
+  # Inject cleanly under [build-dependencies]
+  if grep -q '^\[build-dependencies\]' "$MAGNUM_TOML"; then
+    sed -i '/^\[build-dependencies\]/a pkg-config = "0.3"' "$MAGNUM_TOML"
+  else
+    echo -e '\n[build-dependencies]\npkg-config = "0.3"' >> "$MAGNUM_TOML"
+  fi
 else
   echo "❌ $MAGNUM_TOML not found"
   exit 1
