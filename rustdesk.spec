@@ -90,12 +90,25 @@ if [ -f "$MAGNUM_TOML" ]; then
   # Remove any bad/inline [dependencies] entry if needed
   sed -i '/pkg-config = /d' "$MAGNUM_TOML"
 
-  # Inject cleanly under [build-dependencies]
-  if grep -q '^\[build-dependencies\]' "$MAGNUM_TOML"; then
+  # Inject pkg-config in [build-dependencies]
+    if [ -f "$MAGNUM_TOML" ]; then
+    echo "📦 Ensuring build-dependency on pkg-config"
+
+    # Remove any invalid or duplicate pkg-config lines
+    sed -i '/^\[build-dependencies\.pkg-config\]/,/^$/d' "$MAGNUM_TOML"
+    sed -i '/^\s*pkg-config\s*=/d' "$MAGNUM_TOML"
+
+    # Ensure [build-dependencies] exists
+    if ! grep -q '^\[build-dependencies\]' "$MAGNUM_TOML"; then
+        echo -e '\n[build-dependencies]' >> "$MAGNUM_TOML"
+    fi
+
+    # Append the valid entry
     sed -i '/^\[build-dependencies\]/a pkg-config = "0.3"' "$MAGNUM_TOML"
-  else
-    echo -e '\n[build-dependencies]\npkg-config = "0.3"' >> "$MAGNUM_TOML"
-  fi
+    else
+    echo "❌ $MAGNUM_TOML not found"
+    exit 1
+    fi
 else
   echo "❌ $MAGNUM_TOML not found"
   exit 1
