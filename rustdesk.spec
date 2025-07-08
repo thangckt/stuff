@@ -65,15 +65,17 @@ else
   exit 1
 fi
 
-# Patch magnum-opus to use pkg-config instead of VCPKG/HOMEBREW
+# Patch magnum-opus build.rs to use pkg-config
 MAGNUM_RS=vendor/magnum-opus/build.rs
 MAGNUM_TOML=vendor/magnum-opus/Cargo.toml
 
 if [ -f "$MAGNUM_RS" ]; then
   echo "⚙️  Patching $MAGNUM_RS to use pkg-config"
+
+  # Replace panic line with pkg_config logic
   sed -i 's/^\s*panic!.*VCPKG_ROOT.*/pkg_config::probe_library("opus").unwrap();/' "$MAGNUM_RS"
 
-  # Ensure pkg_config is imported
+  # Insert extern crate if missing
   grep -q 'extern crate pkg_config;' "$MAGNUM_RS" || \
     sed -i '1i extern crate pkg_config;' "$MAGNUM_RS"
 else
@@ -81,14 +83,11 @@ else
   exit 1
 fi
 
+# Ensure build-dependency in magnum-opus Cargo.toml
 if [ -f "$MAGNUM_TOML" ]; then
-  echo "📦 Ensuring pkg-config = 0.3 is in build-dependencies"
-  if ! grep -q '\[build-dependencies\]' "$MAGNUM_TOML"; then
-    echo -e '\n[build-dependencies]' >> "$MAGNUM_TOML"
-  fi
-  if ! grep -q '^pkg-config' "$MAGNUM_TOML"; then
-    echo 'pkg-config = "0.3"' >> "$MAGNUM_TOML"
-  fi
+  echo "📦 Ensuring pkg-config = 0.3 is in [build-dependencies]"
+  grep -q '^\[build-dependencies\]' "$MAGNUM_TOML" || echo '[build-dependencies]' >> "$MAGNUM_TOML"
+  grep -q '^pkg-config' "$MAGNUM_TOML" || echo 'pkg-config = "0.3"' >> "$MAGNUM_TOML"
 else
   echo "❌ $MAGNUM_TOML not found"
   exit 1
