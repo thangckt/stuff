@@ -67,8 +67,6 @@ cp icons/programicon.png %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/golden
 mkdir -p %{buildroot}%{_datadir}/goldendict/help
 cp -a help/* %{buildroot}%{_datadir}/goldendict/help/
 
-find %{buildroot}
-
 %files
 %{_bindir}/goldendict
 %{_datadir}/applications/goldendict.desktop

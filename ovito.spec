@@ -48,6 +48,8 @@ EOF
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
 cp %{SOURCE1} %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/ovito.png
 
+find %{buildroot}
+
 # Clean up
 rm -f %{buildroot}%{_bindir}/ssh_askpass
 
