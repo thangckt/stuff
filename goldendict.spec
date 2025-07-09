@@ -64,6 +64,8 @@ EOF
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/64x64/apps
 cp icons/programicon.png %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/goldendict.png
 
+find %{buildroot}
+
 %files
 %{_bindir}/goldendict
 %{_datadir}/applications/goldendict.desktop
