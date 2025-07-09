@@ -8,8 +8,7 @@ URL:            https://github.com/pol-rivero/github-desktop-plus
 Source0:        %{url}/releases/download/v%{version}/GitHubDesktopPlus-v%{version}-linux-x86_64.rpm
 
 ExclusiveArch:  x86_64
-BuildRequires: nodejs npm
-Requires:       git
+BuildRequires:  chrpath
 
 %description
 GitHub Desktop Plus (prebuilt binary). This package simply repackages the RPM for distribution via Copr.
@@ -23,6 +22,13 @@ GitHub Desktop Plus (prebuilt binary). This package simply repackages the RPM fo
 %install
 mkdir -p %{buildroot}
 rpm2cpio %{SOURCE0} | cpio -idmv -D %{buildroot}
+
+# Strip invalid RPATHs from embedded git binaries
+for bin in %{buildroot}/usr/lib/%{name}/resources/app/git/libexec/git-core/git-*; do
+    if file "$bin" | grep -q ELF && chrpath -l "$bin" | grep -q '/tmp/build'; then
+        chrpath -d "$bin"
+    fi
+done
 
 %files
 %{_bindir}/%{name}
