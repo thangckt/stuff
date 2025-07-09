@@ -27,17 +27,20 @@ rpm2cpio %{SOURCE0} | cpio -idmv -D %{buildroot}
 # Remove broken internal git
 rm -rf %{buildroot}/usr/lib/%{name}/resources/app/git
 
-# Extract app.asar and patch dugite
-npm install -g asar
-export PATH=$PATH:$(npm bin -g)
+# Install asar locally in a temp dir
+mkdir -p asar-tools
+npm install --prefix asar-tools asar
+
+# Extract and patch app.asar
+export PATH="$PWD/asar-tools/node_modules/.bin:$PATH"
 cd %{buildroot}/usr/lib/%{name}/resources/
 asar extract app.asar app_unpacked
 
-# Patch resolveGitBinary
+# Patch dugite to use system git
 find app_unpacked -type f -name '*.js' -exec \
     sed -i 's|resolveGitBinary() *{[^}]*}|resolveGitBinary() { return "/usr/bin/git"; }|' {} +
 
-# Repack the modified archive
+# Repack the patched .asar
 rm -f app.asar
 asar pack app_unpacked app.asar
 rm -rf app_unpacked
