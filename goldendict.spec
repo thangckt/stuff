@@ -37,14 +37,11 @@ export CFLAGS="%{optflags} -O2 -march=native -flto"
 export LDFLAGS="-flto"
 
 qmake-qt5 goldendict.pro CONFIG+=release CONFIG+=optimize
-make -j$(nproc)
-make doc
+make -j%{?_smp_build_ncpus}
 
 %install
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datadir}/applications
-mkdir -p %{buildroot}%{_datadir}/icons/hicolor/128x128/apps
-mkdir -p %{buildroot}%{_datadir}/goldendict/doc
 
 # Install binary
 install -m 0755 goldendict %{buildroot}%{_bindir}/goldendict
@@ -66,6 +63,9 @@ EOF
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/64x64/apps
 cp icons/programicon.png %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/goldendict.png
 
+# Install help files
+mkdir -p %{buildroot}%{_datadir}/goldendict/help
+cp -a help/* %{buildroot}%{_datadir}/goldendict/help/
 
 find %{buildroot}
 
@@ -73,7 +73,7 @@ find %{buildroot}
 %{_bindir}/goldendict
 %{_datadir}/applications/goldendict.desktop
 %{_datadir}/icons/hicolor/64x64/apps/goldendict.png
-%{_datadir}/goldendict/doc/
+%{_datadir}/goldendict/help/
 
 %changelog
 %autochangelog
