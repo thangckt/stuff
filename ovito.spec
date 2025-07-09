@@ -24,7 +24,7 @@ OVITO is a scientific data visualization and analysis software for atomistic, mo
 %autosetup -n %{name}-v%{version}
 
 %build
-%cmake -DCMAKE_BUILD_TYPE=Release -DOVITO_BUILD_DOCS=ON -DCMAKE_CXX_FLAGS="-O3"
+%cmake -DCMAKE_BUILD_TYPE=Release -DOVITO_BUILD_DOCS=ON
 %cmake_build -j$(nproc)
 
 %install
