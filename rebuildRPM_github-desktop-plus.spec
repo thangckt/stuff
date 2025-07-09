@@ -23,6 +23,9 @@ GitHub Desktop Plus (prebuilt binary). This package simply repackages the RPM fo
 mkdir -p %{buildroot}
 rpm2cpio %{SOURCE0} | cpio -idmv -D %{buildroot}
 
+# Remove broken internal git, force to use system git
+rm -rf %{buildroot}/usr/lib/%{name}/resources/app/git
+
 # Strip invalid RPATHs from embedded git binaries
 for bin in %{buildroot}/usr/lib/%{name}/resources/app/git/libexec/git-core/git-*; do
     if file "$bin" | grep -q ELF && chrpath -l "$bin" | grep -q '/tmp/build'; then
