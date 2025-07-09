@@ -9,6 +9,7 @@ Source0:        %{url}/releases/download/v%{version}/GitHubDesktopPlus-v%{versio
 
 ExclusiveArch:  x86_64
 BuildRequires: chrpath
+Requires:       git
 
 %description
 GitHub Desktop Plus (prebuilt binary). This package simply repackages the RPM for distribution via Copr.
@@ -25,6 +26,10 @@ rpm2cpio %{SOURCE0} | cpio -idmv -D %{buildroot}
 
 # Remove broken internal git, force to use system git
 rm -rf %{buildroot}/usr/lib/%{name}/resources/app/git
+
+# Patch dugite to use system git binary
+find %{buildroot}/usr/lib/%{name}/resources/app -type f -name '*.js' -exec \
+    sed -i 's|resolveGitBinary() *{[^}]*}|resolveGitBinary() { return "/usr/bin/git"; }|' {} +
 
 # Strip invalid RPATHs from embedded git binaries
 for bin in %{buildroot}/usr/lib/%{name}/resources/app/git/libexec/git-core/git-*; do
