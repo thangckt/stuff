@@ -37,12 +37,14 @@ export CFLAGS="%{optflags} -O2 -march=native -flto"
 export LDFLAGS="-flto"
 
 qmake-qt5 goldendict.pro CONFIG+=release CONFIG+=optimize
-make -j%{?_smp_build_ncpus}
+make -j$(nproc)
 
 %install
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datadir}/applications
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/128x128/apps
+mkdir -p %{buildroot}%{_datadir}/goldendict/doc
+mkdir -p %{buildroot}%{_datadir}/goldendict/locale
 
 # Install binary
 install -m 0755 goldendict %{buildroot}%{_bindir}/goldendict
@@ -63,6 +65,10 @@ EOF
 # Install icon manually (SVG preferred if available)
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/64x64/apps
 cp icons/programicon.png %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/goldendict.png
+
+# Copy documentation & locale files
+cp -a doc/* %{buildroot}/usr/share/goldendict/doc/
+cp -a locale/* %{buildroot}/usr/share/goldendict/locale/
 
 find %{buildroot}
 
