@@ -8,6 +8,7 @@ URL:            https://github.com/pol-rivero/github-desktop-plus
 Source0:        %{url}/releases/download/v%{version}/GitHubDesktopPlus-v%{version}-linux-x86_64.rpm
 
 ExclusiveArch:  x86_64
+BuildRequires: nodejs npm
 Requires:       git
 
 %description
@@ -27,6 +28,8 @@ rpm2cpio %{SOURCE0} | cpio -idmv -D %{buildroot}
 rm -rf %{buildroot}/usr/lib/%{name}/resources/app/git
 
 # Extract app.asar and patch dugite
+npm install -g asar
+export PATH=$PATH:$(npm bin -g)
 cd %{buildroot}/usr/lib/%{name}/resources/
 asar extract app.asar app_unpacked
 
