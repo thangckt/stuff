@@ -38,13 +38,13 @@ export LDFLAGS="-flto"
 
 qmake-qt5 goldendict.pro CONFIG+=release CONFIG+=optimize
 make -j$(nproc)
+make doc
 
 %install
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datadir}/applications
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/128x128/apps
 mkdir -p %{buildroot}%{_datadir}/goldendict/doc
-mkdir -p %{buildroot}%{_datadir}/goldendict/locale
 
 # Install binary
 install -m 0755 goldendict %{buildroot}%{_bindir}/goldendict
@@ -66,9 +66,6 @@ EOF
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/64x64/apps
 cp icons/programicon.png %{buildroot}%{_datadir}/icons/hicolor/64x64/apps/goldendict.png
 
-# Copy documentation & locale files
-cp -a doc/* %{buildroot}/usr/share/goldendict/doc/
-cp -a locale/* %{buildroot}/usr/share/goldendict/locale/
 
 find %{buildroot}
 
@@ -77,7 +74,6 @@ find %{buildroot}
 %{_datadir}/applications/goldendict.desktop
 %{_datadir}/icons/hicolor/64x64/apps/goldendict.png
 %{_datadir}/goldendict/doc/
-%{_datadir}/goldendict/locale/
 
 %changelog
 %autochangelog
