@@ -22,7 +22,6 @@ Wikipedia, and various offline/online resources.
 # Clone the repository with submodules
 git clone --recurse-submodules https://github.com/goldendict/goldendict.git goldendict
 cd goldendict
-#git tag
 git checkout %{version}
 git submodule update --init --recursive
 
@@ -32,7 +31,12 @@ cp -a goldendict/. ./
 rm -rf goldendict
 
 %build
-qmake-qt5 goldendict.pro CONFIG+=release
+# Enable optimization flags for better performance
+export CXXFLAGS="%{optflags} -O2 -march=native -flto"
+export CFLAGS="%{optflags} -O2 -march=native -flto"
+export LDFLAGS="-flto"
+
+qmake-qt5 goldendict.pro CONFIG+=release CONFIG+=optimize
 make -j%{?_smp_build_ncpus}
 
 %install
