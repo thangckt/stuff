@@ -24,6 +24,9 @@ GitHub Desktop Plus (prebuilt binary). This package simply repackages the RPM fo
 mkdir -p %{buildroot}
 rpm2cpio %{SOURCE0} | cpio -idmv -D %{buildroot}
 
+echo "Listing app contents:"
+ls -lR %{buildroot}/usr/lib/github-desktop/resources/
+
 # Remove broken internal git
 rm -rf %{buildroot}/usr/lib/%{name}/resources/app/git
 
