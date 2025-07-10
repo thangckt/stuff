@@ -10,8 +10,6 @@ Source0:        %{url}/releases/download/v%{version}/GitHubDesktopPlus-v%{versio
 ExclusiveArch:  x86_64
 BuildRequires:  chrpath
 
-%global __requires_exclude_from ^(/usr/lib|%{_libdir})/%{name}/.*
-
 %description
 GitHub Desktop Plus (prebuilt binary). This package simply repackages the RPM for distribution via Copr.
 
