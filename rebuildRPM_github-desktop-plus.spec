@@ -10,7 +10,8 @@ Source0:        %{url}/releases/download/v%{version}/GitHubDesktopPlus-v%{versio
 ExclusiveArch:  x86_64
 BuildRequires:  chrpath
 
-%global __requires_exclude_from ^(/usr/lib|%{_libdir})/%{name}/.*
+# Filter out the problematic dependency: `libcurl-gnutls`
+%global __requires_exclude ^libcurl-gnutls\\.so\\.[0-9]+.*$
 
 %description
 GitHub Desktop Plus (prebuilt binary). This package simply repackages the RPM for distribution via Copr.
@@ -32,7 +33,7 @@ for bin in %{buildroot}/usr/lib/%{name}/resources/app/git/libexec/git-core/git-*
     fi
 done
 
-# Patch binaries to use standard libcurl instead of libcurl-gnutls
+# Patch binaries to use standard `libcurl` instead of `libcurl-gnutls`
 find %{buildroot}/usr/lib/%{name} -type f -executable -exec \
     sed -i 's/libcurl-gnutls\.so\.4/libcurl.so.4\x00\x00\x00\x00\x00\x00\x00/g' {} \; 2>/dev/null || true
 
