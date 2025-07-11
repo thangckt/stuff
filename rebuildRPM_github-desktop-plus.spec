@@ -30,6 +30,10 @@ for bin in %{buildroot}/usr/lib/%{name}/resources/app/git/libexec/git-core/git-*
     fi
 done
 
+# Patch binaries to use standard libcurl instead of libcurl-gnutls
+find %{buildroot}/usr/lib/%{name} -type f -executable -exec \
+    sed -i 's/libcurl-gnutls\.so\.4/libcurl.so.4\x00\x00\x00\x00\x00\x00\x00/g' {} \; 2>/dev/null || true
+
 %files
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
