@@ -12,6 +12,7 @@ BuildRequires:  chrpath
 
 # Filter out the problematic dependency: `libcurl-gnutls`
 %global __requires_exclude ^libcurl-gnutls\\.so\\.[0-9]+.*$
+%global __requires_exclude ^libcurl\\.so\\.[0-9]+.*$
 
 %description
 GitHub Desktop Plus (prebuilt binary). This package simply repackages the RPM for distribution via Copr.
