@@ -29,7 +29,9 @@ using the Qt framework which supports online feed synchronization.
 sed -i 's/\r$//' README.md
 
 %build
-%cmake -DQT_MAJOR_VERSION=6
+%cmake -DQT_MAJOR_VERSION=6 \
+       -DLibMPV_LIBRARIES=/usr/lib64/libmpv.so \
+       -DLibMPV_INCLUDE_DIR=/usr/include
 %cmake_build
 
 %install
