@@ -30,8 +30,9 @@ sed -i 's/\r$//' README.md
 
 %build
 %cmake -DQT_MAJOR_VERSION=6 \
+-DLibMPV_INCLUDE_DIR=/usr/include \
        -DLibMPV_LIBRARIES=/usr/lib64/libmpv.so \
-       -DLibMPV_INCLUDE_DIR=/usr/include
+       -DSQLite3_LIBRARY=/usr/lib64/libsqlite3.so
 %cmake_build
 
 %install
