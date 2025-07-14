@@ -13,17 +13,10 @@ Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 
 ExclusiveArch:  %{qt6_qtwebengine_arches}
 
-BuildRequires:  make
-BuildRequires:  gcc-c++
-BuildRequires:  cmake
-BuildRequires:  qt6-qtbase-devel
-BuildRequires:  qt6-qttools-devel
-BuildRequires:  qt6-qtwebengine-devel
-BuildRequires:  qt6-qtwebchannel-devel
-BuildRequires:  qt6-qt5compat-devel
-BuildRequires:  qt6-linguist
-BuildRequires:  libappstream-glib
-BuildRequires:  desktop-file-utils
+BuildRequires:  cmake gcc-c++
+BuildRequires:  qt6-qtbase-devel qt6-qttools-devel qt6-qtwebengine-devel qt6-qtwebchannel-devel
+BuildRequires:  qt6-qt5compat-devel qt6-linguist qt6-qtmultimedia-devel
+BuildRequires:  libappstream-glib desktop-file-utils
 
 Requires:       hicolor-icon-theme
 

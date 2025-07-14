@@ -22,10 +22,10 @@ function update_spec_version() {
     current_version=$(grep -E '^Version:' "$spec_file" | awk '{print $2}')
     # Compare versions using sort -V (version sort)
     if [[ "$new_version" != "$current_version" ]] && [[ "$(printf "%s\n%s" "$current_version" "$new_version" | sort -V | tail -n1)" == "$new_version" ]]; then
-        echo "Updating version: $current_version to $new_version"
+        echo "Updating version $current_version to $new_version, in file $spec_file"
         sed -i "s/^Version:[[:space:]]\+$current_version/Version:        $new_version/" "$spec_file"
     else
-        echo "Current version ($current_version) is up to date."
+        echo "Current version ($current_version) is up to date, in file $spec_file"
     fi
 }
 
