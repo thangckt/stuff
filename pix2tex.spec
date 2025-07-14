@@ -7,13 +7,14 @@ License:        MIT
 URL:            https://github.com/lukas-blecher/LaTeX-OCR
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
-
 BuildArch:      noarch
-BuildRequires:  python3-devel
+
+%global _pyproject_ghost_dist true
+BuildRequires:  python3-devel python3-pip python3-setuptools python3-wheel
 
 Requires:       python3-pyqt6 python3-pyqt6-webengine
 # Requires:       python3 python3-torch python3-transformers
-# Requires:       python3-Pillow python3-opencv python3-matplotlib python3-pyqt6 python3-requests
+# Requires:       python3-Pillow python3-opencv python3-matplotlib python3-requests
 
 %description
 A GUI application that allows users to convert images of math equations into LaTeX using deep learning.
@@ -28,6 +29,9 @@ A GUI application that allows users to convert images of math equations into LaT
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{python3_sitelib}/pix2tex
 install -m 644 pix2tex/gui.py %{buildroot}%{python3_sitelib}/pix2tex/gui.py
+
+# Install pynput using pip into the buildroot
+pip3 install --no-deps --target %{buildroot}%{python3_sitelib} pynput
 
 # Create a launcher script
 cat > %{buildroot}%{_bindir}/pix2tex << 'EOF'
