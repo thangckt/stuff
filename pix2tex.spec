@@ -37,8 +37,8 @@ EOF
 chmod +x %{buildroot}%{_bindir}/pix2tex
 
 # Install icon
-mkdir -p %{buildroot}%{_datadir}/icons/hicolor/512x512/apps/
-install -m 644 pix2tex/resources/logo.png %{buildroot}%{_datadir}/icons/hicolor/512x512/apps/pix2tex.png
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/
+install -m 644 pix2tex/resources/icon.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/pix2tex.svg
 
 # Install .desktop entry
 mkdir -p %{buildroot}%{_datadir}/applications/
@@ -59,7 +59,7 @@ EOF
 %{python3_sitelib}/pix2tex/gui.py
 %{python3_sitelib}/pix2tex/__pycache__/*
 %{_datadir}/applications/pix2tex.desktop
-%{_datadir}/icons/hicolor/512x512/apps/pix2tex.png
+%{_datadir}/icons/hicolor/scalable/apps/pix2tex.svg
 
 %changelog
 %autochangelog
