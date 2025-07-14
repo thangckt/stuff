@@ -9,9 +9,9 @@ Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
 
 BuildArch:      noarch
-BuildRequires:  python3-devel python3-pyqt6
+BuildRequires:  python3-devel
 
-# Requires:       python3-pyqt6 python3-pyqt6-devel
+Requires:       python3-pyqt6 python3-pyqt6-webengine
 # Requires:       python3 python3-torch python3-transformers
 # Requires:       python3-Pillow python3-opencv python3-matplotlib python3-pyqt6 python3-requests
 
