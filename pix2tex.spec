@@ -32,9 +32,25 @@ install -m 644 pix2tex/gui.py %{buildroot}%{python3_sitelib}/pix2tex/gui.py
 # Create a launcher script
 cat > %{buildroot}%{_bindir}/pix2tex << 'EOF'
 #!/bin/bash
-exec python3 -m pix2tex.gui "$@"
+exec /usr/bin/python3.13 -m pix2tex.gui "$@"
 EOF
 chmod +x %{buildroot}%{_bindir}/pix2tex
+
+# Install icon
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/512x512/apps/
+install -m 644 pix2tex/resources/logo.png %{buildroot}%{_datadir}/icons/hicolor/512x512/apps/pix2tex.png
+
+# Install .desktop entry
+mkdir -p %{buildroot}%{_datadir}/applications/
+cat > %{buildroot}%{_datadir}/applications/pix2tex.desktop << 'EOF'
+[Desktop Entry]
+Name=pix2tex
+Exec=pix2tex
+Icon=pix2tex
+Terminal=false
+Type=Application
+Categories=Utility;
+EOF
 
 %files
 %doc
@@ -42,6 +58,8 @@ chmod +x %{buildroot}%{_bindir}/pix2tex
 %{_bindir}/pix2tex
 %{python3_sitelib}/pix2tex/gui.py
 %{python3_sitelib}/pix2tex/__pycache__/*
+%{_datadir}/applications/pix2tex.desktop
+%{_datadir}/icons/hicolor/512x512/apps/pix2tex.png
 
 %changelog
 %autochangelog
