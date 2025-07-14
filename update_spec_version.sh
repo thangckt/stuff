@@ -6,11 +6,11 @@
 ##### ANCHOR: Parameters
 ### Helper functions
 function fetch_gitlab_version() {
-    local repo_url="$1" # e.g. https://gitlab.com/user/project
+    local repo_url="$1"
     local project_path=$(echo "${repo_url#https://gitlab.com/}" | sed 's|/|%2F|g')
-    local api_url="https://gitlab.com/api/v4/projects/${project_path}/releases"
+    local api_url="https://gitlab.com/api/v4/projects/${project_path}/repository/tags"
 
-    new_version=$(curl -sL "$api_url" | sed -nE 's/.*"tag_name":"v?([^"]+)".*/\1/p' | head -n1)
+    new_version=$(curl -sL "$api_url" | grep -o '"name":"[^"]*"' | head -n1 | sed 's/"name":"v\?\([^"]*\)"/\1/')
 
     if [[ -z "$new_version" ]]; then
         echo "Failed to get version for $repo_url" >&2
