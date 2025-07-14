@@ -16,7 +16,7 @@ ExclusiveArch:  %{qt6_qtwebengine_arches}
 BuildRequires:  cmake gcc-c++
 BuildRequires:  qt6-qtbase-devel qt6-qttools-devel qt6-qtwebengine-devel qt6-qtwebchannel-devel
 BuildRequires:  qt6-qt5compat-devel qt6-linguist qt6-qtmultimedia-devel
-BuildRequires:  libappstream-glib desktop-file-utils
+BuildRequires:  libappstream-glib desktop-file-utils mpv-devel
 
 Requires:       hicolor-icon-theme
 
