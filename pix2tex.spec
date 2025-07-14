@@ -36,7 +36,9 @@ pip3 install --no-deps --target %{buildroot}%{python3_sitelib} pynput
 # Create a launcher script
 cat > %{buildroot}%{_bindir}/pix2tex << 'EOF'
 #!/bin/bash
-exec /usr/bin/python3.13 -m pix2tex.gui "$@"
+PYVER=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+export PYTHONPATH=/usr/lib/python${PYVER}/site-packages:$PYTHONPATH
+exec python3 -m pix2tex.gui "$@"
 EOF
 chmod +x %{buildroot}%{_bindir}/pix2tex
 
