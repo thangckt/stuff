@@ -5,6 +5,20 @@
 
 ##### ANCHOR: Parameters
 ### Helper functions
+function fetch_gitlab_version() {
+    local repo_url="$1" # e.g. https://gitlab.com/user/project
+    local project_path=$(echo "${repo_url#https://gitlab.com/}" | sed 's|/|%2F|g')
+    local api_url="https://gitlab.com/api/v4/projects/${project_path}/releases"
+
+    new_version=$(curl -sL "$api_url" | sed -nE 's/.*"tag_name":"v?([^"]+)".*/\1/p' | head -n1)
+
+    if [[ -z "$new_version" ]]; then
+        echo "Failed to get version for $repo_url" >&2
+        exit 1
+    fi
+    echo "$new_version"
+}
+
 function fetch_github_version() {
     local repo_url="$1"
     new_version=$(curl -sL "${repo_url}/releases/latest" | sed -nE 's|.*href="[^"]*/tag/v?([0-9]+(\.[0-9]+)*)".*|\1|p' | head -n1)
@@ -25,7 +39,7 @@ function update_spec_version() {
         echo "Updating version $current_version to $new_version, in file $spec_file"
         sed -i "s/^Version:[[:space:]]\+$current_version/Version:        $new_version/" "$spec_file"
     else
-        echo "Current version ($current_version) is up to date, in file $spec_file"
+        echo "Version ($current_version) is up to date, in file $spec_file"
     fi
 }
 
@@ -66,6 +80,10 @@ new_version=$(fetch_github_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
 ##### ANCHOR: Ovito
+repo_url="https://gitlab.com/stuko/ovito"
+spec_files="ovito.spec"
+new_version=$(fetch_gitlab_version "$repo_url")
+update_spec_version "$spec_files" "$new_version"
 
 ##### ANCHOR: Zotero
 ##### !SECTION

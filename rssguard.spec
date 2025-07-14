@@ -21,8 +21,7 @@ BuildRequires:  libappstream-glib desktop-file-utils mpv-devel sqlite-devel
 Requires:       hicolor-icon-theme
 
 %description
-RSS Guard is simple, light and easy-to-use RSS/ATOM feed aggregator developed
-using the Qt framework which supports online feed synchronization.
+RSS Guard is simple, light and easy-to-use RSS/ATOM feed aggregator developed using the Qt framework which supports online feed synchronization.
 
 %prep
 %autosetup -p1 -n %{name}-%{version}
@@ -33,7 +32,7 @@ sed -i 's/\r$//' README.md
 -DLibMPV_INCLUDE_DIR=/usr/include \
        -DLibMPV_LIBRARIES=/usr/lib64/libmpv.so \
        -DSQLite3_LIBRARY=/usr/lib64/libsqlite3.so
-%cmake_build
+%cmake_build -j%{?_smp_build_ncpus}
 
 %install
 %cmake_install
@@ -45,10 +44,24 @@ appstream-util validate-relax --nonet %{buildroot}/%{_datadir}/metainfo/*.xml
 %files
 %doc README.md
 %license LICENSE.md
+
+# Main app binary
 %{_bindir}/%{name}
+
+# Application desktop integration
 %{_datadir}/applications/io.github.martinrotter.rssguard.desktop
 %{_datadir}/icons/hicolor/*/apps/io.github.martinrotter.rssguard.png
 %{_datadir}/metainfo/io.github.martinrotter.rssguard.metainfo.xml
+
+# Shared library
+%{_libdir}/librssguard.so
+%{_libdir}/rssguard/*.so
+
+# Development headers
+%{_includedir}/librssguard/
+
+# Debug files (if you're packaging debuginfo separately, remove these)
+%exclude /usr/lib/debug/*
 
 %changelog
 %autochangelog
