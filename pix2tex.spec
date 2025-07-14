@@ -11,8 +11,9 @@ Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  python3-devel
 
-# Requires:       python3 python3-torch python3-transformers python3-PyQt5
-# Requires:       python3-Pillow python3-opencv python3-matplotlib python3-pyqt5 python3-requests
+Requires:       python3-PyQt6
+Requires:       python3 python3-torch python3-transformers
+Requires:       python3-Pillow python3-opencv python3-matplotlib python3-pyqt6 python3-requests
 
 %description
 A GUI application that allows users to convert images of math equations into LaTeX using deep learning.
