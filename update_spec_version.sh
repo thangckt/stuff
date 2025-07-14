@@ -58,6 +58,13 @@ spec_files="goldendict.spec"
 new_version=$(fetch_github_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
+##### ANCHOR: rssguard
+repo_url="https://github.com/martinrotter/rssguard"
+spec_files="rssguard.spec"
+
+new_version=$(fetch_github_version "$repo_url")
+update_spec_version "$spec_files" "$new_version"
+
 ##### ANCHOR: Ovito
 
 ##### ANCHOR: Zotero
