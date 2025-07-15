@@ -58,6 +58,9 @@ EOF
 %license LICENSE
 %doc README.md
 %{_bindir}/pix2tex
+%{_bindir}/latexocr
+%{_bindir}/pix2tex_cli
+%{_bindir}/pix2tex_gui
 %{_datadir}/applications/pix2tex.desktop
 %{_datadir}/icons/hicolor/scalable/apps/pix2tex.svg
 
