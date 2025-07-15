@@ -24,7 +24,7 @@ Code at the speed of thought — Zed is a high-performance, multiplayer code edi
 
 %prep
 %autosetup -n zed-%{version}
-%cargo_prep
+%cargo_prep_online
 
 # Set up desktop integration
 export APP_ID=dev.zed.Zed
