@@ -12,6 +12,7 @@ Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 %global _python_disable_dependency_generator 1
 %undefine _debugsource_packages
 %undefine _debuginfo_packages
+%undefine _missing_build_ids_terminate_build
 
 BuildRequires:  python3-devel python3-pip python3-setuptools python3-wheel pyproject-rpm-macros
 Requires:       python3 python3-pyqt6 python3-pyqt6-webengine
@@ -31,9 +32,6 @@ A GUI application that allows users to convert images of math equations into LaT
 # Install PiPy dependencies using pip into the buildroot
 pip3 install --no-deps --prefix=%{buildroot}%{_prefix} albumentations timm \
     tokenizers transformers x-transformers opencv_python_headless
-
-# Remove all vendored .so files to avoid build-id errors
-rm -rf %{buildroot}%{python3_sitearch}/opencv_python_headless.libs
 
 # Install launcher script
 install -Dpm 0755 /dev/stdin %{buildroot}%{_bindir}/pix2tex <<'EOF'
