@@ -13,8 +13,6 @@ BuildArch:      noarch
 BuildRequires:  python3-devel python3-pip python3-setuptools python3-wheel
 
 Requires:       python3-pyqt6 python3-pyqt6-webengine
-# Requires:       python3 python3-torch python3-transformers
-# Requires:       python3-Pillow python3-opencv python3-matplotlib python3-requests
 
 %description
 A GUI application that allows users to convert images of math equations into LaTeX using deep learning.
@@ -31,7 +29,7 @@ mkdir -p %{buildroot}%{python3_sitelib}/pix2tex
 install -m 644 pix2tex/gui.py %{buildroot}%{python3_sitelib}/pix2tex/gui.py
 
 # Install pynput using pip into the buildroot
-pip3 install --no-deps --target %{buildroot}%{python3_sitelib} pynput
+pip3 install --no-deps --target %{buildroot}%{python3_sitelib} pynput screeninfo
 
 # Create a launcher script
 cat > %{buildroot}%{_bindir}/pix2tex << 'EOF'
@@ -67,7 +65,9 @@ EOF
 %{_datadir}/applications/pix2tex.desktop
 %{_datadir}/icons/hicolor/scalable/apps/pix2tex.svg
 %{python3_sitelib}/pynput/
-%{python3_sitelib}/pynput-*.dist-info/
+#%{python3_sitelib}/pynput-*.dist-info/
+%{python3_sitelib}/screeninfo/
+#%{python3_sitelib}/screeninfo-*.dist-info/
 
 %changelog
 %autochangelog
