@@ -10,7 +10,7 @@ URL:            https://zed.dev/
 Source0:        https://github.com/zed-industries/zed/archive/refs/tags/v%{version}.tar.gz
 
 BuildRequires:  cargo-rpm-macros >= 24
-BuildRequires:  gcc, gcc-c++, clang, cmake, mold
+BuildRequires:  gcc, gcc-c++, clang, cmake, mold, git
 BuildRequires:  alsa-lib-devel, fontconfig-devel, wayland-devel
 BuildRequires:  libxkbcommon-x11-devel, openssl-devel
 BuildRequires:  libzstd-devel, vulkan-loader, libcurl-devel
