@@ -26,8 +26,8 @@ A GUI application that allows users to convert images of math equations into LaT
 %install
 %pyproject_install
 
-# Install python dependencies using pip into the buildroot
-pip3 install --no-deps --prefix=%{buildroot}%{_prefix} pynput screeninfo
+# Install PiPy dependencies using pip into the buildroot
+#pip3 install --no-deps --prefix=%{buildroot}%{_prefix} pynput screeninfo
 
 # Install launcher script
 install -Dpm 0755 /dev/stdin %{buildroot}%{_bindir}/pix2tex <<'EOF'
@@ -52,16 +52,18 @@ Type=Application
 Categories=Utility;
 EOF
 
+%pyproject_save_files pix2tex
+
 %files -f %{pyproject_files}
 %license LICENSE
 %doc README.md
 %{_bindir}/pix2tex
 %{_datadir}/applications/pix2tex.desktop
 %{_datadir}/icons/hicolor/scalable/apps/pix2tex.svg
-%{python3_sitelib}/pynput/
-%{python3_sitelib}/pynput-*.dist-info/
-%{python3_sitelib}/screeninfo/
-%{python3_sitelib}/screeninfo-*.dist-info/
+#%{python3_sitelib}/pynput/
+#%{python3_sitelib}/pynput-*.dist-info/
+#%{python3_sitelib}/screeninfo/
+#%{python3_sitelib}/screeninfo-*.dist-info/
 
 %changelog
 %autochangelog
