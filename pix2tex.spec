@@ -70,6 +70,8 @@ EOF
 %{python3_sitelib}/timm-*.dist-info/
 %{python3_sitelib}/transformers/
 %{python3_sitelib}/transformers-*.dist-info/
+%{python3_sitelib}/x_transformers/
+%{python3_sitelib}/x_transformers-*.dist-info/
 
 /usr/lib64/python3.13/site-packages/cv2/
 /usr/lib64/python3.13/site-packages/tokenizers/
