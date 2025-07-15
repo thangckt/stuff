@@ -29,15 +29,14 @@ A GUI application that allows users to convert images of math equations into LaT
 %install
 %pyproject_install
 
-# Install PiPy dependencies using pip into the buildroot
-pip3 install --no-deps --prefix=%{buildroot}%{_prefix} albumentations timm \
-    tokenizers transformers x-transformers opencv_python_headless
+# Install PiPy dependencies using pip into the isolate Python environment
+pip3 install --no-deps --prefix=%{buildroot}%{_prefix}/pix2tex_vendor \
+  albumentations timm tokenizers transformers x-transformers opencv_python_headless
 
 # Install launcher script
 install -Dpm 0755 /dev/stdin %{buildroot}%{_bindir}/pix2tex <<'EOF'
 #!/bin/bash
-PYVER=$(python3 -c "import sys; print(f'%d.%d' % (sys.version_info.major, sys.version_info.minor))")
-export PYTHONPATH=/usr/lib/python${PYVER}/site-packages:$PYTHONPATH
+export PYTHONPATH=%{_prefix}/pix2tex_vendor/lib*/python3.13/site-packages:$PYTHONPATH
 exec python3 -m pix2tex.gui "$@"
 EOF
 
@@ -61,6 +60,7 @@ EOF
 %files -f %{pyproject_files}
 %license LICENSE
 %doc README.md
+%{_prefix}/pix2tex_vendor/
 %{_bindir}/pix2tex
 %{_bindir}/pix2tex_cli
 %{_bindir}/pix2tex_gui
