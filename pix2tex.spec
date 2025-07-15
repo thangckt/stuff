@@ -10,7 +10,7 @@ URL:            https://github.com/lukas-blecher/LaTeX-OCR
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
 BuildRequires:  python3-devel python3-pip python3-setuptools python3-wheel pyproject-rpm-macros
-BuildRequires:  python3-opencv python3-pyqt6 python3-pyqt6-webengine
+Requires:  python3-opencv python3-pyqt6 python3-pyqt6-webengine
 
 %undefine _debugsource_packages
 %undefine _debuginfo_packages
