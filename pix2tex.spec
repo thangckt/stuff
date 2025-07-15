@@ -83,6 +83,7 @@ EOF
 /usr/lib64/python3.13/site-packages/tokenizers/
 /usr/lib64/python3.13/site-packages/tokenizers-*.dist-info/
 /usr/lib64/python3.13/site-packages/cv2/
+/usr/lib64/python3.13/site-packages/opencv_python_headless.libs/
 /usr/lib64/python3.13/site-packages/opencv_python_headless-*.dist-info/
 
 %changelog
