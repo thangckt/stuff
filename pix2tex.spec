@@ -72,11 +72,9 @@ EOF
 %{python3_sitelib}/transformers-*.dist-info/
 
 /usr/lib64/python3.13/site-packages/cv2/
-/usr/lib64/python3.13/site-packages/cv2-*.dist-info/
 /usr/lib64/python3.13/site-packages/tokenizers/
 /usr/lib64/python3.13/site-packages/tokenizers-*.dist-info/
-/usr/lib64/python3.13/site-packages/x-transformers/
-/usr/lib64/python3.13/site-packages/x-transformers-*.dist-info/
+
 
 %changelog
 %autochangelog
