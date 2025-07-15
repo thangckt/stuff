@@ -14,8 +14,8 @@ Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 %undefine _debuginfo_packages
 %undefine _missing_build_ids_terminate_build
 
-# NEW: prevent RPM from auto-generating binary deps from bundled .so files
-%define __requires_exclude_from %{_prefix}/pix2tex_vendor/.*\\.so
+# Prevent rpm from generating python3.13dist(...) or .so-based Requires from vendor path
+%define __requires_exclude_from %{_prefix}/pix2tex_vendor/.*\\.py$|%{_prefix}/pix2tex_vendor/.*\\.so$
 
 BuildRequires:  python3-devel python3-pip python3-setuptools python3-wheel pyproject-rpm-macros
 Requires:       python3 python3-pyqt6 python3-pyqt6-webengine
