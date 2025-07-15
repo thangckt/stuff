@@ -33,7 +33,7 @@ envsubst < crates/zed/resources/flatpak/zed.metainfo.xml.in > %{APP_ID}.metainfo
 
 %build
 echo "stable" > crates/zed/RELEASE_CHANNEL
-%cargo_build --release --package zed --package cli
+%cargo_build -- --package zed --package cli
 script/generate-licenses
 
 %install
