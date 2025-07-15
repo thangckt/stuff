@@ -14,6 +14,7 @@ BuildRequires:  python3-opencv python3-pyqt6 python3-pyqt6-webengine
 
 %undefine _debugsource_packages
 %undefine _debuginfo_packages
+%global _python_disable_dependency_generator 1
 
 %description
 A GUI application that allows users to convert images of math equations into LaTeX using deep learning.
@@ -76,7 +77,6 @@ EOF
 %{python3_sitelib}/transformers-*.dist-info/
 %{python3_sitelib}/x_transformers/
 %{python3_sitelib}/x_transformers-*.dist-info/
-
 /usr/lib64/python3.13/site-packages/tokenizers/
 /usr/lib64/python3.13/site-packages/tokenizers-*.dist-info/
 
