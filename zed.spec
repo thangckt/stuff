@@ -24,7 +24,16 @@ Code at the speed of thought — Zed is a high-performance, multiplayer code edi
 
 %prep
 %autosetup -n zed-%{version}
-%cargo_prep_online
+
+# Fetch notify dependency manually
+git clone https://github.com/zed-industries/notify.git notify
+cd notify
+git checkout bbb9ea5ae52b253e095737847e367c30653a2e96
+cd ..
+
+# Patch Cargo.toml to use local notify
+echo '[patch.crates-io]' >> Cargo.toml
+echo 'notify = { path = "notify" }' >> Cargo.toml
 
 # Set up desktop integration
 export APP_ID=dev.zed.Zed
