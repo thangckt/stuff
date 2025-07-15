@@ -65,9 +65,9 @@ EOF
 %{_datadir}/applications/pix2tex.desktop
 %{_datadir}/icons/hicolor/scalable/apps/pix2tex.svg
 %{python3_sitelib}/pynput/
-#%{python3_sitelib}/pynput-*.dist-info/
+%{python3_sitelib}/pynput-*.dist-info/
 %{python3_sitelib}/screeninfo/
-#%{python3_sitelib}/screeninfo-*.dist-info/
+%{python3_sitelib}/screeninfo-*.dist-info/
 
 %changelog
 %autochangelog
