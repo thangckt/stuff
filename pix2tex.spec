@@ -71,20 +71,5 @@ EOF
 %{_datadir}/applications/pix2tex.desktop
 %{_datadir}/icons/hicolor/scalable/apps/pix2tex.svg
 
-%{python3_sitelib}/albumentations/
-%{python3_sitelib}/albumentations-*.dist-info/
-%{python3_sitelib}/timm/
-%{python3_sitelib}/timm-*.dist-info/
-%{python3_sitelib}/transformers/
-%{python3_sitelib}/transformers-*.dist-info/
-%{python3_sitelib}/x_transformers/
-%{python3_sitelib}/x_transformers-*.dist-info/
-
-/usr/lib64/python3.13/site-packages/tokenizers/
-/usr/lib64/python3.13/site-packages/tokenizers-*.dist-info/
-/usr/lib64/python3.13/site-packages/cv2/
-/usr/lib64/python3.13/site-packages/opencv_python_headless.libs/
-/usr/lib64/python3.13/site-packages/opencv_python_headless-*.dist-info/
-
 %changelog
 %autochangelog
