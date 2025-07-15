@@ -10,6 +10,9 @@ Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 BuildRequires:  python3-devel python3-pip python3-setuptools python3-wheel pyproject-rpm-macros
 Requires:       python3-pyqt6 python3-pyqt6-webengine
 
+%undefine _debugsource_packages
+%undefine _debuginfo_packages
+
 %description
 A GUI application that allows users to convert images of math equations into LaTeX using deep learning.
 
@@ -60,6 +63,7 @@ EOF
 %{_bindir}/pix2tex_gui
 %{_datadir}/applications/pix2tex.desktop
 %{_datadir}/icons/hicolor/scalable/apps/pix2tex.svg
+
 %{python3_sitelib}/albumentations/
 %{python3_sitelib}/albumentations-*.dist-info/
 %{python3_sitelib}/timm/
