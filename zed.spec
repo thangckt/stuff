@@ -23,33 +23,31 @@ Conflicts:      zed-preview
 Code at the speed of thought — Zed is a high-performance, multiplayer code editor from the creators of Atom and Tree-sitter.
 
 %prep
-# Clone the repository with submodules
+# Clone the Zed source with submodules at the specified version
 git clone --recurse-submodules https://github.com/zed-industries/zed.git zed
 cd zed
-git checkout %{version}
+git checkout v%{version}
 git submodule update --init --recursive
-
-# Move source to expected build directory root
 cd ..
+
+# Move Zed source to expected RPM build root
 cp -a zed/. ./
 rm -rf zed
 
-# Clone and checkout the notify dependency
+# Clone the 'notify' dependency used by Zed at pinned revision
 git clone https://github.com/zed-industries/notify.git notify
 cd notify
 git checkout bbb9ea5ae52b253e095737847e367c30653a2e96
 cd ..
 
-# Inject notify = { path = "notify" } into existing [patch.crates-io] or create it
+# Patch Cargo.toml to use local path for 'notify' instead of Git
 if grep -q '^\[patch.crates-io\]' Cargo.toml; then
-  # Insert the patch line right after [patch.crates-io]
   sed -i '/^\[patch.crates-io\]/a notify = { path = "notify" }' Cargo.toml
 else
-  # Append the section and patch if it doesn’t exist
   echo -e '\n[patch.crates-io]\nnotify = { path = "notify" }' >> Cargo.toml
 fi
 
-# Set up desktop integration
+# Generate desktop and metainfo files using envsubst
 export APP_ID=dev.zed.Zed
 envsubst < crates/zed/resources/zed.desktop.in > %{APP_ID}.desktop
 envsubst < crates/zed/resources/flatpak/zed.metainfo.xml.in > %{APP_ID}.metainfo.xml
