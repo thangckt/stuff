@@ -10,7 +10,7 @@ Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 BuildArch:      noarch
 
 %global _pyproject_ghost_dist true
-BuildRequires:  python3-devel python3-pip python3-setuptools python3-wheel pyproject-rpm-macros
+BuildRequires:  python3-devel python3-pip python3-wheel pyproject-rpm-macros
 
 Requires:       python3-pyqt6 python3-pyqt6-webengine
 
@@ -27,7 +27,8 @@ A GUI application that allows users to convert images of math equations into LaT
 %pyproject_install
 
 # Install PiPy dependencies using pip into the buildroot
-#pip3 install --no-deps --prefix=%{buildroot}%{_prefix} pynput screeninfo
+pip3 install --no-deps --prefix=%{buildroot}%{_prefix} albumentations \
+    opencv-python-headless timm tokenizers transformers x-transformers
 
 # Install launcher script
 install -Dpm 0755 /dev/stdin %{buildroot}%{_bindir}/pix2tex <<'EOF'
@@ -63,6 +64,18 @@ EOF
 %{_bindir}/pix2tex_gui
 %{_datadir}/applications/pix2tex.desktop
 %{_datadir}/icons/hicolor/scalable/apps/pix2tex.svg
+%{python3_sitelib}/albumentations/
+%{python3_sitelib}/albumentations-*.dist-info/
+%{python3_sitelib}/opencv-python-headless/
+%{python3_sitelib}/opencv-python-headless-*.dist-info/
+%{python3_sitelib}/timm/
+%{python3_sitelib}/timm-*.dist-info/
+%{python3_sitelib}/tokenizers/
+%{python3_sitelib}/tokenizers-*.dist-info/
+%{python3_sitelib}/transformers/
+%{python3_sitelib}/transformers-*.dist-info/
+%{python3_sitelib}/x-transformers/
+%{python3_sitelib}/x-transformers-*.dist-info/
 
 %changelog
 %autochangelog
