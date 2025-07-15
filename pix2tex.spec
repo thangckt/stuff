@@ -32,6 +32,9 @@ A GUI application that allows users to convert images of math equations into LaT
 pip3 install --no-deps --prefix=%{buildroot}%{_prefix} albumentations timm \
     tokenizers transformers x-transformers opencv_python_headless
 
+# Remove all vendored .so files to avoid build-id errors
+rm -rf %{buildroot}%{python3_sitearch}/opencv_python_headless.libs
+
 # Install launcher script
 install -Dpm 0755 /dev/stdin %{buildroot}%{_bindir}/pix2tex <<'EOF'
 #!/bin/bash
@@ -83,9 +86,6 @@ EOF
 /usr/lib64/python3.13/site-packages/tokenizers-*.dist-info/
 /usr/lib64/python3.13/site-packages/cv2/
 /usr/lib64/python3.13/site-packages/opencv_python_headless-*.dist-info/
-
-%exclude /usr/lib64/python3.13/site-packages/opencv_python_headless.libs/
-%exclude /usr/lib64/python3.13/site-packages/opencv_python_headless.libs/*
 
 %changelog
 %autochangelog
