@@ -9,18 +9,12 @@ License:        MIT
 URL:            https://github.com/lukas-blecher/LaTeX-OCR
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
-%global _python_disable_dependency_generator 1
+# Exclude vendored Python modules from automatic dependency scanning
+%global __requires_exclude ^%{_prefix}/pix2tex_vendor/.*\\.py$
+
 %undefine _debugsource_packages
 %undefine _debuginfo_packages
 %undefine _missing_build_ids_terminate_build
-
-# Disable automatic Python byte compilation and requires
-%undefine __brp_mangle_shebangs
-%undefine __brp_python_bytecompile
-%undefine __python_requires
-
-# Prevent RPM from scanning vendored Python modules
-%global __requires_exclude_from ^/usr/pix2tex_vendor/.*\\.py$|^/usr/pix2tex_vendor/.*\\.so$
 
 BuildRequires:  python3-devel python3-pip python3-setuptools python3-wheel pyproject-rpm-macros
 Requires:       python3 python3-pyqt6 python3-pyqt6-webengine
@@ -40,6 +34,13 @@ A GUI application that allows users to convert images of math equations into LaT
 # Install PiPy dependencies using pip into the isolate Python environment
 pip3 install --no-deps --prefix=%{buildroot}%{_prefix}/pix2tex_vendor \
   albumentations timm tokenizers transformers x-transformers opencv_python_headless
+
+# Remove prebuilt binary blobs (which cause unresolvable .so requires)
+rm -rf %{buildroot}%{_prefix}/pix2tex_vendor/lib*/python3.13/site-packages/*/*.so
+rm -rf %{buildroot}%{_prefix}/pix2tex_vendor/lib*/python3.13/site-packages/*/*.so.*
+
+# Optional: also strip any leftover native libs in .libs dirs (e.g. OpenCV)
+find %{buildroot}%{_prefix}/pix2tex_vendor -type f -name '*.so*' -delete
 
 # Install launcher script
 install -Dpm 0755 /dev/stdin %{buildroot}%{_bindir}/pix2tex <<'EOF'
