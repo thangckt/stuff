@@ -66,16 +66,17 @@ EOF
 %{_datadir}/icons/hicolor/scalable/apps/pix2tex.svg
 %{python3_sitelib}/albumentations/
 %{python3_sitelib}/albumentations-*.dist-info/
-%{python3_sitelib}/opencv-python-headless/
-%{python3_sitelib}/opencv-python-headless-*.dist-info/
 %{python3_sitelib}/timm/
 %{python3_sitelib}/timm-*.dist-info/
-%{python3_sitelib}/tokenizers/
-%{python3_sitelib}/tokenizers-*.dist-info/
 %{python3_sitelib}/transformers/
 %{python3_sitelib}/transformers-*.dist-info/
-%{python3_sitelib}/x-transformers/
-%{python3_sitelib}/x-transformers-*.dist-info/
+
+/usr/lib64/python3.13/site-packages/cv2/
+/usr/lib64/python3.13/site-packages/cv2-*.dist-info/
+/usr/lib64/python3.13/site-packages/tokenizers/
+/usr/lib64/python3.13/site-packages/tokenizers-*.dist-info/
+/usr/lib64/python3.13/site-packages/x-transformers/
+/usr/lib64/python3.13/site-packages/x-transformers-*.dist-info/
 
 %changelog
 %autochangelog
