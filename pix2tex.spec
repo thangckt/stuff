@@ -10,7 +10,7 @@ Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 BuildArch:      noarch
 
 %global _pyproject_ghost_dist true
-BuildRequires:  python3-devel python3-pip python3-wheel pyproject-rpm-macros
+BuildRequires:  python3-devel python3-pip python3-setuptools python3-wheel pyproject-rpm-macros
 
 Requires:       python3-pyqt6 python3-pyqt6-webengine
 
