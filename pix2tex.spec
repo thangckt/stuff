@@ -71,11 +71,12 @@ EOF
 %files -f %{pyproject_files}
 %license LICENSE
 %doc README.md
+
+%{_bindir}/pix2tex
+%{_bindir}/pix2tex_cli
+%{_bindir}/pix2tex_gui
+%{_bindir}/latexocr
 %{_prefix}/pix2tex_vendor/
-%{_prefix}/pix2tex
-%{_prefix}/pix2tex_cli
-%{_prefix}/pix2tex_gui
-%{_prefix}/latexocr
 %{_datadir}/applications/pix2tex.desktop
 %{_datadir}/icons/hicolor/scalable/apps/pix2tex.svg
 
