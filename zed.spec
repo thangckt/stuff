@@ -38,7 +38,7 @@ envsubst < crates/zed/resources/zed.desktop.in > %{APP_ID}.desktop
 envsubst < crates/zed/resources/flatpak/zed.metainfo.xml.in > %{APP_ID}.metainfo.xml
 
 %build
-%cargo_build -- --package zed --package cli
+%cargo_build --release -- --package zed --package cli
 script/generate-licenses
 
 %install
