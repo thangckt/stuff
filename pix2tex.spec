@@ -9,8 +9,9 @@ License:        MIT
 URL:            https://github.com/lukas-blecher/LaTeX-OCR
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
-# Exclude vendored Python modules from automatic dependency scanning
-%global __requires_exclude ^%{_prefix}/pix2tex_vendor/.*\\.py$
+# Disable automatic dependency generation for vendored packages
+%global __python_requires_exclude_from ^%{_prefix}/pix2tex_vendor/.*$
+%global __python_provides_exclude_from ^%{_prefix}/pix2tex_vendor/.*$
 
 %undefine _debugsource_packages
 %undefine _debuginfo_packages
@@ -31,22 +32,30 @@ A GUI application that allows users to convert images of math equations into LaT
 %install
 %pyproject_install
 
-# Install PiPy dependencies using pip into the isolate Python environment
-pip3 install --no-deps --prefix=%{buildroot}%{_prefix}/pix2tex_vendor \
-  albumentations timm tokenizers transformers x-transformers opencv_python_headless
+# Create vendor directory for isolated dependencies
+mkdir -p %{buildroot}%{_prefix}/pix2tex_vendor
+
+# Install PyPI dependencies using pip into the isolated Python environment
+PYTHONUSERBASE=%{buildroot}%{_prefix}/pix2tex_vendor \
+pip3 install --user --no-deps --no-warn-script-location \
+  albumentations timm tokenizers transformers x-transformers opencv-python-headless
 
 # Remove prebuilt binary blobs (which cause unresolvable .so requires)
-rm -rf %{buildroot}%{_prefix}/pix2tex_vendor/lib*/python3.13/site-packages/*/*.so
-rm -rf %{buildroot}%{_prefix}/pix2tex_vendor/lib*/python3.13/site-packages/*/*.so.*
-
-# Optional: also strip any leftover native libs in .libs dirs (e.g. OpenCV)
-find %{buildroot}%{_prefix}/pix2tex_vendor -type f -name '*.so*' -delete
+find %{buildroot}%{_prefix}/pix2tex_vendor -type f -name '*.so' -delete
+find %{buildroot}%{_prefix}/pix2tex_vendor -type f -name '*.so.*' -delete
 
 # Install launcher script
 install -Dpm 0755 /dev/stdin %{buildroot}%{_bindir}/pix2tex <<'EOF'
 #!/bin/bash
-export PYTHONPATH=%{_prefix}/pix2tex_vendor/lib*/python3.13/site-packages:$PYTHONPATH
+export PYTHONPATH=%{_prefix}/pix2tex_vendor/lib/python*/site-packages:$PYTHONPATH
 exec python3 -m pix2tex.gui "$@"
+EOF
+
+# Install CLI launcher script
+install -Dpm 0755 /dev/stdin %{buildroot}%{_bindir}/pix2tex-cli <<'EOF'
+#!/bin/bash
+export PYTHONPATH=%{_prefix}/pix2tex_vendor/lib/python*/site-packages:$PYTHONPATH
+exec python3 -m pix2tex.cli "$@"
 EOF
 
 # Install icon
@@ -57,11 +66,13 @@ install -Dpm 0644 pix2tex/resources/icon.svg \
 install -Dpm 0644 /dev/stdin %{buildroot}%{_datadir}/applications/pix2tex.desktop <<'EOF'
 [Desktop Entry]
 Name=pix2tex
+Comment=Convert images of math equations to LaTeX
 Exec=pix2tex
 Icon=pix2tex
 Terminal=false
 Type=Application
-Categories=Utility;
+Categories=Utility;Education;Science;
+MimeType=image/png;image/jpeg;image/jpg;image/bmp;image/tiff;
 EOF
 
 %pyproject_save_files pix2tex
@@ -70,11 +81,6 @@ EOF
 %license LICENSE
 %doc README.md
 %{_prefix}/pix2tex_vendor/
-%{_bindir}/pix2tex
-%{_bindir}/pix2tex_cli
-%{_bindir}/pix2tex_gui
-%{_bindir}/latexocr
-
 %{_datadir}/applications/pix2tex.desktop
 %{_datadir}/icons/hicolor/scalable/apps/pix2tex.svg
 
