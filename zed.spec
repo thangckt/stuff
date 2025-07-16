@@ -34,18 +34,13 @@ cp -a zed/. ./
 rm -rf zed
 
 # Clone the 'notify' dependency used by Zed at pinned revision
-git clone https://github.com/zed-industries/notify.git notify-repo
-cd notify-repo
+git clone https://github.com/zed-industries/notify.git notify
+cd notify
 git checkout bbb9ea5ae52b253e095737847e367c30653a2e96
 cd ..
 
-# Copy the notify package (not the workspace) to a local directory
-mkdir -p vendor/notify
-cp -r notify-repo/notify/* vendor/notify/
-rm -rf notify-repo
-
-# Replace existing notify entry in Cargo.toml with local path
-sed -i '/^\[patch.crates-io\]/,/^\[/ { /^notify = { git.*notify\.git.*rev.*bbb9ea5ae52b253e095737847e367c30653a2e96.*}/ s/.*/notify = { path = "vendor\/notify" }/ }' Cargo.toml
+# Replace existing notify entry in Cargo.toml with local path pointing to the notify package within the workspace
+sed -i '/^\[patch.crates-io\]/,/^\[/ { /^notify = { git.*notify\.git.*rev.*bbb9ea5ae52b253e095737847e367c30653a2e96.*}/ s/.*/notify = { path = "notify\/notify" }/ }' Cargo.toml
 
 # Generate desktop and metainfo files using envsubst
 export APP_ID=dev.zed.Zed
