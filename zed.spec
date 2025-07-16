@@ -34,19 +34,23 @@ cp -a zed/. ./
 rm -rf zed
 
 # Clone the 'notify' dependency used by Zed at pinned revision
-git clone https://github.com/zed-industries/notify.git notify
-cd notify
+git clone https://github.com/zed-industries/notify.git notify-repo
+cd notify-repo
 git checkout bbb9ea5ae52b253e095737847e367c30653a2e96
 cd ..
 
-# Replace existing notify entry in Cargo.toml with local path
-# The notify repo is a workspace, so we need to point to the notify package within it
+# Copy the notify package (not the workspace) to a local directory
+mkdir -p vendor/notify
+cp -r notify-repo/notify/* vendor/notify/
+rm -rf notify-repo
+
+# Add patch to Cargo.toml to use local notify
 if grep -q '^\[patch.crates-io\]' Cargo.toml; then
-    # Replace the existing notify entry with local path to the notify package
-    sed -i '/^\[patch.crates-io\]/,/^\[/ { /^notify = { git.*notify\.git.*rev.*bbb9ea5ae52b253e095737847e367c30653a2e96.*}/ s/.*/notify = { path = "notify\/notify" }/ }' Cargo.toml
+    # Add or replace the notify entry in existing [patch.crates-io] section
+    sed -i '/^\[patch.crates-io\]/a notify = { path = "vendor/notify" }' Cargo.toml
 else
     # If no [patch.crates-io] section exists, add it
-    echo -e '\n[patch.crates-io]\nnotify = { path = "notify/notify" }' >> Cargo.toml
+    echo -e '\n[patch.crates-io]\nnotify = { path = "vendor/notify" }' >> Cargo.toml
 fi
 
 # Generate desktop and metainfo files using envsubst
