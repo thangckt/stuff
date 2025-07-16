@@ -10,8 +10,8 @@ URL:            https://github.com/lukas-blecher/LaTeX-OCR
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
 # Fully disable auto dependency/provides generation for vendored Python files
-%global __requires_exclude_from ^%{_prefix}/pix2tex_vendor/.*\\.py$|^%{_prefix}/pix2tex_vendor/.*\\.so.*$
-%global __provides_exclude_from ^%{_prefix}/pix2tex_vendor/.*\\.py$|^%{_prefix}/pix2tex_vendor/.*\\.so.*$
+%global __requires_exclude_from ^/usr/pix2tex_vendor/.*\\.py$|^/usr/pix2tex_vendor/.*\\.so.*$
+%global __provides_exclude_from ^/usr/pix2tex_vendor/.*\\.py$|^/usr/pix2tex_vendor/.*\\.so.*$
 
 %undefine _debugsource_packages
 %undefine _debuginfo_packages
