@@ -1,7 +1,7 @@
 ### ref: https://github.com/terrapkg/packages/blob/frawhide/anda/devs/zed/stable/zed.spec
 
 Name:           zed
-Version:        0.195.2-pre
+Version:        0.194.3
 Release:        1%{?dist}
 Summary:        Zed is a high-performance, multiplayer code editor
 
