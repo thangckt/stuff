@@ -38,10 +38,16 @@ cd notify
 git checkout bbb9ea5ae52b253e095737847e367c30653a2e96
 cd ..
 
-# Remove existing notify Git override from [patch.crates-io]
-sed -i '/^\[patch.crates-io\]/,/^\[/ {/notify = { git = "https:\/\/github.com\/zed-industries\/notify.git"/d}' Cargo.toml
+# Completely remove any notify override in [patch.crates-io] section
+awk '
+  BEGIN { inside_patch = 0 }
+  /^\[patch\.crates-io\]/ { inside_patch = 1; print; next }
+  /^\[/ && inside_patch { inside_patch = 0 }
+  inside_patch && /^\s*notify\s*=/ { next }
+  { print }
+' Cargo.toml > Cargo.toml.new && mv Cargo.toml.new Cargo.toml
 
-# Insert local path override
+# Add local path override after [patch.crates-io], or append if it doesn't exist
 if grep -q '^\[patch.crates-io\]' Cargo.toml; then
   sed -i '/^\[patch.crates-io\]/a notify = { path = "notify/notify" }' Cargo.toml
 else
