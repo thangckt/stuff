@@ -53,7 +53,7 @@ install -Dm755 target/release/zed %{buildroot}%{_libexecdir}/zed-editor
 install -Dm755 target/release/cli %{buildroot}%{_bindir}/zed
 
 install -Dm644 zed.desktop %{buildroot}%{_datadir}/applications/zed.desktop
-install -Dm644 crates/zed/resources/app-icon.png %{buildroot}%{_datadir}/pixmaps/zed.png
+install -Dm644 crates/zed/resources/app-icon.png %{buildroot}%{_datadir}/icons/hicolor/512x512/apps/zed.png
 install -Dm644 zed.metainfo.xml %{buildroot}%{_metainfodir}/zed.metainfo.xml
 
 %files
@@ -62,7 +62,7 @@ install -Dm644 zed.metainfo.xml %{buildroot}%{_metainfodir}/zed.metainfo.xml
 %{_libexecdir}/zed-editor
 %{_bindir}/zed
 %{_datadir}/applications/zed.desktop
-%{_datadir}/pixmaps/zed.png
+%{_datadir}/icons/hicolor/512x512/apps/zed.png
 %{_metainfodir}/zed.metainfo.xml
 
 %changelog
