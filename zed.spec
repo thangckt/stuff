@@ -39,8 +39,8 @@ cd notify
 git checkout bbb9ea5ae52b253e095737847e367c30653a2e96
 cd ..
 
-# Replace existing notify entry in Cargo.toml with local path pointing to the notify package within the workspace
-sed -i '/^\[patch.crates-io\]/,/^\[/ { /^notify = { git.*notify\.git.*rev.*bbb9ea5ae52b253e095737847e367c30653a2e96.*}/ s/.*/notify = { path = "notify\/notify" }/ }' Cargo.toml
+# Replace notify Git dependency with local path
+sed -i '/^\[patch.crates-io\]/,/^\[/ { /^notify = { git.*rev.*bbb9ea5ae52b253e095737847e367c30653a2e96.*}/ s/.*/notify = { path = "notify" }/ }' Cargo.toml
 
 # Generate desktop and metainfo files using envsubst
 export APP_ID=dev.zed.Zed
