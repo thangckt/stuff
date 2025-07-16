@@ -44,14 +44,8 @@ mkdir -p vendor/notify
 cp -r notify-repo/notify/* vendor/notify/
 rm -rf notify-repo
 
-# Add patch to Cargo.toml to use local notify
-if grep -q '^\[patch.crates-io\]' Cargo.toml; then
-    # Add or replace the notify entry in existing [patch.crates-io] section
-    sed -i '/^\[patch.crates-io\]/a notify = { path = "vendor/notify" }' Cargo.toml
-else
-    # If no [patch.crates-io] section exists, add it
-    echo -e '\n[patch.crates-io]\nnotify = { path = "vendor/notify" }' >> Cargo.toml
-fi
+# Replace existing notify entry in Cargo.toml with local path
+sed -i '/^\[patch.crates-io\]/,/^\[/ { /^notify = { git.*notify\.git.*rev.*bbb9ea5ae52b253e095737847e367c30653a2e96.*}/ s/.*/notify = { path = "vendor\/notify" }/ }' Cargo.toml
 
 # Generate desktop and metainfo files using envsubst
 export APP_ID=dev.zed.Zed
