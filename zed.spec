@@ -7,7 +7,7 @@ Summary:        Zed is a high-performance, multiplayer code editor
 
 License:        AGPL-3.0-only AND Apache-2.0 AND GPL-3.0-or-later
 URL:            https://zed.dev/
-Source0:        https://github.com/zed-industries/zed/archive/refs/tags/v%{version}.tar.gz
+#Source0:        https://github.com/zed-industries/zed/archive/refs/tags/v%{version}.tar.gz
 
 BuildRequires:  cargo-rpm-macros >= 24
 BuildRequires:  gcc, gcc-c++, clang, cmake, mold, git
