@@ -23,26 +23,29 @@ Conflicts:      zed-preview
 Code at the speed of thought — Zed is a high-performance, multiplayer code editor from the creators of Atom and Tree-sitter.
 
 %prep
-# Clone the Zed source with submodules at the specified version
+# Clone Zed with submodules
 git clone --recurse-submodules https://github.com/zed-industries/zed.git zed
 cd zed
 git checkout v%{version}
 git submodule update --init --recursive
 cd ..
-# Move Zed source to expected RPM build root
 cp -a zed/. ./
 rm -rf zed
 
-# Clone the 'notify' dependency used by Zed at pinned revision
+# Clone the notify workspace repo
 git clone https://github.com/zed-industries/notify.git notify
 cd notify
 git checkout bbb9ea5ae52b253e095737847e367c30653a2e96
 cd ..
 
-# Replace notify Git dependency with local path
-sed -i '/^\[patch.crates-io\]/,/^\[/ { /^notify = { git.*rev.*bbb9ea5ae52b253e095737847e367c30653a2e96.*}/ s/.*/notify = { path = "notify" }/ }' Cargo.toml
+# Patch Cargo.toml to use local crate at notify/notify (not the workspace root)
+if grep -q '^\[patch.crates-io\]' Cargo.toml; then
+  sed -i '/^\[patch.crates-io\]/a notify = { path = "notify/notify" }' Cargo.toml
+else
+  echo -e '\n[patch.crates-io]\nnotify = { path = "notify/notify" }' >> Cargo.toml
+fi
 
-# Generate desktop and metainfo files using envsubst
+# Desktop files
 export APP_ID=dev.zed.Zed
 envsubst < crates/zed/resources/zed.desktop.in > %{APP_ID}.desktop
 envsubst < crates/zed/resources/flatpak/zed.metainfo.xml.in > %{APP_ID}.metainfo.xml
