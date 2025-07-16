@@ -51,13 +51,6 @@ export PYTHONPATH=%{_prefix}/pix2tex_vendor/lib/python*/site-packages:$PYTHONPAT
 exec python3 -m pix2tex.gui "$@"
 EOF
 
-# Install CLI launcher script
-install -Dpm 0755 /dev/stdin %{buildroot}%{_bindir}/pix2tex-cli <<'EOF'
-#!/bin/bash
-export PYTHONPATH=%{_prefix}/pix2tex_vendor/lib/python*/site-packages:$PYTHONPATH
-exec python3 -m pix2tex.cli "$@"
-EOF
-
 # Install icon
 install -Dpm 0644 pix2tex/resources/icon.svg \
   %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/pix2tex.svg
@@ -66,13 +59,11 @@ install -Dpm 0644 pix2tex/resources/icon.svg \
 install -Dpm 0644 /dev/stdin %{buildroot}%{_datadir}/applications/pix2tex.desktop <<'EOF'
 [Desktop Entry]
 Name=pix2tex
-Comment=Convert images of math equations to LaTeX
 Exec=pix2tex
 Icon=pix2tex
 Terminal=false
 Type=Application
 Categories=Utility;Education;Science;
-MimeType=image/png;image/jpeg;image/jpg;image/bmp;image/tiff;
 EOF
 
 %pyproject_save_files pix2tex
@@ -81,6 +72,10 @@ EOF
 %license LICENSE
 %doc README.md
 %{_prefix}/pix2tex_vendor/
+%{_prefix}/pix2tex
+%{_prefix}/pix2tex_cli
+%{_prefix}/pix2tex_gui
+%{_prefix}/latexocr
 %{_datadir}/applications/pix2tex.desktop
 %{_datadir}/icons/hicolor/scalable/apps/pix2tex.svg
 
