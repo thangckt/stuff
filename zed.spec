@@ -33,9 +33,8 @@ cp -a zed/. ./
 rm -rf zed
 
 # Desktop files
-export APP_ID=dev.zed.Zed
-envsubst < crates/zed/resources/zed.desktop.in > %{APP_ID}.desktop
-envsubst < crates/zed/resources/flatpak/zed.metainfo.xml.in > %{APP_ID}.metainfo.xml
+envsubst < crates/zed/resources/zed.desktop.in > dev.zed.Zed.desktop
+envsubst < crates/zed/resources/flatpak/zed.metainfo.xml.in > dev.zed.Zed.metainfo.xml
 
 %build
 export CARGO_HOME=.cargo
@@ -46,9 +45,9 @@ script/generate-licenses
 install -Dm755 target/release/zed %{buildroot}%{_libexecdir}/zed-editor
 install -Dm755 target/release/cli %{buildroot}%{_bindir}/zed
 
-install -Dm644 %{APP_ID}.desktop %{buildroot}%{_datadir}/applications/%{APP_ID}.desktop
-install -Dm644 crates/zed/resources/app-icon.png %{buildroot}%{_datadir}/pixmaps/%{APP_ID}.png
-install -Dm644 %{APP_ID}.metainfo.xml %{buildroot}%{_metainfodir}/%{APP_ID}.metainfo.xml
+install -Dm644 dev.zed.Zed.desktop %{buildroot}%{_datadir}/applications/dev.zed.Zed.desktop
+install -Dm644 crates/zed/resources/app-icon.png %{buildroot}%{_datadir}/pixmaps/dev.zed.Zed.png
+install -Dm644 dev.zed.Zed.metainfo.xml %{buildroot}%{_metainfodir}/dev.zed.Zed.metainfo.xml
 
 %files
 %license LICENSE-AGPL LICENSE-APACHE LICENSE-GPL
