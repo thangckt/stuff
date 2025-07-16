@@ -36,9 +36,13 @@ rm -rf zed
 git clone https://github.com/zed-industries/notify.git notify
 cd notify
 git checkout bbb9ea5ae52b253e095737847e367c30653a2e96
+
+# Patch in a minimal [workspace.package] rust-version
+# This is required so the actual notify crate can inherit it
+echo -e '\n[workspace.package]\nrust-version = "1.70"' >> Cargo.toml
 cd ..
 
-# Completely remove any notify override in [patch.crates-io] section
+# Remove existing notify Git override
 awk '
   BEGIN { inside_patch = 0 }
   /^\[patch\.crates-io\]/ { inside_patch = 1; print; next }
@@ -47,7 +51,7 @@ awk '
   { print }
 ' Cargo.toml > Cargo.toml.new && mv Cargo.toml.new Cargo.toml
 
-# Add local path override after [patch.crates-io], or append if it doesn't exist
+# Add local path override
 if grep -q '^\[patch.crates-io\]' Cargo.toml; then
   sed -i '/^\[patch.crates-io\]/a notify = { path = "notify/notify" }' Cargo.toml
 else
