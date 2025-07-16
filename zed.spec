@@ -22,7 +22,6 @@ Conflicts:      zed-preview
 %description
 Code at the speed of thought — Zed is a high-performance, multiplayer code editor from the creators of Atom and Tree-sitter.
 
-
 %prep
 # Clone the Zed source with submodules at the specified version
 git clone --recurse-submodules https://github.com/zed-industries/zed.git zed
@@ -41,13 +40,13 @@ git checkout bbb9ea5ae52b253e095737847e367c30653a2e96
 cd ..
 
 # Replace existing notify entry in Cargo.toml with local path
-# First, check if [patch.crates-io] section exists
+# The notify repo is a workspace, so we need to point to the notify package within it
 if grep -q '^\[patch.crates-io\]' Cargo.toml; then
-    # Replace the existing notify entry with local path
-    sed -i '/^\[patch.crates-io\]/,/^\[/ { /^notify = { git.*notify\.git.*rev.*bbb9ea5ae52b253e095737847e367c30653a2e96.*}/ s/.*/notify = { path = "notify" }/ }' Cargo.toml
+    # Replace the existing notify entry with local path to the notify package
+    sed -i '/^\[patch.crates-io\]/,/^\[/ { /^notify = { git.*notify\.git.*rev.*bbb9ea5ae52b253e095737847e367c30653a2e96.*}/ s/.*/notify = { path = "notify\/notify" }/ }' Cargo.toml
 else
     # If no [patch.crates-io] section exists, add it
-    echo -e '\n[patch.crates-io]\nnotify = { path = "notify" }' >> Cargo.toml
+    echo -e '\n[patch.crates-io]\nnotify = { path = "notify/notify" }' >> Cargo.toml
 fi
 
 # Generate desktop and metainfo files using envsubst
