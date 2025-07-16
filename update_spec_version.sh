@@ -79,6 +79,14 @@ spec_files="rssguard.spec"
 new_version=$(fetch_github_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
+##### ANCHOR: zed
+repo_url="https://github.com/zed-industries/zed"
+spec_files="zed.spec"
+
+new_version=$(fetch_github_version "$repo_url")
+update_spec_version "$spec_files" "$new_version"
+
+
 ##### ANCHOR: Ovito
 repo_url="https://gitlab.com/stuko/ovito"
 spec_files="ovito.spec"
