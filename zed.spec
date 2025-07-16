@@ -38,7 +38,9 @@ envsubst < crates/zed/resources/zed.desktop.in > %{APP_ID}.desktop
 envsubst < crates/zed/resources/flatpak/zed.metainfo.xml.in > %{APP_ID}.metainfo.xml
 
 %build
-%cargo_build --release -- --package zed --package cli
+export RUSTFLAGS="%{rustflags}"
+export CARGO_HOME=.cargo
+cargo build --release --package zed --package cli
 script/generate-licenses
 
 %install
