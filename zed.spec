@@ -39,7 +39,7 @@ envsubst < crates/zed/resources/flatpak/zed.metainfo.xml.in > %{APP_ID}.metainfo
 
 %build
 export CARGO_HOME=.cargo
-cargo build --release --package zed --package cli
+cargo build -j%{_smp_build_ncpus} --release --package zed --package cli
 script/generate-licenses
 
 %install
