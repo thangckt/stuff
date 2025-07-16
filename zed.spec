@@ -33,8 +33,15 @@ cp -a zed/. ./
 rm -rf zed
 
 # Desktop files
-envsubst < crates/zed/resources/zed.desktop.in > dev.zed.Zed.desktop
-envsubst < crates/zed/resources/flatpak/zed.metainfo.xml.in > dev.zed.Zed.metainfo.xml
+export APP_ID=zed
+export APP_NAME="Zed Editor"
+export APP_CLI="zed"
+export APP_ICON="zed"
+export APP_ARGS="%U"
+export DO_STARTUP_NOTIFY=true
+
+envsubst < crates/zed/resources/zed.desktop.in > zed.desktop
+envsubst < crates/zed/resources/flatpak/zed.metainfo.xml.in > zed.metainfo.xml
 
 %build
 export CARGO_HOME=.cargo
@@ -45,18 +52,18 @@ script/generate-licenses
 install -Dm755 target/release/zed %{buildroot}%{_libexecdir}/zed-editor
 install -Dm755 target/release/cli %{buildroot}%{_bindir}/zed
 
-install -Dm644 dev.zed.Zed.desktop %{buildroot}%{_datadir}/applications/dev.zed.Zed.desktop
-install -Dm644 crates/zed/resources/app-icon.png %{buildroot}%{_datadir}/pixmaps/dev.zed.Zed.png
-install -Dm644 dev.zed.Zed.metainfo.xml %{buildroot}%{_metainfodir}/dev.zed.Zed.metainfo.xml
+install -Dm644 zed.desktop %{buildroot}%{_datadir}/applications/zed.desktop
+install -Dm644 crates/zed/resources/app-icon.png %{buildroot}%{_datadir}/pixmaps/zed.png
+install -Dm644 zed.metainfo.xml %{buildroot}%{_metainfodir}/zed.metainfo.xml
 
 %files
 %license LICENSE-AGPL LICENSE-APACHE LICENSE-GPL
 %doc README.md
 %{_libexecdir}/zed-editor
 %{_bindir}/zed
-%{_datadir}/applications/dev.zed.Zed.desktop
-%{_datadir}/pixmaps/dev.zed.Zed.png
-%{_metainfodir}/dev.zed.Zed.metainfo.xml
+%{_datadir}/applications/zed.desktop
+%{_datadir}/pixmaps/zed.png
+%{_metainfodir}/zed.metainfo.xml
 
 %changelog
 %autochangelog
