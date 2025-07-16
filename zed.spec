@@ -1,7 +1,7 @@
 ### ref: https://github.com/terrapkg/packages/blob/frawhide/anda/devs/zed/stable/zed.spec
 
 Name:           zed
-Version:        0.194.3
+Version:        0.195.2-pre
 Release:        1%{?dist}
 Summary:        Zed is a high-performance, multiplayer code editor
 
@@ -38,7 +38,10 @@ cd notify
 git checkout bbb9ea5ae52b253e095737847e367c30653a2e96
 cd ..
 
-# Patch Cargo.toml to use local crate at notify/notify (not the workspace root)
+# Remove existing notify Git override from [patch.crates-io]
+sed -i '/^\[patch.crates-io\]/,/^\[/ {/notify = { git = "https:\/\/github.com\/zed-industries\/notify.git"/d}' Cargo.toml
+
+# Insert local path override
 if grep -q '^\[patch.crates-io\]' Cargo.toml; then
   sed -i '/^\[patch.crates-io\]/a notify = { path = "notify/notify" }' Cargo.toml
 else
