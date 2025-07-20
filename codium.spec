@@ -27,7 +27,7 @@ VSCodium is a community-driven, freely-licensed binary distribution of Microsoft
 This package builds it from the official source using a reproducible process.
 
 %prep
-%autosetup -n %{name}-%{version}
+%autosetup -n vscodium-%{version}
 
 %build
 # Environment setup
