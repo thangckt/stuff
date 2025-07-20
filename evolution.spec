@@ -35,7 +35,8 @@ cd build
   -DCMAKE_INSTALL_PREFIX=%{_prefix} \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-  -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native"
+  -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+  -DENABLE_GNOME_DESKTOP=OFF
 %cmake_build
 cd ..
 
