@@ -10,14 +10,13 @@ License:        GPLv2+
 URL:            https://gitlab.gnome.org/GNOME/evolution
 Source0:        %{url}/-/archive/%{version}/evolution-%{version}.tar.gz
 
-BuildRequires:  meson
 BuildRequires:  ninja-build
 BuildRequires:  gcc gcc-c++
 BuildRequires:  pkgconfig
 BuildRequires:  gettext
 BuildRequires:  itstool
-BuildRequires:  gtk-doc
 BuildRequires:  yelp-tools
+BuildRequires: autoconf automake libtool gtk-doc
 
 %description
 Evolution is the GNOME email, calendar, contact and task application. It provides integrated mail, address book and calendaring functionality to users of the GNOME desktop.
@@ -26,6 +25,10 @@ Evolution is the GNOME email, calendar, contact and task application. It provide
 %autosetup -n evolution-%{version}
 
 %build
+# Set custom optimization flags for LTO + native tuning
+%global optflags %{optflags} -flto -march=native
+
+./autogen.sh --prefix=%{_prefix} --enable-gtk-doc
 %make_build
 
 %install
