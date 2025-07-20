@@ -33,7 +33,7 @@ ls -la
 
 %build
 # Build Evolution Data Server
-cd %{_builddir}/evolution-data-server-%{version}
+cd %{_builddir}/evolution-%{version}/evolution-data-server-%{version}
 mkdir build-eds && cd build-eds
 %cmake .. \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
@@ -56,7 +56,7 @@ mkdir build && cd build
 %cmake_build
 
 # Build Evolution-EWS
-cd %{_builddir}/evolution-ews-%{version}
+cd %{_builddir}/evolution-%{version}/evolution-ews-%{version}
 mkdir build-ews && cd build-ews
 %cmake .. \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
@@ -67,18 +67,15 @@ mkdir build-ews && cd build-ews
 
 %install
 # Install EDS
-cd %{_builddir}/evolution-data-server-%{version}
-cd build-eds
+cd %{_builddir}/evolution-%{version}/evolution-data-server-%{version}/build-eds
 %cmake_install DESTDIR=%{buildroot}
 
 # Install Evolution
-cd %{_builddir}/evolution-%{version}
-cd build
+cd %{_builddir}/evolution-%{version}/build
 %cmake_install DESTDIR=%{buildroot}
 
 # Install Evolution-EWS
-cd %{_builddir}/evolution-ews-%{version}
-cd build-ews
+cd %{_builddir}/evolution-%{version}/evolution-ews-%{version}/build-ews
 %cmake_install DESTDIR=%{buildroot}
 
 %files
