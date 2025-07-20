@@ -8,7 +8,7 @@ Summary:        Integrated email, calendar and address book for the GNOME deskto
 
 License:        GPLv2+
 URL:            https://gitlab.gnome.org/GNOME/evolution
-Source0:        https://download.gnome.org/sources/evolution/%{version}/evolution-%{version}.tar.xz
+Source0:        %{url}/-/archive/%{version}/evolution-%{version}.tar.gz
 
 BuildRequires:  meson
 BuildRequires:  ninja-build
@@ -26,7 +26,6 @@ Evolution is the GNOME email, calendar, contact and task application. It provide
 %autosetup -n evolution-%{version}
 
 %build
-%configure --enable-gtk-doc
 %make_build
 
 %install

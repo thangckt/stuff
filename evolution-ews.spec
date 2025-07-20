@@ -5,7 +5,7 @@ Summary:        Evolution plugin to connect to Microsoft Exchange servers via EW
 
 License:        GPLv2+
 URL:            https://gitlab.gnome.org/GNOME/evolution-ews
-Source0:        https://download.gnome.org/sources/evolution-ews/%{version}/evolution-ews-%{version}.tar.xz
+Source0:        %{url}/-/archive/%{version}/evolution-ews-%{version}.tar.gz
 
 BuildRequires:  meson
 BuildRequires:  ninja-build
@@ -23,11 +23,10 @@ This package allows Evolution to connect to Microsoft Exchange servers using the
 %autosetup -n evolution-ews-%{version}
 
 %build
-%meson
-%meson_build
+%make_build
 
 %install
-%meson_install
+%make_install
 
 %files
 %license COPYING
