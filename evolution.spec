@@ -65,6 +65,8 @@ mkdir build && cd build
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DWITH_LIBDB=OFF \
     -DENABLE_GTK_DOC=OFF \
+    -DENABLE_OAUTH2=OFF \
+    -DENABLE_OAUTH2_WEBKITGTK=OFF \
     -DENABLE_GNOME_DESKTOP=OFF
 %cmake_build
 
