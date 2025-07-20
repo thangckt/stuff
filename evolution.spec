@@ -27,6 +27,7 @@ Evolution PIM application built with matching Evolution Data Server and EWS plug
 
 %build
 # Build Evolution Data Server
+cd evolution-data-server-%{version}
 mkdir build-eds && cd build-eds
 %cmake ../evolution-data-server-%{version} \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
@@ -35,9 +36,10 @@ mkdir build-eds && cd build-eds
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DWITH_LIBDB=OFF
 %cmake_build
-cd ..
+cd ../../
 
 # Build Evolution
+cd evolution-%{version}
 mkdir build && cd build
 %cmake ../evolution-%{version} \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
@@ -47,9 +49,10 @@ mkdir build && cd build
     -DENABLE_GNOME_DESKTOP=OFF \
     -DWITH_LIBDB=OFF
 %cmake_build
-cd ..
+cd ../../
 
 # Build Evolution-EWS
+cd evolution-ews-%{version}
 mkdir build-ews && cd build-ews
 %cmake ../evolution-ews-%{version} \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
@@ -57,23 +60,26 @@ mkdir build-ews && cd build-ews
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native"
 %cmake_build
-cd ..
+cd ../../
 
 %install
 # Install EDS
+cd evolution-data-server-%{version}
 cd build-eds
 %cmake_install DESTDIR=%{buildroot}
-cd ..
+cd ../../
 
 # Install Evolution
+cd evolution-%{version}
 cd build
 %cmake_install DESTDIR=%{buildroot}
-cd ..
+cd ../../
 
 # Install Evolution-EWS
+cd evolution-ews-%{version}
 cd build-ews
 %cmake_install DESTDIR=%{buildroot}
-cd ..
+cd ../../
 
 %files
 %license COPYING
