@@ -23,11 +23,7 @@ BuildRequires:  libical-devel nss-devel webkitgtk6.0-devel evolution-data-server
 Evolution PIM application built with matching Evolution Data Server and EWS plugin support, enabling Microsoft Exchange/Outlook365 accounts.
 
 %prep
-%autosetup -n evolution-%{version}
-
-# Manually extract evolution-ews and evolution-data-server sources
-tar -xf %{SOURCE1}
-tar -xf %{SOURCE2}
+%autosetup -n evolution-%{version} -a1 -a2
 
 %build
 # Build Evolution Data Server
