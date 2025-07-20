@@ -13,7 +13,7 @@ Source1:        https://gitlab.gnome.org/GNOME/evolution-ews/-/archive/%{version
 Source2:        https://gitlab.gnome.org/GNOME/evolution-data-server/-/archive/%{version}/evolution-data-server-%{version}.tar.gz
 
 BuildRequires:  cmake gcc gcc-c++ gettext pkgconfig intltool
-BuildRequires:  gtk4-devel gperf
+BuildRequires:  gtk4-devel gperf libuuid-devel
 BuildRequires:  libsecret-devel libgweather4-devel gsettings-desktop-schemas-devel
 BuildRequires:  libcanberra-devel libnotify-devel openldap-devel gspell-devel
 BuildRequires:  itstool yelp-tools gdk-pixbuf2-devel libarchive-devel libnma-devel
