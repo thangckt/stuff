@@ -15,7 +15,7 @@ BuildRequires:  cmake gcc gcc-c++ meson gettext
 BuildRequires:  gtk4-devel evolution-data-server-devel >= 3.47
 BuildRequires:  webkit2gtk-5.0-devel libsecret-devel libgweather4-devel
 BuildRequires:  gsettings-desktop-schemas-devel libcanberra-devel libnotify-devel
-BuildRequires:  openldap-devel gcr4-devel gspell-devel itstool yelp-tools
+BuildRequires:  openldap-devel gspell-devel itstool yelp-tools
 BuildRequires:  gdk-pixbuf2-devel libarchive-devel libnma-devel libical-devel
 BuildRequires:  nss-devel pkgconfig
 
