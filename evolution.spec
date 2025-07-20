@@ -17,7 +17,7 @@ BuildRequires:  gtk4-devel gperf libuuid-devel
 BuildRequires:  libsecret-devel libgweather4-devel gsettings-desktop-schemas-devel
 BuildRequires:  libcanberra-devel libnotify-devel openldap-devel gspell-devel
 BuildRequires:  itstool yelp-tools gdk-pixbuf2-devel libarchive-devel libnma-devel
-BuildRequires:  libical-devel nss-devel webkitgtk6.0-devel
+BuildRequires:  libical-devel nss-devel webkitgtk6.0-devel gnome-online-accounts-devel
 
 %description
 Evolution PIM application built with matching Evolution Data Server and EWS plugin support, enabling Microsoft Exchange/Outlook365 accounts.
@@ -41,7 +41,6 @@ export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
 cd %{_builddir}/evolution-%{version}/evolution-data-server-%{version}
 mkdir build-eds && cd build-eds
 %cmake .. \
-    -DCMAKE_POLICY_DEFAULT_CMP0074=NEW \
     -DCMAKE_INSTALL_PREFIX=$LOCALPREFIX \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
@@ -58,7 +57,6 @@ mkdir build-eds && cd build-eds
 cd %{_builddir}/evolution-%{version}
 mkdir build && cd build
 %cmake .. \
-    -DCMAKE_POLICY_DEFAULT_CMP0074=NEW \
     -DCMAKE_PREFIX_PATH=$LOCALPREFIX \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_BUILD_TYPE=Release \
@@ -73,7 +71,6 @@ mkdir build && cd build
 cd %{_builddir}/evolution-%{version}/evolution-ews-%{version}
 mkdir build && cd build
 %cmake .. \
-    -DCMAKE_POLICY_DEFAULT_CMP0074=NEW \
     -DCMAKE_PREFIX_PATH=$LOCALPREFIX \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_BUILD_TYPE=Release \
