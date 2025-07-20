@@ -48,8 +48,6 @@ rustup-init -y
 . ~/.cargo/env || true
 
 # Build
-export NODE_ENV=production
-export VSCODE_NODE_CACHE=${PWD}/.node_cache
 export CFLAGS="%{optflags} -O2 -march=native"
 export CXXFLAGS="$CFLAGS"
 
