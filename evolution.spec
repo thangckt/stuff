@@ -13,13 +13,11 @@ Source1:        %{url}/-/archive/%{version}/evolution-ews-%{version}.tar.gz
 
 BuildRequires:  cmake gcc gcc-c++ meson gettext
 BuildRequires:  gtk4-devel evolution-data-server-devel >= 3.47
-BuildRequires:  webkit2gtk-5.0-devel libsecret-devel libgweather4-devel
+BuildRequires:  libsecret-devel libgweather4-devel
 BuildRequires:  gsettings-desktop-schemas-devel libcanberra-devel libnotify-devel
 BuildRequires:  openldap-devel gspell-devel itstool yelp-tools
 BuildRequires:  gdk-pixbuf2-devel libarchive-devel libnma-devel libical-devel
 BuildRequires:  nss-devel pkgconfig
-
-BuildRequires:  libcurl-devel krb5-devel libsoup3-devel
 
 %description
 Evolution is a personal information management application that provides integrated mail, calendaring and address book functionality. This package also includes the Evolution-EWS plugin for Microsoft Exchange and Outlook 365 support.
