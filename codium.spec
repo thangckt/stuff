@@ -45,9 +45,14 @@ export DISABLE_UPDATE="yes"
 
 # Rust setup
 rustup-init -y
-. "$HOME/.cargo/env"
+. ~/.cargo/env || true
 
 # Build
+export NODE_ENV=production
+export VSCODE_NODE_CACHE=${PWD}/.node_cache
+export CFLAGS="%{optflags} -O2 -march=native"
+export CXXFLAGS="$CFLAGS"
+
 sed -i "s#. version.sh#. ./version.sh#g" build.sh
 sed -i "s#. prepare_vscode.sh#. ./prepare_vscode.sh#g" build.sh
 . ./get_repo.sh
@@ -70,7 +75,7 @@ cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << 'EOF'
 [Desktop Entry]
 Name=VSCodium
 GenericName=Text Editor
-Exec=/usr/bin/codium %F
+Exec=/usr/bin/codium --no-sandbox --disable-dev-shm-usage %F
 Icon=%{name}
 Type=Application
 Terminal=false
@@ -90,6 +95,12 @@ EOF
 # Icon
 install -D -m644 VSCode-linux-%{vscode_arch}/resources/app/resources/linux/code.png \
   %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
+
+# Remove unnecessary files to reduce size
+rm -rf %{buildroot}/usr/share/vscodium/resources/app/node_modules/typescript
+rm -rf %{buildroot}/usr/share/vscodium/resources/app/extensions/*/test
+find %{buildroot}/usr/share/vscodium/resources/app/extensions -name "package.nls.*.json" \
+  ! -name "package.nls.en.json" -delete
 
 %files
 %license LICENSE
