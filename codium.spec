@@ -1,6 +1,6 @@
 ### REF: https://gitlab.com/athenaos/packages/applications/vscodium/-/blob/main/rpm/vscodium.spec?ref_type=heads
 
-Name:           vscodium
+Name:           codium
 Version:        1.102.14746
 Release:        5%{?dist}
 Summary:        Free/Libre Open Source Software Binaries of VSCode
@@ -54,8 +54,8 @@ sed -i "s#. prepare_vscode.sh#. ./prepare_vscode.sh#g" build.sh
 . ./build.sh
 
 %install
-mkdir -p %{buildroot}/usr/share/vscodium
-cp -r VSCode-linux-%{vscode_arch}/* %{buildroot}/usr/share/vscodium/
+mkdir -p %{buildroot}/usr/share/%{name}
+cp -r VSCode-linux-%{vscode_arch}/* %{buildroot}/usr/share/%{name}/
 
 # Replace statically included binary with system copy. It allows the usage of Fedora ripgrep binary that includes build-id
 ln -sf /usr/bin/rg %{buildroot}/usr/share/vscodium/resources/app/node_modules/@vscode/ripgrep/bin/rg
@@ -71,7 +71,7 @@ cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << 'EOF'
 Name=VSCodium
 GenericName=Text Editor
 Exec=/usr/bin/codium %F
-Icon=vscodium
+Icon=%{name}
 Type=Application
 Terminal=false
 StartupNotify=false
@@ -84,20 +84,20 @@ Keywords=vscode;
 [Desktop Action new-empty-window]
 Name=New Empty Window
 Exec=/usr/bin/codium --new-window %F
-Icon=vscodium
+Icon=%{name}
 EOF
 
 # Icon
 install -D -m644 VSCode-linux-%{vscode_arch}/resources/app/resources/linux/code.png \
-  %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/vscodium.png
+  %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
 
 %files
 %license LICENSE
 %doc README.md
 %{_bindir}/codium
-%{_datadir}/vscodium
-%{_datadir}/applications/vscodium.desktop
-%{_datadir}/icons/hicolor/128x128/apps/vscodium.png
+%{_datadir}/%{name}
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
 
 %changelog
 %autochangelog
