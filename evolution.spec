@@ -29,7 +29,7 @@ Evolution PIM application built with matching Evolution Data Server and EWS plug
 # Build Evolution Data Server
 cd evolution-data-server-%{version}
 mkdir build-eds && cd build-eds
-%cmake ../evolution-data-server-%{version} \
+%cmake .. \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
@@ -41,7 +41,7 @@ cd ../../
 # Build Evolution
 cd evolution-%{version}
 mkdir build && cd build
-%cmake ../evolution-%{version} \
+%cmake .. \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
@@ -54,7 +54,7 @@ cd ../../
 # Build Evolution-EWS
 cd evolution-ews-%{version}
 mkdir build-ews && cd build-ews
-%cmake ../evolution-ews-%{version} \
+%cmake .. \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
