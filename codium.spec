@@ -45,12 +45,9 @@ export DISABLE_UPDATE="yes"
 
 # Rust setup
 rustup-init -y
-. ~/.cargo/env || true
+. "$HOME/.cargo/env"
 
 # Build
-export CFLAGS="%{optflags} -O2 -march=native"
-export CXXFLAGS="$CFLAGS"
-
 sed -i "s#. version.sh#. ./version.sh#g" build.sh
 sed -i "s#. prepare_vscode.sh#. ./prepare_vscode.sh#g" build.sh
 . ./get_repo.sh
@@ -76,9 +73,7 @@ GenericName=Text Editor
 Exec=/usr/bin/codium %F
 Icon=%{name}
 Type=Application
-Terminal=false
 StartupNotify=false
-StartupWMClass=VSCodium
 Categories=Utility;Development;IDE;
 MimeType=text/plain;inode/directory;application/x-code-workspace;
 Actions=new-empty-window;
