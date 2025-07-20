@@ -10,13 +10,35 @@ License:        GPLv2+
 URL:            https://gitlab.gnome.org/GNOME/evolution
 Source0:        %{url}/-/archive/%{version}/evolution-%{version}.tar.gz
 
-BuildRequires:  ninja-build
-BuildRequires:  gcc gcc-c++
-BuildRequires:  pkgconfig
+BuildRequires:  cmake
+BuildRequires:  gcc
+BuildRequires:  gcc-c++
+BuildRequires:  make
 BuildRequires:  gettext
-BuildRequires:  itstool
+BuildRequires:  gtk3-devel
+BuildRequires:  evolution-data-server-devel
+BuildRequires:  libnotify-devel
+BuildRequires:  libcanberra-devel
+BuildRequires:  libsecret-devel
+BuildRequires:  libgweather4-devel
+BuildRequires:  webkit2gtk3-devel
+BuildRequires:  gsettings-desktop-schemas-devel
 BuildRequires:  yelp-tools
-BuildRequires: autoconf automake libtool gtk-doc
+BuildRequires:  intltool
+BuildRequires:  gperf
+BuildRequires:  itstool
+BuildRequires:  nss-devel
+BuildRequires:  libical-devel
+BuildRequires:  gcr4-devel
+BuildRequires:  libhandy1-devel
+BuildRequires:  openldap-devel
+BuildRequires:  gdk-pixbuf2-devel
+BuildRequires:  libarchive-devel
+BuildRequires:  libnma-devel
+BuildRequires:  libxml2-devel
+BuildRequires:  zlib-devel
+BuildRequires:  glib2-devel
+BuildRequires:  pango-devel
 
 %description
 Evolution is the GNOME email, calendar, contact and task application. It provides integrated mail, address book and calendaring functionality to users of the GNOME desktop.
@@ -25,12 +47,14 @@ Evolution is the GNOME email, calendar, contact and task application. It provide
 %autosetup -n evolution-%{version}
 
 %build
-# Set custom optimization flags for LTO + native tuning
-%global optflags %{optflags} -flto -march=native
-
-autoreconf -fvi
-%configure --enable-gtk-doc
-%make_build
+mkdir build
+cd build
+%cmake .. \
+    -DCMAKE_INSTALL_PREFIX=%{_prefix} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+    -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native"
+%cmake_build
 
 %install
 %make_install
