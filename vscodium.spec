@@ -17,29 +17,10 @@ ExclusiveArch:  x86_64 aarch64
 %global vscode_arch arm64
 %endif
 
-Requires:       libX11
-Requires:       libxkbfile
-Requires:       libsecret
-Requires:       krb5-libs
-Requires:       libstdc++
-Requires:       ripgrep
-
-BuildRequires:  nodejs-npm
-BuildRequires:  rustup
-BuildRequires:  ripgrep
-BuildRequires:  jq
-BuildRequires:  git
-BuildRequires:  python3
-BuildRequires:  gcc
-BuildRequires:  gcc-c++
-BuildRequires:  make
-BuildRequires:  pkgconf
-BuildRequires:  libX11-devel
-BuildRequires:  libxkbfile-devel
-BuildRequires:  libsecret-devel
-BuildRequires:  fakeroot
-BuildRequires:  krb5-devel
-BuildRequires:  rpm-build
+BuildRequires: gcc gcc-c++ make pkgconf
+BuildRequires: git jq fakeroot ripgrep
+BuildRequires: python3 nodejs-npm rustup
+BuildRequires: libX11-devel libxkbfile-devel libsecret-devel krb5-devel
 
 %description
 VSCodium is a community-driven, freely-licensed binary distribution of Microsoft’s VS Code.
@@ -92,10 +73,11 @@ GenericName=Text Editor
 Exec=/usr/bin/codium %F
 Icon=vscodium
 Type=Application
+Terminal=false
 StartupNotify=false
 StartupWMClass=VSCodium
 Categories=Utility;Development;IDE;
-MimeType=text/plain;inode/directory;
+MimeType=text/plain;inode/directory;application/x-code-workspace;
 Actions=new-empty-window;
 Keywords=vscode;
 
