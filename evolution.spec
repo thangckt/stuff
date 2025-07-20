@@ -28,7 +28,8 @@ Evolution is the GNOME email, calendar, contact and task application. It provide
 # Set custom optimization flags for LTO + native tuning
 %global optflags %{optflags} -flto -march=native
 
-./autogen.sh --prefix=%{_prefix} --enable-gtk-doc
+autoreconf -fvi
+%configure --enable-gtk-doc
 %make_build
 
 %install
