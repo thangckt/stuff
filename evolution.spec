@@ -24,8 +24,10 @@ Evolution PIM application built with matching Evolution Data Server and EWS plug
 
 %prep
 %autosetup -n evolution-%{version}
-%autosetup -a1 -n evolution-ews-%{version}
-%autosetup -a2 -n evolution-data-server-%{version}
+
+# Manually extract evolution-ews and evolution-data-server sources
+tar -xf %{SOURCE1}
+tar -xf %{SOURCE2}
 
 %build
 # Build Evolution Data Server
