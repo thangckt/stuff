@@ -73,7 +73,7 @@ cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << 'EOF'
 [Desktop Entry]
 Name=VSCodium
 GenericName=Text Editor
-Exec=/usr/bin/codium --no-sandbox --disable-dev-shm-usage %F
+Exec=/usr/bin/codium %F
 Icon=%{name}
 Type=Application
 Terminal=false
