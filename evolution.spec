@@ -17,7 +17,7 @@ BuildRequires:  gtk4-devel gperf libuuid-devel
 BuildRequires:  libsecret-devel libgweather4-devel gsettings-desktop-schemas-devel
 BuildRequires:  libcanberra-devel libnotify-devel openldap-devel gspell-devel
 BuildRequires:  itstool yelp-tools gdk-pixbuf2-devel libarchive-devel libnma-devel
-BuildRequires:  libical-devel nss-devel webkitgtk6.0-devel evolution-data-server-devel
+BuildRequires:  libical-devel nss-devel webkitgtk6.0-devel
 
 %description
 Evolution PIM application built with matching Evolution Data Server and EWS plugin support, enabling Microsoft Exchange/Outlook365 accounts.
