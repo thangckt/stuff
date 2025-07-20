@@ -8,7 +8,7 @@ Summary:        Integrated email, calendar and address book for the GNOME deskto
 
 License:        GPLv2+
 URL:            https://gitlab.gnome.org/GNOME/evolution
-Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
+Source0:        %{url}/-/archive/%{version}/evolution-%{version}.tar.gz
 
 BuildRequires:  meson
 BuildRequires:  ninja-build
