@@ -18,7 +18,7 @@ BuildRequires:  libsecret-devel libgweather4-devel gsettings-desktop-schemas-dev
 BuildRequires:  libcanberra-devel libnotify-devel openldap-devel gspell-devel
 BuildRequires:  itstool yelp-tools gdk-pixbuf2-devel libarchive-devel libnma-devel
 BuildRequires:  libical-devel nss-devel webkitgtk6.0-devel
-BuildRequires:  gnome-online-accounts-devel libical-glib-devel
+BuildRequires:  gnome-online-accounts-devel libical-glib-devel webkit2gtk4.1-devel
 
 %description
 Evolution PIM application built with matching Evolution Data Server and EWS plugin support, enabling Microsoft Exchange/Outlook365 accounts.
@@ -65,8 +65,6 @@ mkdir build && cd build
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DWITH_LIBDB=OFF \
     -DENABLE_GTK_DOC=OFF \
-    -DENABLE_OAUTH2=OFF \
-    -DENABLE_OAUTH2_WEBKITGTK=OFF \
     -DENABLE_GNOME_DESKTOP=OFF
 %cmake_build
 
