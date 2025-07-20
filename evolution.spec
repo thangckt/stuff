@@ -26,11 +26,11 @@ Evolution is the GNOME email, calendar, contact and task application. It provide
 %autosetup -n evolution-%{version}
 
 %build
-%meson
-%meson_build
+%configure --enable-gtk-doc
+%make_build
 
 %install
-%meson_install
+%make_install
 
 %files
 %license COPYING
