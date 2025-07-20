@@ -5,19 +5,12 @@ Summary:        Evolution plugin to connect to Microsoft Exchange servers via EW
 
 License:        GPLv2+
 URL:            https://gitlab.gnome.org/GNOME/evolution-ews
-Source0:        %{url}/-/archive/%{version}/evolution-ews-%{version}.tar.gz
+Source0:        https://download.gnome.org/sources/evolution-ews/%{version}/evolution-ews-%{version}.tar.xz
 
 BuildRequires:  meson
 BuildRequires:  ninja-build
 BuildRequires:  gcc gcc-c++
-BuildRequires:  pkgconfig(glib-2.0)
-BuildRequires:  pkgconfig(gtk4)
-BuildRequires:  pkgconfig(gobject-introspection-1.0)
-BuildRequires:  pkgconfig(libedataserver-1.2)
-BuildRequires:  pkgconfig(libecal-2.0)
-BuildRequires:  pkgconfig(libical-glib)
-BuildRequires:  pkgconfig(libcurl)
-BuildRequires:  pkgconfig(libxml-2.0)
+BuildRequires:  pkgconfig
 BuildRequires:  evolution-data-server-devel
 BuildRequires:  evolution-devel
 
