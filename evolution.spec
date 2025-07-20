@@ -17,7 +17,7 @@ BuildRequires:  libsecret-devel libgweather4-devel
 BuildRequires:  gsettings-desktop-schemas-devel libcanberra-devel libnotify-devel
 BuildRequires:  openldap-devel gspell-devel itstool yelp-tools
 BuildRequires:  gdk-pixbuf2-devel libarchive-devel libnma-devel libical-devel
-BuildRequires:  nss-devel pkgconfig
+BuildRequires:  nss-devel pkgconfig intltool
 
 %description
 Evolution is a personal information management application that provides integrated mail, calendaring and address book functionality. This package also includes the Evolution-EWS plugin for Microsoft Exchange and Outlook 365 support.
