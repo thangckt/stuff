@@ -47,6 +47,7 @@ mkdir build-eds && cd build-eds
 # Build Evolution
 cd %{_builddir}/evolution-%{version}
 mkdir build && cd build
+export PKG_CONFIG_PATH="%{_builddir}/evolution-%{version}/evolution-data-server-%{version}/build-eds:$PKG_CONFIG_PATH"
 %cmake .. \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_BUILD_TYPE=Release \
