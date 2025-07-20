@@ -33,12 +33,15 @@ ls -la
 
 %build
 # Build and install EDS
-cd %{_builddir}/evolution-data-server-%{version}
+cd %{_builddir}/evolution-%{version}/evolution-data-server-%{version}
 mkdir build-eds && cd build-eds
 %cmake .. \
-  -DCMAKE_INSTALL_PREFIX=%{_builddir}/localprefix \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DENABLE_INTROSPECTION=OFF -DENABLE_GTK_DOC=OFF
+    -DCMAKE_INSTALL_PREFIX=%{_builddir}/localprefix \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+    -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+    -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
+    -DENABLE_OAUTH2=ON -DENABLE_GTK=ON
 %cmake_build
 %cmake_install
 
@@ -57,7 +60,7 @@ export PKG_CONFIG_PATH=%{_builddir}/localprefix/lib64/pkgconfig:%{_builddir}/loc
 %cmake_build
 
 # Build evolution-ews after evolution
-cd %{_builddir}/evolution-ews-%{version}
+cd %{_builddir}/evolution-%{version}/evolution-ews-%{version}
 mkdir build && cd build
 export PKG_CONFIG_PATH=%{_builddir}/localprefix/lib64/pkgconfig:$PKG_CONFIG_PATH
 %cmake .. \
