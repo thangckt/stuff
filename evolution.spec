@@ -48,7 +48,7 @@ mkdir build-eds && cd build-eds
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DWITH_LIBDB=OFF \
     -DENABLE_GTK_DOC=OFF \
-    -DENABLE_OAUTH2=ON \
+    -DENABLE_OAUTH2=OFF \
     -DENABLE_GTK=ON
 %cmake_build
 %cmake_install
