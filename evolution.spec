@@ -7,7 +7,7 @@ Release:        1%{?dist}
 Summary:        GNOME email, calendar and contact management software with EWS plugin
 
 License:        GPL-2.0-or-later
-URL:            https://wiki.gnome.org/Apps/Evolution
+URL:            https://gitlab.gnome.org/GNOME/evolution
 Source0:        %{url}/-/archive/%{version}/evolution-%{version}.tar.gz
 Source1:        %{url}/-/archive/%{version}/evolution-ews-%{version}.tar.gz
 
