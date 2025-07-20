@@ -40,7 +40,8 @@ mkdir build-eds && cd build-eds
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-    -DWITH_LIBDB=OFF
+    -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
+    -DENABLE_OAUTH2=ON -DENABLE_GTK=ON
 %cmake_build
 
 # Build Evolution
@@ -51,8 +52,9 @@ mkdir build && cd build
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+    -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_GNOME_DESKTOP=OFF \
-    -DWITH_LIBDB=OFF
+    -DCMAKE_PREFIX_PATH="%{_builddir}/evolution-%{version}/evolution-data-server-%{version}/build-eds"
 %cmake_build
 
 # Build Evolution-EWS
