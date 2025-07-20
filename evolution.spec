@@ -1,4 +1,4 @@
-### REF: https://www.ovito.org/docs/current/development/build_linux.html
+### REF: https://github.com/GNOME/evolution/blob/master/.gitlab-ci.yml
 #        https://github.com/clearlinux-pkgs/evolution/blob/main/evolution.spec
 
 Name:           evolution
@@ -8,7 +8,7 @@ Summary:        Integrated email, calendar and address book for the GNOME deskto
 
 License:        GPLv2+
 URL:            https://gitlab.gnome.org/GNOME/evolution
-Source0:        https://download.gnome.org/sources/evolution/%{version}/evolution-%{version}.tar.xz
+Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
 
 BuildRequires:  meson
 BuildRequires:  ninja-build
