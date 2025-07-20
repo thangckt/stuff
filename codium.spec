@@ -76,9 +76,7 @@ GenericName=Text Editor
 Exec=/usr/bin/codium %F
 Icon=%{name}
 Type=Application
-Terminal=false
 StartupNotify=false
-StartupWMClass=VSCodium
 Categories=Utility;Development;IDE;
 MimeType=text/plain;inode/directory;application/x-code-workspace;
 Actions=new-empty-window;
@@ -93,12 +91,6 @@ EOF
 # Icon
 install -D -m644 VSCode-linux-%{vscode_arch}/resources/app/resources/linux/code.png \
   %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
-
-# Remove unnecessary files to reduce size
-rm -rf %{buildroot}/usr/share/vscodium/resources/app/node_modules/typescript
-rm -rf %{buildroot}/usr/share/vscodium/resources/app/extensions/*/test
-find %{buildroot}/usr/share/vscodium/resources/app/extensions -name "package.nls.*.json" \
-  ! -name "package.nls.en.json" -delete
 
 %files
 %license LICENSE
