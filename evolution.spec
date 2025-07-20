@@ -32,54 +32,54 @@ tar -xf %{SOURCE2}
 ls -la
 
 %build
-# Build Evolution Data Server
-cd %{_builddir}/evolution-%{version}/evolution-data-server-%{version}
+# Build and install EDS
+cd %{_builddir}/evolution-data-server-%{version}
 mkdir build-eds && cd build-eds
 %cmake .. \
-    -DCMAKE_INSTALL_PREFIX=%{_prefix} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-    -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-    -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
-    -DENABLE_OAUTH2=ON -DENABLE_GTK=ON
+  -DCMAKE_INSTALL_PREFIX=%{_builddir}/localprefix \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DENABLE_INTROSPECTION=OFF -DENABLE_GTK_DOC=OFF
 %cmake_build
+%cmake_install
 
-# Build Evolution
+# Build Evolution using the locally installed EDS
 cd %{_builddir}/evolution-%{version}
 mkdir build && cd build
-export PKG_CONFIG_PATH="%{_builddir}/evolution-%{version}/evolution-data-server-%{version}/build-eds:$PKG_CONFIG_PATH"
+export PKG_CONFIG_PATH=%{_builddir}/localprefix/lib64/pkgconfig:%{_builddir}/localprefix/lib/pkgconfig:$PKG_CONFIG_PATH
 %cmake .. \
-    -DCMAKE_INSTALL_PREFIX=%{_prefix} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-    -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-    -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
-    -DENABLE_GNOME_DESKTOP=OFF \
-    -DCMAKE_PREFIX_PATH="%{_builddir}/evolution-%{version}/evolution-data-server-%{version}/build-eds"
+  -DCMAKE_INSTALL_PREFIX=%{_prefix} \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+  -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+  -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
+  -DENABLE_GNOME_DESKTOP=OFF \
+  -DCMAKE_PREFIX_PATH=%{_builddir}/localprefix
 %cmake_build
 
-# Build Evolution-EWS
-cd %{_builddir}/evolution-%{version}/evolution-ews-%{version}
-mkdir build-ews && cd build-ews
+# Build evolution-ews after evolution
+cd %{_builddir}/evolution-ews-%{version}
+mkdir build && cd build
+export PKG_CONFIG_PATH=%{_builddir}/localprefix/lib64/pkgconfig:$PKG_CONFIG_PATH
 %cmake .. \
-    -DCMAKE_INSTALL_PREFIX=%{_prefix} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-    -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native"
+  -DCMAKE_INSTALL_PREFIX=%{_prefix} \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+  -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+  -DENABLE_GTK_DOC=OFF \
+  -DCMAKE_PREFIX_PATH=%{_builddir}/localprefix
 %cmake_build
 
 %install
-# Install EDS
-cd %{_builddir}/evolution-%{version}/evolution-data-server-%{version}/build-eds
-%cmake_install DESTDIR=%{buildroot}
+# Install EDS to system root (from localprefix)
+cp -a %{_builddir}/localprefix/* %{buildroot}/%{_prefix}
 
 # Install Evolution
 cd %{_builddir}/evolution-%{version}/build
-%cmake_install DESTDIR=%{buildroot}
+%cmake_install
 
 # Install Evolution-EWS
-cd %{_builddir}/evolution-%{version}/evolution-ews-%{version}/build-ews
-%cmake_install DESTDIR=%{buildroot}
+cd %{_builddir}/evolution-ews-%{version}/build
+%cmake_install
 
 %files
 %license COPYING
