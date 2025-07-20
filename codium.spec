@@ -54,8 +54,8 @@ sed -i "s#. prepare_vscode.sh#. ./prepare_vscode.sh#g" build.sh
 . ./build.sh
 
 %install
-mkdir -p %{buildroot}/usr/share/%{name}
-cp -r VSCode-linux-%{vscode_arch}/* %{buildroot}/usr/share/%{name}/
+mkdir -p %{buildroot}/usr/share/vscodium
+cp -r VSCode-linux-%{vscode_arch}/* %{buildroot}/usr/share/vscodium/
 
 # Replace statically included binary with system copy. It allows the usage of Fedora ripgrep binary that includes build-id
 ln -sf /usr/bin/rg %{buildroot}/usr/share/vscodium/resources/app/node_modules/@vscode/ripgrep/bin/rg
@@ -95,7 +95,7 @@ install -D -m644 VSCode-linux-%{vscode_arch}/resources/app/resources/linux/code.
 %license LICENSE
 %doc README.md
 %{_bindir}/codium
-%{_datadir}/%{name}
+%{_datadir}/vscodium
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/128x128/apps/%{name}.png
 

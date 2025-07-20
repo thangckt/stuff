@@ -47,49 +47,54 @@ function update_spec_version() {
 ##### ANCHOR: rustdesk
 repo_url="https://github.com/rustdesk/rustdesk"
 spec_files="rebuildRPM_rustdesk.spec"
-
 new_version=$(fetch_github_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
 ##### ANCHOR: electerm
 repo_url="https://github.com/electerm/electerm"
 spec_files="rebuildRPM_electerm.spec"
-
 new_version=$(fetch_github_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
 ##### ANCHOR: github-desktop
 repo_url="https://github.com/pol-rivero/github-desktop-plus"
 spec_files="rebuildRPM_github-desktop-plus.spec"
-
 new_version=$(fetch_github_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
 ##### ANCHOR: goldendict
 repo_url="https://github.com/goldendict/goldendict"
 spec_files="goldendict.spec"
-
 new_version=$(fetch_github_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
 ##### ANCHOR: rssguard
 repo_url="https://github.com/martinrotter/rssguard"
 spec_files="rssguard.spec"
-
 new_version=$(fetch_github_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
 ##### ANCHOR: zed
 repo_url="https://github.com/zed-industries/zed"
 spec_files="zed.spec"
-
 new_version=$(fetch_github_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
+##### ANCHOR: vscodium
+repo_url="https://github.com/VSCodium/vscodium"
+spec_files="codium.spec"
+new_version=$(fetch_github_version "$repo_url")
+update_spec_version "$spec_files" "$new_version"
 
 ##### ANCHOR: Ovito
 repo_url="https://gitlab.com/stuko/ovito"
 spec_files="ovito.spec"
+new_version=$(fetch_gitlab_version "$repo_url")
+update_spec_version "$spec_files" "$new_version"
+
+##### ANCHOR: Evolution
+repo_url="https://gitlab.gnome.org/GNOME/evolution"
+spec_files="evolution.spec"
 new_version=$(fetch_gitlab_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
