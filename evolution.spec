@@ -49,6 +49,7 @@ mkdir build-eds && cd build-eds
     -DWITH_LIBDB=OFF \
     -DENABLE_GTK_DOC=OFF \
     -DENABLE_OAUTH2=OFF \
+    -DENABLE_OAUTH2_WEBKITGTK=OFF \
     -DENABLE_GTK=ON
 %cmake_build
 %cmake_install
