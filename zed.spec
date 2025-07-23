@@ -7,7 +7,7 @@ Summary:        Zed is a high-performance, multiplayer code editor
 
 License:        AGPL-3.0-only AND Apache-2.0 AND GPL-3.0-or-later
 URL:            https://zed.dev/
-#Source0:        https://github.com/zed-industries/zed/archive/refs/tags/v%{version}.tar.gz
+#Source0:       https://github.com/zed-industries/zed/archive/refs/tags/v%{version}.tar.gz
 
 BuildRequires:  cargo-rpm-macros >= 24
 BuildRequires:  gcc, gcc-c++, clang, cmake, mold, git
@@ -53,7 +53,7 @@ install -Dm755 target/release/zed %{buildroot}%{_libexecdir}/zed-editor
 install -Dm755 target/release/cli %{buildroot}%{_bindir}/zed
 
 install -Dm644 zed.desktop %{buildroot}%{_datadir}/applications/zed.desktop
-install -Dm644 crates/zed/resources/app-icon.png %{buildroot}%{_datadir}/icons/hicolor/512x512/apps/zed.png
+install -Dm644 crates/zed/resources/app-icon.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/zed.png
 install -Dm644 zed.metainfo.xml %{buildroot}%{_metainfodir}/zed.metainfo.xml
 
 %files
@@ -62,7 +62,7 @@ install -Dm644 zed.metainfo.xml %{buildroot}%{_metainfodir}/zed.metainfo.xml
 %{_libexecdir}/zed-editor
 %{_bindir}/zed
 %{_datadir}/applications/zed.desktop
-%{_datadir}/icons/hicolor/512x512/apps/zed.png
+%{_datadir}/icons/hicolor/128x128/apps/zed.png
 %{_metainfodir}/zed.metainfo.xml
 
 %changelog
