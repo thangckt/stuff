@@ -56,6 +56,7 @@ mkdir -p %{buildroot}/usr/share/vscodium
 cp -r VSCode-linux-%{vscode_arch}/* %{buildroot}/usr/share/vscodium/
 
 # Replace statically included binary with system copy. It allows the usage of Fedora ripgrep binary that includes build-id
+mkdir -p %{buildroot}/usr/share/vscodium/resources/app/node_modules/@vscode/ripgrep/bin
 ln -sf /usr/bin/rg %{buildroot}/usr/share/vscodium/resources/app/node_modules/@vscode/ripgrep/bin/rg
 
 # Symlink binary
@@ -86,6 +87,11 @@ EOF
 # Icon
 install -D -m644 VSCode-linux-%{vscode_arch}/resources/app/resources/linux/code.png \
   %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
+
+# Strip development-only and unnecessary files to reduce package size
+rm -rf %{buildroot}/usr/share/vscodium/resources/app/extensions/*/test
+find %{buildroot}/usr/share/vscodium/resources/app/extensions -name "package.nls.*.json" \
+  ! -name "package.nls.en.json" -delete
 
 %files
 %license LICENSE
