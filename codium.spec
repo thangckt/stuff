@@ -20,6 +20,8 @@ ExclusiveArch:  x86_64 aarch64
 BuildRequires: gcc gcc-c++ make pkgconf git jq fakeroot ripgrep
 BuildRequires: python3 nodejs-npm rustup libX11-devel libxkbfile-devel libsecret-devel krb5-devel
 
+Requires:      libX11 libxkbfile libsecret krb5-libs libstdc++ ripgrep
+
 %description
 VSCodium is a community-driven, freely-licensed binary distribution of Microsoft’s VS Code.
 This package builds it from the official source using a reproducible process.
