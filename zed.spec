@@ -38,7 +38,7 @@ export APP_NAME="Zed Editor"
 export APP_CLI="zed"
 export APP_ICON="zed"
 export APP_ARGS="%U"
-export DO_STARTUP_NOTIFY=false
+export DO_STARTUP_NOTIFY=true
 
 # Generate desktop/metainfo files
 envsubst < crates/zed/resources/zed.desktop.in > zed.desktop
