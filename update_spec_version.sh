@@ -93,10 +93,10 @@ new_version=$(fetch_gitlab_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
 #####ANCHOR: Evolution
-repo_url="https://gitlab.gnome.org/GNOME/evolution"
-spec_files="evolution.spec"
-new_version=$(fetch_gitlab_version "$repo_url")
-update_spec_version "$spec_files" "$new_version"
+# repo_url="https://gitlab.gnome.org/GNOME/evolution"
+# spec_files="evolution.spec"
+# new_version=$(fetch_gitlab_version "$repo_url")
+# update_spec_version "$spec_files" "$new_version"
 
 #####ANCHOR: Zotero
 #####!SECTION
