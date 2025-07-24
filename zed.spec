@@ -38,10 +38,14 @@ export APP_NAME="Zed Editor"
 export APP_CLI="zed"
 export APP_ICON="zed"
 export APP_ARGS="%U"
-export DO_STARTUP_NOTIFY=true
+export DO_STARTUP_NOTIFY=false
 
+# Generate desktop/metainfo files
 envsubst < crates/zed/resources/zed.desktop.in > zed.desktop
 envsubst < crates/zed/resources/flatpak/zed.metainfo.xml.in > zed.metainfo.xml
+
+# Append StartupWMClass to ensure KDE task manager shows icon
+grep -q '^StartupWMClass=' zed.desktop || sed -i '/^\[Desktop Action /i StartupWMClass=dev.zed.Zed' zed.desktop
 
 %build
 export CARGO_HOME=.cargo
