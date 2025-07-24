@@ -39,11 +39,14 @@ function update_spec_version() {
         echo "Updating version $current_version to $new_version, in file $spec_file"
         sed -i "s/^Version:[[:space:]]\+$current_version/Version:        $new_version/" "$spec_file"
     else
-        echo "Version ($current_version) is up to date, in file $spec_file"
+        new_version=""
     fi
+    printf "%-15s %-15s %s\n" "$current_version" "$new_version" "$spec_file"
 }
 
 #####SECTION: From GitHub
+printf "%-15s %-15s %s\n" "Old_ver" "New_ver" "File"
+
 #####ANCHOR: rustdesk
 repo_url="https://github.com/rustdesk/rustdesk"
 spec_files="rebuildRPM_rustdesk.spec"
