@@ -34,6 +34,8 @@ and the EWS plugin. Supports Microsoft Exchange/Outlook365 accounts via the EWS 
 tar -xf %{SOURCE1}
 tar -xf %{SOURCE2}
 
+ls -1  # for debugging, check if sources are unpacked correctly
+
 %build
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
 export LOCALPREFIX=%{_builddir}/localprefix
@@ -55,7 +57,7 @@ mkdir build-eds && cd build-eds
 %cmake_install
 popd
 
-# (Debug) See if some libs are built correctly
+# (Debug) See if some libs are built and install correctly
 find $LOCALPREFIX -name "camel-1.2.pc"
 
 # Build Evolution
