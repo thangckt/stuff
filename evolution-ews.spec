@@ -28,7 +28,9 @@ This spec builds Evolution PIM as a unified package including matching versions 
 and the EWS plugin. Supports Microsoft Exchange/Outlook365 accounts via the EWS plugin.
 
 %prep
-%setup -q -n topdir -T
+mkdir -p topdir
+cd topdir
+%setup -q -T -D -c
 tar -xf %{SOURCE0}
 tar -xf %{SOURCE1}
 tar -xf %{SOURCE2}
@@ -42,8 +44,7 @@ export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:
 export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
 
 # Build EDS
-cd %{_builddir}
-pushd evolution-data-server-%{version}
+cd %{_builddir}/topdir/evolution-data-server-%{version}
 mkdir build-eds && cd build-eds
 %cmake .. \
     -DCMAKE_INSTALL_PREFIX=$LOCALPREFIX \
@@ -55,7 +56,6 @@ mkdir build-eds && cd build-eds
     -DENABLE_OAUTH2=ON -DENABLE_GTK=ON
 %cmake_build
 %cmake_install
-popd
 
 # (Debug) See if some libs are built and install correctly
 find $LOCALPREFIX -name "camel-1.2.pc"
@@ -64,8 +64,7 @@ find $LOCALPREFIX -name "camel-1.2.pc"
 export CMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake:$CMAKE_PREFIX_PATH"
 export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 
-cd %{_builddir}
-pushd evolution-%{version}
+cd %{_builddir}/topdir/evolution-%{version}
 mkdir build && cd build
 %cmake .. \
     -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
@@ -77,14 +76,12 @@ mkdir build && cd build
     -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_GNOME_DESKTOP=OFF
 %cmake_build
-popd
 
 # Build EWS plugin
 export CMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake:$CMAKE_PREFIX_PATH"
 export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 
-cd %{_builddir}
-pushd evolution-ews-%{version}
+cd %{_builddir}/topdir/evolution-ews-%{version}
 mkdir build && cd build
 %cmake .. \
     -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
@@ -95,7 +92,6 @@ mkdir build && cd build
   -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
   -DENABLE_GTK_DOC=OFF
 %cmake_build
-popd
 
 %install
 cp -a $LOCALPREFIX/* %{buildroot}%{_prefix}
