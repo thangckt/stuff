@@ -36,7 +36,7 @@ tar -xf %{SOURCE2}
 # ls -1  # for debugging, check if sources are unpacked correctly
 
 %build
-export LOCALPREFIX=%{_builddir}/localprefix
+export LOCALPREFIX=%{_builddir}/evolution-ews-%{version}/localprefix
 export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
