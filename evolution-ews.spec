@@ -56,6 +56,9 @@ mkdir build-eds && cd build-eds
 popd
 
 # Build Evolution
+export CMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake:$CMAKE_PREFIX_PATH"
+export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
+
 mkdir build && cd build
 %cmake .. \
     -DCMAKE_PREFIX_PATH=$LOCALPREFIX \
@@ -69,6 +72,9 @@ mkdir build && cd build
 popd
 
 # Build EWS plugin
+export CMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake:$CMAKE_PREFIX_PATH"
+export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
+
 pushd evolution-ews-%{version}
 mkdir build && cd build
 %cmake .. \
