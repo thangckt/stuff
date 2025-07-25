@@ -53,8 +53,8 @@ mkdir build-eds && cd build-eds
     -DENABLE_OAUTH2_WEBKITGTK=ON -DENABLE_OAUTH2_WEBKITGTK4=ON \
     -DENABLE_GTK=ON
 %cmake_build
-%cmake_install
-cd ..
+%cmake --install . --prefix $LOCALPREFIX
+cd ../..
 
 # (Debug) See if some libs are built and install correctly
 find $LOCALPREFIX -name "camel-1.2.pc"
@@ -64,7 +64,6 @@ cd evolution-%{version}
 mkdir build && cd build
 %cmake .. \
     -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
-    -DCMAKE_PREFIX_PATH=$LOCALPREFIX \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_BUILD_TYPE=Release -DENABLE_PLUGINS=all \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
@@ -72,7 +71,7 @@ mkdir build && cd build
     -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_GNOME_DESKTOP=OFF
 %cmake_build
-cd ..
+cd ../..
 
 # Build EWS plugin
 mkdir build && cd build
@@ -87,13 +86,17 @@ mkdir build && cd build
 %cmake_build
 
 %install
-cp -a $LOCALPREFIX/* %{buildroot}%{_prefix}
+# Copy locally installed EDS into buildroot
+mkdir -p %{buildroot}%{_prefix}
+cp -a $LOCALPREFIX/* %{buildroot}%{_prefix}/
 
+# Install Evolution
 pushd evolution-%{version}/build
 %cmake_install
 popd
 
-pushd evolution-%{version}/evolution-ews-%{version}/build
+# Install EWS
+pushd build
 %cmake_install
 popd
 
