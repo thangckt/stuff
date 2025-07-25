@@ -37,7 +37,6 @@ tar -xf %{SOURCE2}
 
 %build
 export LOCALPREFIX=%{_builddir}/localprefix
-mkdir -p "$LOCALPREFIX"
 export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
@@ -52,7 +51,7 @@ mkdir build-eds && cd build-eds
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_OAUTH2_WEBKITGTK=ON -DENABLE_OAUTH2_WEBKITGTK4=ON \
-    -DENABLE_OAUTH2=ON -DENABLE_GTK=ON
+    -DENABLE_GTK=ON
 %cmake_build
 %cmake_install
 cd ..
