@@ -28,9 +28,8 @@ This spec builds Evolution PIM as a unified package including matching versions 
 and the EWS plugin. Supports Microsoft Exchange/Outlook365 accounts via the EWS plugin.
 
 %prep
-%setup -q -n evolution-%{version}
-
-# Unpack evolution-ews and evolution-data-server under main tree
+%setup -q -n topdir -T
+tar -xf %{SOURCE0}
 tar -xf %{SOURCE1}
 tar -xf %{SOURCE2}
 
@@ -43,7 +42,8 @@ export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:
 export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
 
 # Build EDS
-pushd ../evolution-data-server-%{version}
+cd %{_builddir}
+pushd evolution-data-server-%{version}
 mkdir build-eds && cd build-eds
 %cmake .. \
     -DCMAKE_INSTALL_PREFIX=$LOCALPREFIX \
@@ -64,6 +64,8 @@ find $LOCALPREFIX -name "camel-1.2.pc"
 export CMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake:$CMAKE_PREFIX_PATH"
 export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 
+cd %{_builddir}
+pushd evolution-%{version}
 mkdir build && cd build
 %cmake .. \
     -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
@@ -81,7 +83,8 @@ popd
 export CMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake:$CMAKE_PREFIX_PATH"
 export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 
-pushd ../evolution-ews-%{version}
+cd %{_builddir}
+pushd evolution-ews-%{version}
 mkdir build && cd build
 %cmake .. \
     -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
