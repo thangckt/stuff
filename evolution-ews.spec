@@ -43,8 +43,9 @@ export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declaratio
 
 # Build EDS
 cd evolution-data-server-%{version}
-mkdir build-eds && cd build-eds
-%cmake .. \
+
+# Always use -B and -S to avoid implicit subdir mess
+%cmake -B build-eds -S . \
     -DCMAKE_INSTALL_PREFIX=$LOCALPREFIX \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
@@ -52,9 +53,9 @@ mkdir build-eds && cd build-eds
     -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_OAUTH2_WEBKITGTK=ON -DENABLE_OAUTH2_WEBKITGTK4=ON \
     -DENABLE_GTK=ON
-%cmake_build
-cmake --install redhat-linux-build --prefix $LOCALPREFIX
-cd ../..
+%cmake_build -C build-eds
+cmake --install build-eds --prefix $LOCALPREFIX
+cd ..
 
 # (Debug) See if some libs are built and install correctly
 find $LOCALPREFIX -name "camel-1.2.pc"
