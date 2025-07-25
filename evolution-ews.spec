@@ -28,11 +28,14 @@ This spec builds Evolution PIM as a unified package including matching versions 
 and the EWS plugin. Supports Microsoft Exchange/Outlook365 accounts via the EWS plugin.
 
 %prep
-%autosetup -n evolution-%{version}
+%setup -q -n evolution-%{version}
+
+# Unpack evolution-ews and evolution-data-server under main tree
 tar -xf %{SOURCE1}
 tar -xf %{SOURCE2}
 
 %build
+export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
 export LOCALPREFIX=%{_builddir}/localprefix
 export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
@@ -53,9 +56,6 @@ mkdir build-eds && cd build-eds
 popd
 
 # Build Evolution
-export CFLAGS="$RPM_OPT_FLAGS -fPIC -DLDAP_DEPRECATED -Wno-sign-compare -Wno-deprecated-declarations"
-
-pushd evolution-%{version}
 mkdir build && cd build
 %cmake .. \
     -DCMAKE_PREFIX_PATH=$LOCALPREFIX \
@@ -69,7 +69,7 @@ mkdir build && cd build
 popd
 
 # Build EWS plugin
-pushd evolution-%{version}/evolution-ews-%{version}
+pushd evolution-ews-%{version}
 mkdir build && cd build
 %cmake .. \
   -DCMAKE_PREFIX_PATH=$LOCALPREFIX \
