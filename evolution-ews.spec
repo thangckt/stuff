@@ -11,8 +11,8 @@ Summary:        GNOME PIM (Evolution + EDS + EWS plugin unified build)
 License:        GPL-2.0-or-later
 URL:            https://gitlab.gnome.org/GNOME/evolution
 
-Source0:        https://gitlab.gnome.org/GNOME/evolution/-/archive/%{version}/evolution-%{version}.tar.gz
-Source1:        https://gitlab.gnome.org/GNOME/evolution-ews/-/archive/%{version}/evolution-ews-%{version}.tar.gz
+Source0:        https://gitlab.gnome.org/GNOME/evolution-ews/-/archive/%{version}/evolution-ews-%{version}.tar.gz
+Source1:        https://gitlab.gnome.org/GNOME/evolution/-/archive/%{version}/evolution-%{version}.tar.gz
 Source2:        https://gitlab.gnome.org/GNOME/evolution-data-server/-/archive/%{version}/evolution-data-server-%{version}.tar.gz
 
 BuildRequires:  cmake gcc gcc-c++ gettext pkgconfig intltool
@@ -28,10 +28,10 @@ This spec builds Evolution PIM as a unified package including matching versions 
 and the EWS plugin. Supports Microsoft Exchange/Outlook365 accounts via the EWS plugin.
 
 %prep
-%setup -q -n evolution-ews-%{version} -a 1
-tar -xf %{SOURCE0}
+%setup -q -n evolution-ews-%{version}
+tar -xf %{SOURCE1}
 tar -xf %{SOURCE2}
-# The topdir must the same as package name (from source1: -a 1), other sources will be unpacked into the topdir
+# The topdir must the same as package name (from source0), other sources will be unpacked into the topdir
 
 # ls -1  # for debugging, check if sources are unpacked correctly
 
