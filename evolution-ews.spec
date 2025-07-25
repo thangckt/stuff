@@ -34,7 +34,7 @@ and the EWS plugin. Supports Microsoft Exchange/Outlook365 accounts via the EWS 
 tar -xf %{SOURCE1}
 tar -xf %{SOURCE2}
 
-ls -1  # for debugging, check if sources are unpacked correctly
+# ls -1  # for debugging, check if sources are unpacked correctly
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
@@ -43,7 +43,7 @@ export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:
 export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
 
 # Build EDS
-pushd evolution-data-server-%{version}
+pushd ../evolution-data-server-%{version}
 mkdir build-eds && cd build-eds
 %cmake .. \
     -DCMAKE_INSTALL_PREFIX=$LOCALPREFIX \
@@ -81,7 +81,7 @@ popd
 export CMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake:$CMAKE_PREFIX_PATH"
 export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 
-pushd evolution-ews-%{version}
+pushd ../evolution-ews-%{version}
 mkdir build && cd build
 %cmake .. \
     -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
