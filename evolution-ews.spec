@@ -55,12 +55,16 @@ mkdir build-eds && cd build-eds
 %cmake_install
 popd
 
+# (Debug) See if some libs are built correctly
+find $LOCALPREFIX -name "camel-1.2.pc"
+
 # Build Evolution
 export CMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake:$CMAKE_PREFIX_PATH"
 export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 
 mkdir build && cd build
 %cmake .. \
+    -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
     -DCMAKE_PREFIX_PATH=$LOCALPREFIX \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_BUILD_TYPE=Release -DENABLE_PLUGINS=all \
@@ -78,6 +82,7 @@ export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:
 pushd evolution-ews-%{version}
 mkdir build && cd build
 %cmake .. \
+    -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
   -DCMAKE_PREFIX_PATH=$LOCALPREFIX \
   -DCMAKE_INSTALL_PREFIX=%{_prefix} \
   -DCMAKE_BUILD_TYPE=Release \
