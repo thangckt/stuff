@@ -28,23 +28,21 @@ This spec builds Evolution PIM as a unified package including matching versions 
 and the EWS plugin. Supports Microsoft Exchange/Outlook365 accounts via the EWS plugin.
 
 %prep
-mkdir -p topdir
-cd topdir
-%setup -q -T -D -c
+%setup -q -n evolution-ews-%{version}
 tar -xf %{SOURCE0}
-tar -xf %{SOURCE1}
 tar -xf %{SOURCE2}
 
 # ls -1  # for debugging, check if sources are unpacked correctly
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
-export LOCALPREFIX=%{_builddir}/localprefix
+export LOCALPREFIX=%{_builddir}/evolution-ews-%{version}/localprefix
+mkdir -p "$LOCALPREFIX"
 export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
+export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
 
 # Build EDS
-cd %{_builddir}/topdir/evolution-data-server-%{version}
+cd %{_builddir}/evolution-ews-%{version}/evolution-data-server-%{version}
 mkdir build-eds && cd build-eds
 %cmake .. \
     -DCMAKE_INSTALL_PREFIX=$LOCALPREFIX \
@@ -61,10 +59,7 @@ mkdir build-eds && cd build-eds
 find $LOCALPREFIX -name "camel-1.2.pc"
 
 # Build Evolution
-export CMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake:$CMAKE_PREFIX_PATH"
-export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
-
-cd %{_builddir}/topdir/evolution-%{version}
+cd %{_builddir}/evolution-ews-%{version}/evolution-%{version}
 mkdir build && cd build
 %cmake .. \
     -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
@@ -78,19 +73,16 @@ mkdir build && cd build
 %cmake_build
 
 # Build EWS plugin
-export CMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake:$CMAKE_PREFIX_PATH"
-export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
-
-cd %{_builddir}/topdir/evolution-ews-%{version}
+cd %{_builddir}/evolution-ews-%{version}
 mkdir build && cd build
 %cmake .. \
     -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
-  -DCMAKE_PREFIX_PATH=$LOCALPREFIX \
-  -DCMAKE_INSTALL_PREFIX=%{_prefix} \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-  -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-  -DENABLE_GTK_DOC=OFF
+    -DCMAKE_PREFIX_PATH=$LOCALPREFIX \
+    -DCMAKE_INSTALL_PREFIX=%{_prefix} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+    -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+    -DENABLE_GTK_DOC=OFF
 %cmake_build
 
 %install
