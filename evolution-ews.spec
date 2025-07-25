@@ -15,13 +15,13 @@ Source0:        https://gitlab.gnome.org/GNOME/evolution/-/archive/%{version}/ev
 Source1:        https://gitlab.gnome.org/GNOME/evolution-ews/-/archive/%{version}/evolution-ews-%{version}.tar.gz
 Source2:        https://gitlab.gnome.org/GNOME/evolution-data-server/-/archive/%{version}/evolution-data-server-%{version}.tar.gz
 
-BuildRequires:  cmake gcc gcc-c++ gettext pkgconfig intltool \
-                gtk4-devel gperf libuuid-devel \
-                libsecret-devel libgweather4-devel gsettings-desktop-schemas-devel \
-                libcanberra-devel libnotify-devel openldap-devel gspell-devel \
-                itstool yelp-tools gdk-pixbuf2-devel libarchive-devel libnma-devel \
-                libical-devel nss-devel webkitgtk6.0-devel \
-                gnome-online-accounts-devel libical-glib-devel webkit2gtk4.1-devel
+BuildRequires:  cmake gcc gcc-c++ gettext pkgconfig intltool
+BuildRequires:  gtk4-devel gperf libuuid-devel
+BuildRequires:  libsecret-devel libgweather4-devel gsettings-desktop-schemas-devel
+BuildRequires:  libcanberra-devel libnotify-devel openldap-devel gspell-devel
+BuildRequires:  itstool yelp-tools gdk-pixbuf2-devel libarchive-devel libnma-devel
+BuildRequires:  libical-devel nss-devel webkitgtk6.0-devel
+BuildRequires:  gnome-online-accounts-devel libical-glib-devel webkit2gtk4.1-devel
 
 %description
 This spec builds Evolution PIM as a unified package including matching versions of Evolution, Evolution Data Server (EDS),
@@ -41,26 +41,30 @@ export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
 pushd evolution-data-server-%{version}
 mkdir build-eds && cd build-eds
 %cmake .. \
-  -DCMAKE_INSTALL_PREFIX=$LOCALPREFIX \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-  -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-  -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF -DENABLE_OAUTH2=OFF \
-  -DENABLE_OAUTH2_WEBKITGTK=OFF -DENABLE_GTK=ON
+    -DCMAKE_INSTALL_PREFIX=$LOCALPREFIX \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+    -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+    -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
+    -DENABLE_OAUTH2_WEBKITGTK=ON -DENABLE_OAUTH2_WEBKITGTK4=ON \
+    -DENABLE_OAUTH2=ON -DENABLE_GTK=ON
 %cmake_build
 %cmake_install
 popd
 
 # Build Evolution
+export CFLAGS="$RPM_OPT_FLAGS -fPIC -DLDAP_DEPRECATED -Wno-sign-compare -Wno-deprecated-declarations"
+
 pushd evolution-%{version}
 mkdir build && cd build
 %cmake .. \
-  -DCMAKE_PREFIX_PATH=$LOCALPREFIX \
-  -DCMAKE_INSTALL_PREFIX=%{_prefix} \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-  -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-  -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF -DENABLE_GNOME_DESKTOP=OFF
+    -DCMAKE_PREFIX_PATH=$LOCALPREFIX \
+    -DCMAKE_INSTALL_PREFIX=%{_prefix} \
+    -DCMAKE_BUILD_TYPE=Release -DENABLE_PLUGINS=all \
+    -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+    -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+    -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
+    -DENABLE_GNOME_DESKTOP=OFF
 %cmake_build
 popd
 
