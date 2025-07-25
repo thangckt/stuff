@@ -53,7 +53,7 @@ mkdir build-eds && cd build-eds
     -DENABLE_OAUTH2_WEBKITGTK=ON -DENABLE_OAUTH2_WEBKITGTK4=ON \
     -DENABLE_GTK=ON
 %cmake_build
-cmake --install . --prefix $LOCALPREFIX
+cmake --install redhat-linux-build --prefix $LOCALPREFIX
 cd ../..
 
 # (Debug) See if some libs are built and install correctly
