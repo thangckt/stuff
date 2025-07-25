@@ -1,27 +1,81 @@
-### REF: https://gitlab.gnome.org/GNOME/evolution/-/wikis/Building
-#        https://github.com/clearlinux-pkgs/evolution/blob/main/evolution.spec
+### REF: https://src.fedoraproject.org/rpms/evolution-data-server/blob/rawhide/f/evolution-data-server.spec
 
-Name:           evolution
-Version:        3.57.1
-Release:        1%{?dist}
-Summary:        GNOME email, calendar and contact management software with EWS plugin
+### Abstract ###
+Name: evolution-data-server
+Version: 3.57.1
+Release: 2%{?dist}
+Summary: Backend data server for Evolution
+License: LGPL-2.0-or-later
+URL: https://gitlab.gnome.org/GNOME/evolution/-/wikis/home
+Source: http://download.gnome.org/sources/%{name}/3.57/%{name}-%{version}.tar.xz
 
-License:        GPL-2.0-or-later
-URL:            https://gitlab.gnome.org/GNOME/evolution
-Source0:        https://gitlab.gnome.org/GNOME/evolution/-/archive/%{version}/evolution-%{version}.tar.gz
-Source1:        https://gitlab.gnome.org/GNOME/evolution-ews/-/archive/%{version}/evolution-ews-%{version}.tar.gz
-Source2:        https://gitlab.gnome.org/GNOME/evolution-data-server/-/archive/%{version}/evolution-data-server-%{version}.tar.gz
+### Dependencies ###
 
-BuildRequires:  cmake gcc gcc-c++ gettext pkgconfig intltool
-BuildRequires:  gtk4-devel gperf libuuid-devel
-BuildRequires:  libsecret-devel libgweather4-devel gsettings-desktop-schemas-devel
-BuildRequires:  libcanberra-devel libnotify-devel openldap-devel gspell-devel
-BuildRequires:  itstool yelp-tools gdk-pixbuf2-devel libarchive-devel libnma-devel
-BuildRequires:  libical-devel nss-devel webkitgtk6.0-devel
-BuildRequires:  gnome-online-accounts-devel libical-glib-devel webkit2gtk4.1-devel
+Requires: %{name}-langpacks = %{version}-%{release}
+
+### Build Dependencies ###
+
+BuildRequires: cmake
+BuildRequires: gcc
+BuildRequires: gcc-c++
+BuildRequires: gettext
+BuildRequires: gperf
+%if %{with_docs}
+BuildRequires: gtk-doc >= %{gtk_doc_version}
+%endif
+BuildRequires: vala
+BuildRequires: systemd
+
+BuildRequires: pkgconfig(gio-2.0) >= %{glib2_version}
+BuildRequires: pkgconfig(gio-unix-2.0) >= %{glib2_version}
+BuildRequires: pkgconfig(gmodule-2.0) >= %{glib2_version}
+BuildRequires: pkgconfig(icu-i18n)
+BuildRequires: pkgconfig(gtk+-3.0) >= %{gtk3_version}
+BuildRequires: pkgconfig(gtk4) >= %{gtk4_version}
+BuildRequires: pkgconfig(goa-1.0) >= %{goa_version}
+BuildRequires: pkgconfig(gweather4) >= %{libgweather_version}
+BuildRequires: pkgconfig(libical-glib) >= %{libical_version}
+BuildRequires: pkgconfig(libsecret-unstable) >= %{libsecret_version}
+BuildRequires: pkgconfig(libsoup-3.0) >= %{libsoup_version}
+BuildRequires: pkgconfig(libxml-2.0)
+BuildRequires: pkgconfig(nspr)
+BuildRequires: pkgconfig(nss) >= %{nss_version}
+BuildRequires: pkgconfig(sqlite3) >= %{sqlite_version}
+BuildRequires: pkgconfig(uuid) >= %{uuid_version}
+%if %{with_webkitgtk}
+BuildRequires: pkgconfig(webkit2gtk-4.1) >= %{webkit2gtk_version}
+BuildRequires: pkgconfig(webkitgtk-6.0) >= %{webkit2gtk4_version}
+%endif
+BuildRequires: pkgconfig(json-glib-1.0) >= %{json_glib_version}
+BuildRequires: pkgconfig(libcanberra-gtk3)
+
+%if %{ldap_support}
+BuildRequires: openldap-devel >= 2.0.11
+%if %{static_ldap}
+BuildRequires: pkgconfig(openssl)
+%endif
+%endif
+
+%if %{krb5_support}
+BuildRequires: krb5-devel >= 1.11
+%endif
+
+%if %{phonenum_support}
+BuildRequires: libphonenumber-devel
+BuildRequires: protobuf-devel
+BuildRequires: boost-devel
+BuildRequires: abseil-cpp-devel
+%endif
+
+# libical 3.0.16 added new API, this ensures to bring it in
+Requires: libical-glib >= %{libical_version}
 
 %description
-Evolution PIM application built with matching Evolution Data Server and EWS plugin support, enabling Microsoft Exchange/Outlook365 accounts.
+The %{name} package provides a unified backend for programs that work
+with contacts, tasks, and calendar information.
+
+It was originally developed for Evolution (hence the name), but is now used
+by other packages.
 
 %prep
 # Unpack main tarball

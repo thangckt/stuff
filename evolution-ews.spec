@@ -1,0 +1,111 @@
+### This spec to build Evolution with EWS support. This unify 3 speparated builds:
+# - evolution-data-server (EDS): https://src.fedoraproject.org/rpms/evolution-data-server/blob/rawhide/f/evolution-data-server.spec
+# - evolution: https://src.fedoraproject.org/rpms/evolution/blob/rawhide/f/evolution.spec
+# - evolution-ews: https://src.fedoraproject.org/rpms/evolution-ews/blob/rawhide/f/evolution-ews.spec
+
+
+Name:           evolution-ews
+Version:        3.57.1
+Release:        1%{?dist}
+Summary:        GNOME PIM (Evolution + EDS + EWS plugin unified build)
+License:        GPL-2.0-or-later
+URL:            https://gitlab.gnome.org/GNOME/evolution
+
+Source0:        https://gitlab.gnome.org/GNOME/evolution/-/archive/%{version}/evolution-%{version}.tar.gz
+Source1:        https://gitlab.gnome.org/GNOME/evolution-ews/-/archive/%{version}/evolution-ews-%{version}.tar.gz
+Source2:        https://gitlab.gnome.org/GNOME/evolution-data-server/-/archive/%{version}/evolution-data-server-%{version}.tar.gz
+
+BuildRequires:  cmake gcc gcc-c++ gettext pkgconfig intltool \
+                gtk4-devel gperf libuuid-devel \
+                libsecret-devel libgweather4-devel gsettings-desktop-schemas-devel \
+                libcanberra-devel libnotify-devel openldap-devel gspell-devel \
+                itstool yelp-tools gdk-pixbuf2-devel libarchive-devel libnma-devel \
+                libical-devel nss-devel webkitgtk6.0-devel \
+                gnome-online-accounts-devel libical-glib-devel webkit2gtk4.1-devel
+
+%description
+This spec builds Evolution PIM as a unified package including matching versions of Evolution, Evolution Data Server (EDS),
+and the EWS plugin. Supports Microsoft Exchange/Outlook365 accounts via the EWS plugin.
+
+%prep
+%autosetup -n evolution-%{version}
+tar -xf %{SOURCE1}
+tar -xf %{SOURCE2}
+
+%build
+export LOCALPREFIX=%{_builddir}/localprefix
+export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
+export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
+
+# Build EDS
+pushd evolution-data-server-%{version}
+mkdir build-eds && cd build-eds
+%cmake .. \
+  -DCMAKE_INSTALL_PREFIX=$LOCALPREFIX \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+  -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+  -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF -DENABLE_OAUTH2=OFF \
+  -DENABLE_OAUTH2_WEBKITGTK=OFF -DENABLE_GTK=ON
+%cmake_build
+%cmake_install
+popd
+
+# Build Evolution
+pushd evolution-%{version}
+mkdir build && cd build
+%cmake .. \
+  -DCMAKE_PREFIX_PATH=$LOCALPREFIX \
+  -DCMAKE_INSTALL_PREFIX=%{_prefix} \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+  -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+  -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF -DENABLE_GNOME_DESKTOP=OFF
+%cmake_build
+popd
+
+# Build EWS plugin
+pushd evolution-%{version}/evolution-ews-%{version}
+mkdir build && cd build
+%cmake .. \
+  -DCMAKE_PREFIX_PATH=$LOCALPREFIX \
+  -DCMAKE_INSTALL_PREFIX=%{_prefix} \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+  -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
+  -DENABLE_GTK_DOC=OFF
+%cmake_build
+popd
+
+%install
+cp -a $LOCALPREFIX/* %{buildroot}%{_prefix}
+
+pushd evolution-%{version}/build
+%cmake_install
+popd
+
+pushd evolution-%{version}/evolution-ews-%{version}/build
+%cmake_install
+popd
+
+%files
+%license COPYING
+%doc NEWS README.md
+
+%{_bindir}/evolution
+%{_libexecdir}/evolution*
+%{_libdir}/evolution
+%{_datadir}/evolution
+%{_datadir}/applications/org.gnome.Evolution.desktop
+%{_datadir}/metainfo/org.gnome.Evolution.appdata.xml
+%{_datadir}/icons/hicolor/*/apps/org.gnome.Evolution*.svg
+%{_datadir}/glib-2.0/schemas/org.gnome.evolution*.gschema.xml
+
+%{_libdir}/evolution/plugins/liborg-gnome-exchange-ews.so
+%{_datadir}/evolution/ui/org-gnome-exchange-ews.ui
+
+%{_libdir}/evolution-data-server-*/  # EDS libraries and modules installed
+%{_mandir}/man1/evolution.1.gz
+
+%changelog
+%autochangelog
