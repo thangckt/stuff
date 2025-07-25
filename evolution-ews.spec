@@ -36,14 +36,14 @@ tar -xf %{SOURCE2}
 # ls -1  # for debugging, check if sources are unpacked correctly
 
 %build
-export LOCALPREFIX=%{_builddir}/evolution-ews-%{version}/localprefix
+export LOCALPREFIX=%{_builddir}/localprefix
 mkdir -p "$LOCALPREFIX"
 export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
 
 # Build EDS
-cd %{_builddir}/evolution-ews-%{version}/evolution-data-server-%{version}
+cd evolution-data-server-%{version}
 mkdir build-eds && cd build-eds
 %cmake .. \
     -DCMAKE_INSTALL_PREFIX=$LOCALPREFIX \
@@ -55,12 +55,13 @@ mkdir build-eds && cd build-eds
     -DENABLE_OAUTH2=ON -DENABLE_GTK=ON
 %cmake_build
 %cmake_install
+cd ..
 
 # (Debug) See if some libs are built and install correctly
 find $LOCALPREFIX -name "camel-1.2.pc"
 
 # Build Evolution
-cd %{_builddir}/evolution-ews-%{version}/evolution-%{version}
+cd evolution-%{version}
 mkdir build && cd build
 %cmake .. \
     -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
@@ -72,9 +73,9 @@ mkdir build && cd build
     -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_GNOME_DESKTOP=OFF
 %cmake_build
+cd ..
 
 # Build EWS plugin
-cd %{_builddir}/evolution-ews-%{version}
 mkdir build && cd build
 %cmake .. \
     -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
