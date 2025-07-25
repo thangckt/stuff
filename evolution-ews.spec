@@ -28,9 +28,10 @@ This spec builds Evolution PIM as a unified package including matching versions 
 and the EWS plugin. Supports Microsoft Exchange/Outlook365 accounts via the EWS plugin.
 
 %prep
-%setup -q -n evolution-ews-%{version}
+%setup -q -n evolution-ews-%{version} -a 1
 tar -xf %{SOURCE0}
 tar -xf %{SOURCE2}
+# The topdir must the same as package name (from source1: -a 1), other sources will be unpacked into the topdir
 
 # ls -1  # for debugging, check if sources are unpacked correctly
 
