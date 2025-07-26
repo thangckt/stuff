@@ -76,7 +76,6 @@ rm -rf build_ev && mkdir build_ev
 cd build_ev
 cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-    -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_INSTALL_PREFIX="$LOCALPREFIX" \
     -DCMAKE_BUILD_TYPE=Release \
     -DENABLE_PLUGINS=all \
@@ -93,12 +92,11 @@ rm -rf build_ews && mkdir build_ews
 cd build_ews
 cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-    -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_BUILD_TYPE=Release \
     -DENABLE_GTK_DOC=OFF
 cmake --build . -j%{_smp_build_ncpus}
-cmake --install .
+DESTDIR=%{buildroot} cmake --install .
 
 %install
 # Copy locally installed into buildroot
