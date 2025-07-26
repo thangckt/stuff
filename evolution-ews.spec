@@ -21,7 +21,7 @@ BuildRequires:  gperf gsettings-desktop-schemas-devel
 BuildRequires:  nss-devel yelp-tools openldap-devel gspell-devel highlight
 BuildRequires:  libsecret-devel libgweather4-devel libcanberra-devel libnotify-devel libuuid-devel
 BuildRequires:  libical-devel libical-glib-devel libpst-devel libarchive-devel libnma-devel
-BuildRequires:  libytnef-devel libmspack-devel
+BuildRequires:  libytnef-devel libmspack-devel chrpath
 
 %description
 This spec builds Evolution PIM as a unified package including matching versions of Evolution, Evolution Data Server (EDS),
@@ -93,14 +93,13 @@ cd build_ews
 cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DENABLE_GTK_DOC=OFF
+    -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j%{_smp_build_ncpus}
 DESTDIR=%{buildroot} cmake --install .
 
 %install
 # Copy locally installed into buildroot
-install -d %{buildroot}%{_prefix}  # just make dir
+mkdir -p %{buildroot}%{_prefix}
 cp -a %{_cmake_install_prefix}/* %{buildroot}%{_prefix}/
 
 %files
