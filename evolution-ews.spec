@@ -19,8 +19,8 @@ BuildRequires:  gtk4-devel gperf libuuid-devel
 BuildRequires:  libsecret-devel libgweather4-devel gsettings-desktop-schemas-devel
 BuildRequires:  libcanberra-devel libnotify-devel openldap-devel gspell-devel
 BuildRequires:  itstool yelp-tools gdk-pixbuf2-devel libarchive-devel libnma-devel
-BuildRequires:  libical-devel nss-devel webkitgtk6.0-devel
-BuildRequires:  gnome-online-accounts-devel libical-glib-devel webkit2gtk4.1-devel
+BuildRequires:  libical-devel libical-glib-devel nss-devel webkitgtk6.0-devel webkit2gtk4.1-devel
+BuildRequires:  gnome-online-accounts-devel gnome-autoar-devel
 
 %description
 This spec builds Evolution PIM as a unified package including matching versions of Evolution, Evolution Data Server (EDS),
@@ -45,6 +45,7 @@ export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
 
 # Build EDS
+echo "ANCHOR: Build Evolution Data Server"
 cd evolution-data-server-%{version}
 rm -rf build-eds && mkdir build-eds
 cd build-eds
@@ -62,10 +63,11 @@ cmake --build . -j%{_smp_build_ncpus}
 cmake --install .
 cd ../..
 
-# (Debug) See if some libs are built and install correctly
+##(Debug) See if some libs are built and install correctly
 find $LOCALPREFIX -name "camel-1.2.pc"
 
 # Build Evolution
+echo "ANCHOR: Build Evolution"
 cd evolution-%{version}
 rm -rf build && mkdir build
 cd build
@@ -82,6 +84,7 @@ cmake --build . -j%{_smp_build_ncpus}
 cd ..
 
 # Build EWS
+echo "ANCHOR: Build Evolution EWS plugin"
 rm -rf build && mkdir build
 cd build
 %cmake .. \
