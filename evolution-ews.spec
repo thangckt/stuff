@@ -46,24 +46,30 @@ export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declaratio
 
 # Build EDS
 cd evolution-data-server-%{version}
-%cmake -B build-eds -S . \
-    -DCMAKE_INSTALL_PREFIX=%{_cmake_install_prefix} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-    -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-    -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
-    -DENABLE_OAUTH2_WEBKITGTK=ON -DENABLE_OAUTH2_WEBKITGTK4=ON \
-    -DENABLE_GTK=ON
-cmake --build build-eds --verbose -- -j$(nproc)
-cmake --install build-eds
-cd ..
+rm -rf build-eds && mkdir build-eds
+cd build-eds
+
+cmake .. \
+  -DCMAKE_INSTALL_PREFIX="$LOCALPREFIX" \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_C_FLAGS_RELEASE="${CFLAGS} -flto -march=native" \
+  -DCMAKE_CXX_FLAGS_RELEASE="${CFLAGS} -flto -march=native" \
+  -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
+  -DENABLE_OAUTH2_WEBKITGTK=ON -DENABLE_OAUTH2_WEBKITGTK4=ON \
+  -DENABLE_GTK=ON
+
+cmake --build . -j%{_smp_build_ncpus}
+cmake --install .
+cd ../..
 
 # (Debug) See if some libs are built and install correctly
 find $LOCALPREFIX -name "camel-1.2.pc"
 
 # Build Evolution
 cd evolution-%{version}
-%cmake -B build -S . \
+rm -rf build && mkdir build
+cd build
+%cmake .. \
     -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_BUILD_TYPE=Release \
@@ -72,18 +78,20 @@ cd evolution-%{version}
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_GNOME_DESKTOP=OFF
-cmake --build build --verbose -- -j$(nproc)
+cmake --build . -j%{_smp_build_ncpus}
 cd ..
 
 # Build EWS
-%cmake -B build -S . \
+rm -rf build && mkdir build
+cd build
+%cmake .. \
     -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DENABLE_GTK_DOC=OFF
-cmake --build build --verbose -- -j$(nproc)
+cmake --build . -j%{_smp_build_ncpus}
 
 %install
 # Copy locally installed EDS into buildroot
