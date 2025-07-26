@@ -23,6 +23,9 @@ BuildRequires:  libsecret-devel libgweather4-devel libcanberra-devel libnotify-d
 BuildRequires:  libical-devel libical-glib-devel libpst-devel libarchive-devel libnma-devel
 BuildRequires:  libytnef-devel libmspack-devel
 
+%global _local_prefix %{_builddir}/localprefix
+%global _prefix /usr
+
 %description
 This spec builds Evolution PIM as a unified package including matching versions of Evolution, Evolution Data Server (EDS),
 and the EWS plugin. Supports Microsoft Exchange/Outlook365 accounts via the EWS plugin.
@@ -36,7 +39,6 @@ tar -xf %{SOURCE2}
 # ls -1  # for debugging, check if sources are unpacked correctly
 
 %build
-global _local_prefix %{_builddir}/localprefix
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
 
 ################ Step 1: Build and install EDS
@@ -57,14 +59,14 @@ cmake --install .
 cd ../..
 
 ##(Debug) See if some libs are built and install correctly
-find $LOCALPREFIX -name "camel-1.2.pc"
+find %{_local_prefix} -name "camel-1.2.pc"
 
 ################ Step 2: Build and install Evolution
-export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
-export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
-export CMAKE_PREFIX_PATH="$LOCALPREFIX:$CMAKE_PREFIX_PATH"
-export PATH="$LOCALPREFIX/bin:$PATH"
-export XDG_DATA_DIRS="$LOCALPREFIX/share:$XDG_DATA_DIRS"
+export PKG_CONFIG_PATH="%{_local_prefix}/lib64/pkgconfig:%{_local_prefix}/lib/pkgconfig:$PKG_CONFIG_PATH"
+export LD_LIBRARY_PATH="%{_local_prefix}/lib64:%{_local_prefix}/lib:$LD_LIBRARY_PATH"
+export CMAKE_PREFIX_PATH="%{_local_prefix}:$CMAKE_PREFIX_PATH"
+export PATH="%{_local_prefix}/bin:$PATH"
+export XDG_DATA_DIRS="%{_local_prefix}/share:$XDG_DATA_DIRS"
 
 printf "\n%s\n" "#ANCHOR: Build Evolution"
 rm -rf build_ev && mkdir build_ev
@@ -110,12 +112,13 @@ cp -a %{_local_prefix}/* %{buildroot}%{_prefix}/
 %{_libexecdir}/evolution*
 %{_libdir}/evolution*/
 %{_datadir}/evolution/
+%{_libdir}/pkgconfig/evolution-*.pc
+
 %{_datadir}/applications/org.gnome.Evolution.desktop
 %{_datadir}/metainfo/org.gnome.Evolution.appdata.xml
 %{_datadir}/icons/hicolor/*/apps/org.gnome.Evolution*.svg
 %{_datadir}/glib-2.0/schemas/org.gnome.evolution*.gschema.xml
 %{_mandir}/man1/evolution.1*
-%{_libdir}/pkgconfig/evolution-*.pc
 
 %changelog
 %autochangelog
