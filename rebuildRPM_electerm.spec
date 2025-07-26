@@ -31,14 +31,6 @@ for bin in %{buildroot}/usr/lib/%{name}/resources/app/git/libexec/git-core/git-*
     fi
 done
 
-%post
-alternatives --install %{_bindir}/%{name} %{name} /opt/%{name}/%{name} 100
-
-%postun
-if [ -x %{_bindir}/%{name} ] && alternatives --display %{name} &>/dev/null; then
-    alternatives --remove %{name} %{_bindir}/%{name}
-fi
-
 %files
 /opt/electerm/**
 %{_datadir}/applications/%{name}.desktop
