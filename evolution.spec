@@ -103,23 +103,8 @@ export QA_RPATHS=$((0x002))
 mkdir -p %{buildroot}%{_prefix}
 cp -a %{_local_prefix}/* %{buildroot}%{_prefix}/
 
-%files
-%license COPYING
-%doc NEWS README.md
-
-%{_bindir}/evolution
-%{_libexecdir}/evolution*
-%{_datadir}/evolution/
-%{_libdir}/evolution/
-%{_libdir}/evolution-data-server/
-%{_libdir}/evolution-ews/
-%{_libdir}/pkgconfig/evolution-*.pc
-
-%{_datadir}/applications/org.gnome.Evolution.desktop
-%{_datadir}/metainfo/org.gnome.Evolution.appdata.xml
-%{_datadir}/icons/hicolor/*/apps/org.gnome.Evolution*.svg
-%{_datadir}/glib-2.0/schemas/org.gnome.evolution*.gschema.xml
-%{_mandir}/man1/evolution.1*
+find %{buildroot} -type f | sed "s|%{buildroot}||" > filelist.txt
+%files -f filelist.txt
 
 %changelog
 %autochangelog
