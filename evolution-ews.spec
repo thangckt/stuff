@@ -74,7 +74,7 @@ printf "\n%s\n" "#ANCHOR: Build Evolution"
 cd evolution-%{version}
 rm -rf build_ev && mkdir build_ev
 cd build_ev
-%cmake .. \
+cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_INSTALL_PREFIX="$LOCALPREFIX" \
@@ -91,7 +91,7 @@ cd ../..
 printf "\n%s\n" "#ANCHOR: Build Evolution EWS plugin"
 rm -rf build_ews && mkdir build_ews
 cd build_ews
-%cmake .. \
+cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
@@ -102,7 +102,7 @@ cmake --install .
 
 %install
 # Copy locally installed into buildroot
-mkdir -p %{buildroot}%{_prefix}
+install -d %{buildroot}%{_prefix}  # just make dir
 cp -a %{_cmake_install_prefix}/* %{buildroot}%{_prefix}/
 
 %files
