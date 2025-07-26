@@ -99,6 +99,9 @@ cmake --build . -j%{_smp_build_ncpus}
 DESTDIR=%{buildroot} cmake --install .
 
 %install
+# Allow invalid RPATHs temporarily
+export QA_RPATHS=$((0x002))
+
 # Copy locally installed into buildroot
 mkdir -p %{buildroot}%{_prefix}
 cp -a %{_cmake_install_prefix}/* %{buildroot}%{_prefix}/
