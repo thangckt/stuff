@@ -64,11 +64,11 @@ cd ../..
 find $LOCALPREFIX -name "camel-1.2.pc"
 
 ################ Step 2: Build and install Evolution
-#export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
-#export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
-#export CMAKE_PREFIX_PATH="$LOCALPREFIX:$CMAKE_PREFIX_PATH"
-#export PATH="$LOCALPREFIX/bin:$PATH"
-#export XDG_DATA_DIRS="$LOCALPREFIX/share:$XDG_DATA_DIRS"
+export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
+export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
+export CMAKE_PREFIX_PATH="$LOCALPREFIX:$CMAKE_PREFIX_PATH"
+export PATH="$LOCALPREFIX/bin:$PATH"
+export XDG_DATA_DIRS="$LOCALPREFIX/share:$XDG_DATA_DIRS"
 
 printf "\n%s\n" "ANCHOR: Build Evolution"
 cd evolution-%{version}
