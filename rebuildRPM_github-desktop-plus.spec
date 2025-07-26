@@ -1,5 +1,5 @@
 Name:           github-desktop
-Version:        3.5.1
+Version:        3.5.2
 Release:        1%{?dist}
 Summary:        GitHub Desktop Plus
 
