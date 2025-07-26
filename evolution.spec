@@ -24,7 +24,6 @@ BuildRequires:  libical-devel libical-glib-devel libpst-devel libarchive-devel l
 BuildRequires:  libytnef-devel libmspack-devel
 
 %global _local_prefix %{_builddir}/localprefix
-%global _prefix /usr
 
 %description
 This spec builds Evolution PIM as a unified package including matching versions of Evolution, Evolution Data Server (EDS),
@@ -110,8 +109,10 @@ cp -a %{_local_prefix}/* %{buildroot}%{_prefix}/
 
 %{_bindir}/evolution
 %{_libexecdir}/evolution*
-%{_libdir}/evolution*/
 %{_datadir}/evolution/
+%{_libdir}/evolution/
+%{_libdir}/evolution-data-server/
+%{_libdir}/evolution-ews/
 %{_libdir}/pkgconfig/evolution-*.pc
 
 %{_datadir}/applications/org.gnome.Evolution.desktop
