@@ -71,7 +71,6 @@ export PATH="$LOCALPREFIX/bin:$PATH"
 export XDG_DATA_DIRS="$LOCALPREFIX/share:$XDG_DATA_DIRS"
 
 printf "\n%s\n" "#ANCHOR: Build Evolution"
-cd evolution-%{version}
 rm -rf build_ev && mkdir build_ev
 cd build_ev
 cmake .. \
@@ -83,11 +82,12 @@ cmake .. \
     -DENABLE_GTK_DOC=OFF \
     -DENABLE_MARKDOWN=OFF
 cmake --build . -j%{_smp_build_ncpus}
-cmake --install .
-cd ../..
+DESTDIR=%{buildroot} cmake --install .
+cd ..
 
 ################ Step 3: Build EWS plugin against EDS and Evolution
 printf "\n%s\n" "#ANCHOR: Build Evolution EWS plugin"
+cd evolution-ews-%{version}
 rm -rf build_ews && mkdir build_ews
 cd build_ews
 cmake .. \
@@ -95,7 +95,8 @@ cmake .. \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j%{_smp_build_ncpus}
-DESTDIR=%{buildroot} cmake --install .
+cmake --install .
+cd ../..
 
 %install
 # Allow invalid RPATHs temporarily
