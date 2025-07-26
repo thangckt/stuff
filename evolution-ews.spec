@@ -20,8 +20,8 @@ BuildRequires:  gnome-online-accounts-devel gnome-autoar-devel gnome-desktop3-de
 BuildRequires:  gperf gsettings-desktop-schemas-devel
 BuildRequires:  nss-devel yelp-tools openldap-devel gspell-devel highlight
 BuildRequires:  libsecret-devel libgweather4-devel libcanberra-devel libnotify-devel libuuid-devel
-BuildRequires:  libical-devel libical-glib-devel libpst-devel libarchive-devel libnma-devel libytnef-devel
-BuildRequires:  libchamplain-gtk
+BuildRequires:  libical-devel libical-glib-devel libpst-devel libarchive-devel libnma-devel
+BuildRequires:  libytnef-devel
 
 %description
 This spec builds Evolution PIM as a unified package including matching versions of Evolution, Evolution Data Server (EDS),
@@ -79,8 +79,7 @@ cd build
     -DCMAKE_BUILD_TYPE=Release -DENABLE_PLUGINS=all \
     -DENABLE_MAINTAINER_MODE=OFF \
     -DENABLE_GTK_DOC=OFF \
-    -DENABLE_MARKDOWN=OFF \
-    -DENABLE_CONTACT_MAPS=ON
+    -DENABLE_MARKDOWN=OFF
 cmake --build . -j%{_smp_build_ncpus}
 cd ../..
 
