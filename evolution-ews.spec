@@ -40,10 +40,10 @@ tar -xf %{SOURCE2}
 %global _cmake_install_prefix %{_builddir}/evolution-ews-%{version}/localprefix
 
 %build
-export LOCALPREFIX=%{_cmake_install_prefix}
+export LOCALPREFIX=%{_builddir}/evolution-ews-%{version}/localprefix
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
 
-# Build EDS
+################ Step 1: Build and install EDS
 printf "\n%s\n" "ANCHOR: Build Evolution Data Server"
 cd evolution-data-server-%{version}
 rm -rf build-eds && mkdir build-eds
@@ -63,12 +63,14 @@ cd ../..
 ##(Debug) See if some libs are built and install correctly
 find $LOCALPREFIX -name "camel-1.2.pc"
 
-# Build Evolution
-printf "\n%s\n" "ANCHOR: Build Evolution"
-export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
-export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
-export CMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake"
+################ Step 2: Build and install Evolution
+#export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
+#export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
+#export CMAKE_PREFIX_PATH="$LOCALPREFIX:$CMAKE_PREFIX_PATH"
+#export PATH="$LOCALPREFIX/bin:$PATH"
+#export XDG_DATA_DIRS="$LOCALPREFIX/share:$XDG_DATA_DIRS"
 
+printf "\n%s\n" "ANCHOR: Build Evolution"
 cd evolution-%{version}
 rm -rf build && mkdir build
 cd build
@@ -81,14 +83,11 @@ cd build
     -DENABLE_GTK_DOC=OFF \
     -DENABLE_MARKDOWN=OFF
 cmake --build . -j%{_smp_build_ncpus}
+cmake --install .
 cd ../..
 
-# Build EWS
+################ Step 3: Build EWS plugin against EDS and Evolution
 printf "\n%s\n" "ANCHOR: Build Evolution EWS plugin"
-export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
-export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
-export CMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake"
-
 rm -rf build && mkdir build
 cd build
 %cmake .. \
@@ -100,12 +99,11 @@ cd build
 cmake --build . -j%{_smp_build_ncpus}
 
 %install
-# Copy locally installed EDS into buildroot
+# Copy locally installed EDS and Evolution into buildroot
 mkdir -p %{buildroot}%{_prefix}
 cp -a %{_cmake_install_prefix}/* %{buildroot}%{_prefix}/
 
-# Install Evolution and EWS plugin
-%cmake_install -C evolution-%{version}/build
+# Install EWS
 %cmake_install -C build
 
 %files
