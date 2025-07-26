@@ -115,8 +115,8 @@ cp -a %{_local_prefix}/* %{buildroot}%{_prefix}/
 find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
 
 %files -f filelist.txt
-#/usr/lib/lib*.so
-#/usr/lib/lib*.so.*
+/usr/lib/lib*.so
+/usr/lib/lib*.so.*
 
 %changelog
 %autochangelog
