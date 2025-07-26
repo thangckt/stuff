@@ -3,16 +3,17 @@
 # - evolution: https://src.fedoraproject.org/rpms/evolution/blob/rawhide/f/evolution.spec
 # - evolution-ews: https://src.fedoraproject.org/rpms/evolution-ews/blob/rawhide/f/evolution-ews.spec
 
-Name:           evolution-ews
+Name:           evolution
 Version:        3.57.1
 Release:        1%{?dist}
 Summary:        GNOME PIM (Evolution + EDS + EWS plugin unified build)
 License:        GPL-2.0-or-later
 URL:            https://gitlab.gnome.org/GNOME/evolution
 
-Source0:        https://gitlab.gnome.org/GNOME/evolution-ews/-/archive/%{version}/evolution-ews-%{version}.tar.gz
-Source1:        https://gitlab.gnome.org/GNOME/evolution-data-server/-/archive/%{version}/evolution-data-server-%{version}.tar.gz
-Source2:        https://gitlab.gnome.org/GNOME/evolution/-/archive/%{version}/evolution-%{version}.tar.gz
+Source0:        https://gitlab.gnome.org/GNOME/evolution/-/archive/%{version}/evolution-%{version}.tar.gz
+Source1:        https://gitlab.gnome.org/GNOME/evolution-ews/-/archive/%{version}/evolution-ews-%{version}.tar.gz
+Source2:        https://gitlab.gnome.org/GNOME/evolution-data-server/-/archive/%{version}/evolution-data-server-%{version}.tar.gz
+
 
 BuildRequires:  cmake gcc gcc-c++ gettext pkgconfig intltool itstool
 BuildRequires:  gtk4-devel gdk-pixbuf2-devel webkitgtk6.0-devel webkit2gtk4.1-devel
