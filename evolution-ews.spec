@@ -21,7 +21,7 @@ BuildRequires:  gperf gsettings-desktop-schemas-devel
 BuildRequires:  nss-devel yelp-tools openldap-devel gspell-devel highlight
 BuildRequires:  libsecret-devel libgweather4-devel libcanberra-devel libnotify-devel libuuid-devel
 BuildRequires:  libical-devel libical-glib-devel libpst-devel libarchive-devel libnma-devel
-BuildRequires:  libytnef-devel
+BuildRequires:  libytnef-devel libmspack-devel
 
 %description
 This spec builds Evolution PIM as a unified package including matching versions of Evolution, Evolution Data Server (EDS),
@@ -111,18 +111,14 @@ cp -a %{_cmake_install_prefix}/* %{buildroot}%{_prefix}/
 
 %{_bindir}/evolution
 %{_libexecdir}/evolution*
-%{_libdir}/evolution
-%{_datadir}/evolution
+%{_libdir}/evolution*/
+%{_datadir}/evolution/
 %{_datadir}/applications/org.gnome.Evolution.desktop
 %{_datadir}/metainfo/org.gnome.Evolution.appdata.xml
 %{_datadir}/icons/hicolor/*/apps/org.gnome.Evolution*.svg
 %{_datadir}/glib-2.0/schemas/org.gnome.evolution*.gschema.xml
-
-%{_libdir}/evolution/plugins/liborg-gnome-exchange-ews.so
-%{_datadir}/evolution/ui/org-gnome-exchange-ews.ui
-
-%{_libdir}/evolution-data-server-*/  # EDS libraries and modules installed
-%{_mandir}/man1/evolution.1.gz
+%{_mandir}/man1/evolution.1*
+%{_libdir}/pkgconfig/evolution-*.pc
 
 %changelog
 %autochangelog
