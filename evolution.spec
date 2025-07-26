@@ -24,6 +24,8 @@ BuildRequires:  libical-devel libical-glib-devel libpst-devel libarchive-devel l
 BuildRequires:  libytnef-devel libmspack-devel
 
 %global _local_prefix %{_builddir}/localprefix
+%global __brp_compress true
+%global __brp_mangle_shebangs true
 
 %description
 This spec builds Evolution PIM as a unified package including matching versions of Evolution, Evolution Data Server (EDS),
@@ -50,6 +52,7 @@ cmake .. \
     -DCMAKE_CXX_FLAGS_RELEASE="${CFLAGS} -flto -march=native" \
     -DCMAKE_INSTALL_PREFIX=%{_local_prefix} \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_LIBDIR=lib64 \
     -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_OAUTH2_WEBKITGTK=ON -DENABLE_OAUTH2_WEBKITGTK4=ON \
     -DENABLE_GTK=ON
@@ -103,8 +106,8 @@ export QA_RPATHS=$((0x002))
 mkdir -p %{buildroot}%{_prefix}
 cp -a %{_local_prefix}/* %{buildroot}%{_prefix}/
 
-## list files for the %files section (exclude "*/man/*")
-find %{buildroot} -type f ! -path "*/man/*" | sed "s|%{buildroot}||" > filelist.txt
+## Generate file list (include everything)
+find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
 
 %files -f filelist.txt
 
