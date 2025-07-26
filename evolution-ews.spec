@@ -14,14 +14,13 @@ Source0:        https://gitlab.gnome.org/GNOME/evolution-ews/-/archive/%{version
 Source1:        https://gitlab.gnome.org/GNOME/evolution-data-server/-/archive/%{version}/evolution-data-server-%{version}.tar.gz
 Source2:        https://gitlab.gnome.org/GNOME/evolution/-/archive/%{version}/evolution-%{version}.tar.gz
 
-BuildRequires:  cmake gcc gcc-c++ gettext pkgconfig intltool
-BuildRequires:  gtk4-devel gperf libuuid-devel
-BuildRequires:  libsecret-devel libgweather4-devel gsettings-desktop-schemas-devel
-BuildRequires:  libcanberra-devel libnotify-devel openldap-devel gspell-devel
-BuildRequires:  itstool yelp-tools gdk-pixbuf2-devel libarchive-devel libnma-devel libytnef-devel
-BuildRequires:  libical-devel libical-glib-devel nss-devel webkitgtk6.0-devel webkit2gtk4.1-devel
+BuildRequires:  cmake gcc gcc-c++ gettext pkgconfig intltool itstool
+BuildRequires:  gtk4-devel gdk-pixbuf2-devel webkitgtk6.0-devel webkit2gtk4.1-devel
 BuildRequires:  gnome-online-accounts-devel gnome-autoar-devel
-BuildRequires:  highlight
+BuildRequires:  gperf gsettings-desktop-schemas-devel
+BuildRequires:  nss-devel yelp-tools openldap-devel gspell-devel highlight
+BuildRequires:  libsecret-devel libgweather4-devel libcanberra-devel libnotify-devel libuuid-devel
+BuildRequires:  libical-devel libical-glib-devel libpst-devel libarchive-devel libnma-devel libytnef-devel
 
 %description
 This spec builds Evolution PIM as a unified package including matching versions of Evolution, Evolution Data Server (EDS),
