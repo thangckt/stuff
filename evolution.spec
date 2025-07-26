@@ -14,7 +14,6 @@ Source0:        https://gitlab.gnome.org/GNOME/evolution/-/archive/%{version}/ev
 Source1:        https://gitlab.gnome.org/GNOME/evolution-ews/-/archive/%{version}/evolution-ews-%{version}.tar.gz
 Source2:        https://gitlab.gnome.org/GNOME/evolution-data-server/-/archive/%{version}/evolution-data-server-%{version}.tar.gz
 
-
 BuildRequires:  cmake gcc gcc-c++ gettext pkgconfig intltool itstool
 BuildRequires:  gtk4-devel gdk-pixbuf2-devel webkitgtk6.0-devel webkit2gtk4.1-devel
 BuildRequires:  gnome-online-accounts-devel gnome-autoar-devel gnome-desktop3-devel
@@ -29,7 +28,7 @@ This spec builds Evolution PIM as a unified package including matching versions 
 and the EWS plugin. Supports Microsoft Exchange/Outlook365 accounts via the EWS plugin.
 
 %prep
-%setup -q -n evolution-ews-%{version}
+%setup -q -n evolution-%{version}
 tar -xf %{SOURCE1}
 tar -xf %{SOURCE2}
 # The topdir must the same as package name (from source0), other sources will be unpacked into the topdir
