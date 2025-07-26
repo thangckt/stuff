@@ -3,6 +3,10 @@
 # - evolution: https://src.fedoraproject.org/rpms/evolution/blob/rawhide/f/evolution.spec
 # - evolution-ews: https://src.fedoraproject.org/rpms/evolution-ews/blob/rawhide/f/evolution-ews.spec
 
+### NOTE:
+# - Use `%cmake` and `%cmake_build` for all, and avoid mixing with manual `cmake --install`.
+# - override %cmake’s default CMAKE_INSTALL_PREFIX by using -DCMAKE_INSTALL_PREFIX=$LOCALPREFIX early via macro override.
+
 
 Name:           evolution-ews
 Version:        3.57.1
@@ -35,26 +39,28 @@ tar -xf %{SOURCE2}
 
 # ls -1  # for debugging, check if sources are unpacked correctly
 
+# override %cmake’s default CMAKE_INSTALL_PREFIX
+%global __cmake_in_source_build 0
+%global _cmake_install_prefix %{_builddir}/evolution-ews-%{version}/localprefix
+
 %build
-export LOCALPREFIX=%{_builddir}/evolution-ews-%{version}/localprefix
+export LOCALPREFIX=%{_cmake_install_prefix}
 export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
 
 # Build EDS
 cd evolution-data-server-%{version}
-
-# Always use -B and -S to avoid implicit subdir mess
 %cmake -B build-eds -S . \
-    -DCMAKE_INSTALL_PREFIX=$LOCALPREFIX \
+    -DCMAKE_INSTALL_PREFIX=%{_cmake_install_prefix} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_OAUTH2_WEBKITGTK=ON -DENABLE_OAUTH2_WEBKITGTK4=ON \
     -DENABLE_GTK=ON
-%cmake_build -C build-eds
-cmake --install build-eds --prefix $LOCALPREFIX
+%cmake_build --build build-eds
+%cmake_install -C build-eds
 cd ..
 
 # (Debug) See if some libs are built and install correctly
@@ -62,23 +68,21 @@ find $LOCALPREFIX -name "camel-1.2.pc"
 
 # Build Evolution
 cd evolution-%{version}
-mkdir build && cd build
-%cmake .. \
+%cmake -B build -S . \
     -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
-    -DCMAKE_BUILD_TYPE=Release -DENABLE_PLUGINS=all \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DENABLE_PLUGINS=all \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_GNOME_DESKTOP=OFF
-%cmake_build
-cd ../..
+%cmake_build --build build
+cd ..
 
-# Build EWS plugin
-mkdir build && cd build
-%cmake .. \
+# Build EWS
+%cmake -B build -S . \
     -DCMAKE_PREFIX_PATH="$LOCALPREFIX:$LOCALPREFIX/lib64/cmake:$LOCALPREFIX/lib/cmake" \
-    -DCMAKE_PREFIX_PATH=$LOCALPREFIX \
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
@@ -89,17 +93,11 @@ mkdir build && cd build
 %install
 # Copy locally installed EDS into buildroot
 mkdir -p %{buildroot}%{_prefix}
-cp -a $LOCALPREFIX/* %{buildroot}%{_prefix}/
+cp -a %{_cmake_install_prefix}/* %{buildroot}%{_prefix}/
 
-# Install Evolution
-pushd evolution-%{version}/build
-%cmake_install
-popd
-
-# Install EWS
-pushd build
-%cmake_install
-popd
+# Install Evolution and EWS plugin
+%cmake_install -C evolution-%{version}/build
+%cmake_install -C build
 
 %files
 %license COPYING
