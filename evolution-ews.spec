@@ -41,9 +41,6 @@ tar -xf %{SOURCE2}
 
 %build
 export LOCALPREFIX=%{_cmake_install_prefix}
-export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
-export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
-export CMAKE_PREFIX_PATH="$LOCALPREFIX:$CMAKE_PREFIX_PATH"
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
 
 # Build EDS
@@ -68,6 +65,9 @@ find $LOCALPREFIX -name "camel-1.2.pc"
 
 # Build Evolution
 printf "\n%s\n" "ANCHOR: Build Evolution"
+export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
+export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
+
 cd evolution-%{version}
 rm -rf build && mkdir build
 cd build
@@ -86,7 +86,9 @@ cd ../..
 
 # Build EWS
 printf "\n%s\n" "ANCHOR: Build Evolution EWS plugin"
-export export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
+export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
+export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
+
 rm -rf build && mkdir build
 cd build
 %cmake .. \
