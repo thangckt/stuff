@@ -44,10 +44,10 @@ export LOCALPREFIX=%{_builddir}/evolution-ews-%{version}/localprefix
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
 
 ################ Step 1: Build and install EDS
-printf "\n%s\n" "ANCHOR: Build Evolution Data Server"
+printf "\n%s\n" "#ANCHOR: Build Evolution Data Server"
 cd evolution-data-server-%{version}
-rm -rf build-eds && mkdir build-eds
-cd build-eds
+rm -rf build_eds && mkdir build_eds
+cd build_eds
 cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="${CFLAGS} -flto -march=native" \
     -DCMAKE_CXX_FLAGS_RELEASE="${CFLAGS} -flto -march=native" \
@@ -70,15 +70,16 @@ export CMAKE_PREFIX_PATH="$LOCALPREFIX:$CMAKE_PREFIX_PATH"
 export PATH="$LOCALPREFIX/bin:$PATH"
 export XDG_DATA_DIRS="$LOCALPREFIX/share:$XDG_DATA_DIRS"
 
-printf "\n%s\n" "ANCHOR: Build Evolution"
+printf "\n%s\n" "#ANCHOR: Build Evolution"
 cd evolution-%{version}
-rm -rf build && mkdir build
-cd build
+rm -rf build_ev && mkdir build_ev
+cd build_ev
 %cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_INSTALL_PREFIX="$LOCALPREFIX" \
-    -DCMAKE_BUILD_TYPE=Release -DENABLE_PLUGINS=all \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DENABLE_PLUGINS=all \
     -DENABLE_MAINTAINER_MODE=OFF \
     -DENABLE_GTK_DOC=OFF \
     -DENABLE_MARKDOWN=OFF
@@ -87,9 +88,9 @@ cmake --install .
 cd ../..
 
 ################ Step 3: Build EWS plugin against EDS and Evolution
-printf "\n%s\n" "ANCHOR: Build Evolution EWS plugin"
-rm -rf build && mkdir build
-cd build
+printf "\n%s\n" "#ANCHOR: Build Evolution EWS plugin"
+rm -rf build_ews && mkdir build_ews
+cd build_ews
 %cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
@@ -97,14 +98,12 @@ cd build
     -DCMAKE_BUILD_TYPE=Release \
     -DENABLE_GTK_DOC=OFF
 cmake --build . -j%{_smp_build_ncpus}
+cmake --install .
 
 %install
-# Copy locally installed EDS and Evolution into buildroot
+# Copy locally installed into buildroot
 mkdir -p %{buildroot}%{_prefix}
 cp -a %{_cmake_install_prefix}/* %{buildroot}%{_prefix}/
-
-# Install EWS
-%cmake_install -C build
 
 %files
 %license COPYING
