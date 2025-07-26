@@ -54,7 +54,7 @@ cd evolution-data-server-%{version}
     -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_OAUTH2_WEBKITGTK=ON -DENABLE_OAUTH2_WEBKITGTK4=ON \
     -DENABLE_GTK=ON
-%cmake_build --build build-eds
+%cmake_build build-eds
 %cmake_install -C build-eds
 cd ..
 
@@ -72,7 +72,7 @@ cd evolution-%{version}
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_GNOME_DESKTOP=OFF
-%cmake_build --build build
+%cmake_build build
 cd ..
 
 # Build EWS
@@ -83,7 +83,7 @@ cd ..
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_CXX_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DENABLE_GTK_DOC=OFF
-%cmake_build
+%cmake_build build
 
 %install
 # Copy locally installed EDS into buildroot
