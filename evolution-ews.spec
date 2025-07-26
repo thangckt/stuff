@@ -21,6 +21,7 @@ BuildRequires:  libcanberra-devel libnotify-devel openldap-devel gspell-devel
 BuildRequires:  itstool yelp-tools gdk-pixbuf2-devel libarchive-devel libnma-devel libytnef-devel
 BuildRequires:  libical-devel libical-glib-devel nss-devel webkitgtk6.0-devel webkit2gtk4.1-devel
 BuildRequires:  gnome-online-accounts-devel gnome-autoar-devel
+BuildRequires:  highlight
 
 %description
 This spec builds Evolution PIM as a unified package including matching versions of Evolution, Evolution Data Server (EDS),
@@ -45,7 +46,7 @@ export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
 
 # Build EDS
-printf "\nANCHOR: Build Evolution Data Server"
+printf "\n%s\n" "ANCHOR: Build Evolution Data Server"
 cd evolution-data-server-%{version}
 rm -rf build-eds && mkdir build-eds
 cd build-eds
@@ -65,7 +66,7 @@ cd ../..
 find $LOCALPREFIX -name "camel-1.2.pc"
 
 # Build Evolution
-printf "\nANCHOR: Build Evolution"
+printf "\n%s\n" "ANCHOR: Build Evolution"
 cd evolution-%{version}
 rm -rf build && mkdir build
 cd build
@@ -82,7 +83,7 @@ cmake --build . -j%{_smp_build_ncpus}
 cd ..
 
 # Build EWS
-printf "\nANCHOR: Build Evolution EWS plugin"
+printf "\n%s\n" "ANCHOR: Build Evolution EWS plugin"
 rm -rf build && mkdir build
 cd build
 %cmake .. \
