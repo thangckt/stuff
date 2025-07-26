@@ -43,6 +43,7 @@ tar -xf %{SOURCE2}
 export LOCALPREFIX=%{_cmake_install_prefix}
 export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
+export CMAKE_PREFIX_PATH="$LOCALPREFIX:$CMAKE_PREFIX_PATH"
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
 
 # Build EDS
@@ -77,13 +78,15 @@ cd build
     -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DCMAKE_BUILD_TYPE=Release -DENABLE_PLUGINS=all \
     -DENABLE_MAINTAINER_MODE=OFF \
-    -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
-    -DENABLE_MARKDOWN=OFF
+    -DENABLE_GTK_DOC=OFF \
+    -DENABLE_MARKDOWN=OFF \
+    -DENABLE_CONTACT_MAPS=ON
 cmake --build . -j%{_smp_build_ncpus}
 cd ../..
 
 # Build EWS
 printf "\n%s\n" "ANCHOR: Build Evolution EWS plugin"
+export export PKG_CONFIG_PATH="$LOCALPREFIX/lib64/pkgconfig:$LOCALPREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 rm -rf build && mkdir build
 cd build
 %cmake .. \
