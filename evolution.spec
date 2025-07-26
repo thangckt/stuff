@@ -35,12 +35,8 @@ tar -xf %{SOURCE2}
 
 # ls -1  # for debugging, check if sources are unpacked correctly
 
-# override default CMake variables
-%global __cmake_in_source_build 0
-%global _cmake_install_prefix %{_builddir}/evolution-ews-%{version}/localprefix
-
 %build
-export LOCALPREFIX=%{_builddir}/evolution-ews-%{version}/localprefix
+global _local_prefix %{_builddir}/localprefix
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
 
 ################ Step 1: Build and install EDS
@@ -51,7 +47,7 @@ cd build_eds
 cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="${CFLAGS} -flto -march=native" \
     -DCMAKE_CXX_FLAGS_RELEASE="${CFLAGS} -flto -march=native" \
-    -DCMAKE_INSTALL_PREFIX="$LOCALPREFIX" \
+    -DCMAKE_INSTALL_PREFIX=%{_local_prefix} \
     -DCMAKE_BUILD_TYPE=Release \
     -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_OAUTH2_WEBKITGTK=ON -DENABLE_OAUTH2_WEBKITGTK4=ON \
@@ -75,14 +71,14 @@ rm -rf build_ev && mkdir build_ev
 cd build_ev
 cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-    -DCMAKE_INSTALL_PREFIX="$LOCALPREFIX" \
+    -DCMAKE_INSTALL_PREFIX=%{_local_prefix} \
     -DCMAKE_BUILD_TYPE=Release \
     -DENABLE_PLUGINS=all \
     -DENABLE_MAINTAINER_MODE=OFF \
     -DENABLE_GTK_DOC=OFF \
     -DENABLE_MARKDOWN=OFF
 cmake --build . -j%{_smp_build_ncpus}
-DESTDIR=%{buildroot} cmake --install .
+cmake --install .
 cd ..
 
 ################ Step 3: Build EWS plugin against EDS and Evolution
@@ -92,7 +88,7 @@ rm -rf build_ews && mkdir build_ews
 cd build_ews
 cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-    -DCMAKE_INSTALL_PREFIX=%{_prefix} \
+    -DCMAKE_INSTALL_PREFIX=%{_local_prefix} \
     -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j%{_smp_build_ncpus}
 cmake --install .
@@ -104,7 +100,7 @@ export QA_RPATHS=$((0x002))
 
 # Copy locally installed into buildroot
 mkdir -p %{buildroot}%{_prefix}
-cp -a %{_cmake_install_prefix}/* %{buildroot}%{_prefix}/
+cp -a %{_local_prefix}/* %{buildroot}%{_prefix}/
 
 %files
 %license COPYING
