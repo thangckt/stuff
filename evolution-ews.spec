@@ -3,11 +3,6 @@
 # - evolution: https://src.fedoraproject.org/rpms/evolution/blob/rawhide/f/evolution.spec
 # - evolution-ews: https://src.fedoraproject.org/rpms/evolution-ews/blob/rawhide/f/evolution-ews.spec
 
-### NOTE:
-# - Use `%cmake` and `%cmake_build` for all, and avoid mixing with manual `cmake --install`.
-# - override %cmake’s default CMAKE_INSTALL_PREFIX by using -DCMAKE_INSTALL_PREFIX=$LOCALPREFIX early via macro override.
-
-
 Name:           evolution-ews
 Version:        3.57.1
 Release:        1%{?dist}
@@ -39,7 +34,7 @@ tar -xf %{SOURCE2}
 
 # ls -1  # for debugging, check if sources are unpacked correctly
 
-# override %cmake’s default CMAKE_INSTALL_PREFIX
+# override default CMake variables
 %global __cmake_in_source_build 0
 %global _cmake_install_prefix %{_builddir}/evolution-ews-%{version}/localprefix
 
