@@ -11,14 +11,14 @@ License:        GPL-2.0-or-later
 URL:            https://gitlab.gnome.org/GNOME/evolution
 
 Source0:        https://gitlab.gnome.org/GNOME/evolution-ews/-/archive/%{version}/evolution-ews-%{version}.tar.gz
-Source1:        https://gitlab.gnome.org/GNOME/evolution/-/archive/%{version}/evolution-%{version}.tar.gz
-Source2:        https://gitlab.gnome.org/GNOME/evolution-data-server/-/archive/%{version}/evolution-data-server-%{version}.tar.gz
+Source1:        https://gitlab.gnome.org/GNOME/evolution-data-server/-/archive/%{version}/evolution-data-server-%{version}.tar.gz
+Source2:        https://gitlab.gnome.org/GNOME/evolution/-/archive/%{version}/evolution-%{version}.tar.gz
 
 BuildRequires:  cmake gcc gcc-c++ gettext pkgconfig intltool
 BuildRequires:  gtk4-devel gperf libuuid-devel
 BuildRequires:  libsecret-devel libgweather4-devel gsettings-desktop-schemas-devel
 BuildRequires:  libcanberra-devel libnotify-devel openldap-devel gspell-devel
-BuildRequires:  itstool yelp-tools gdk-pixbuf2-devel libarchive-devel libnma-devel
+BuildRequires:  itstool yelp-tools gdk-pixbuf2-devel libarchive-devel libnma-devel libytnef-devel
 BuildRequires:  libical-devel libical-glib-devel nss-devel webkitgtk6.0-devel webkit2gtk4.1-devel
 BuildRequires:  gnome-online-accounts-devel gnome-autoar-devel
 
@@ -45,7 +45,7 @@ export LD_LIBRARY_PATH="$LOCALPREFIX/lib64:$LOCALPREFIX/lib:$LD_LIBRARY_PATH"
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
 
 # Build EDS
-echo "ANCHOR: Build Evolution Data Server"
+printf "\nANCHOR: Build Evolution Data Server"
 cd evolution-data-server-%{version}
 rm -rf build-eds && mkdir build-eds
 cd build-eds
@@ -65,7 +65,7 @@ cd ../..
 find $LOCALPREFIX -name "camel-1.2.pc"
 
 # Build Evolution
-echo "ANCHOR: Build Evolution"
+printf "\nANCHOR: Build Evolution"
 cd evolution-%{version}
 rm -rf build && mkdir build
 cd build
@@ -82,7 +82,7 @@ cmake --build . -j%{_smp_build_ncpus}
 cd ..
 
 # Build EWS
-echo "ANCHOR: Build Evolution EWS plugin"
+printf "\nANCHOR: Build Evolution EWS plugin"
 rm -rf build && mkdir build
 cd build
 %cmake .. \
