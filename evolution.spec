@@ -103,7 +103,9 @@ export QA_RPATHS=$((0x002))
 mkdir -p %{buildroot}%{_prefix}
 cp -a %{_local_prefix}/* %{buildroot}%{_prefix}/
 
-find %{buildroot} -type f | sed "s|%{buildroot}||" > filelist.txt
+## list files for the %files section (exclude "*/man/*")
+find %{buildroot} -type f ! -path "*/man/*" | sed "s|%{buildroot}||" > filelist.txt
+
 %files -f filelist.txt
 
 %changelog
