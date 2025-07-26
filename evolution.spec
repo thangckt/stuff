@@ -51,7 +51,6 @@ cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="${CFLAGS} -flto -march=native" \
     -DCMAKE_CXX_FLAGS_RELEASE="${CFLAGS} -flto -march=native" \
     -DCMAKE_INSTALL_PREFIX=%{_local_prefix} \
-    -DCMAKE_INSTALL_LIBDIR=%{_libdir} \
     -DCMAKE_BUILD_TYPE=Release \
     -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_OAUTH2_WEBKITGTK=ON -DENABLE_OAUTH2_WEBKITGTK4=ON \
@@ -110,6 +109,8 @@ cp -a %{_local_prefix}/* %{buildroot}%{_prefix}/
 find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
 
 %files -f filelist.txt
+/usr/lib/lib*.so
+/usr/lib/lib*.so.*
 
 %changelog
 %autochangelog
