@@ -21,11 +21,12 @@ BuildRequires:  gperf gsettings-desktop-schemas-devel
 BuildRequires:  nss-devel yelp-tools openldap-devel gspell-devel highlight
 BuildRequires:  libsecret-devel libgweather4-devel libcanberra-devel libnotify-devel libuuid-devel
 BuildRequires:  libical-devel libical-glib-devel libpst-devel libarchive-devel libnma-devel
-BuildRequires:  libytnef-devel libmspack-devel
+BuildRequires:  libytnef-devel libmspack-devel chrpath
 
 %global _local_prefix %{_builddir}/localprefix
 %global __brp_compress true
 %global __brp_mangle_shebangs true
+%define _libdir /usr/lib64
 
 %description
 This spec builds Evolution PIM as a unified package including matching versions of Evolution, Evolution Data Server (EDS),
@@ -51,7 +52,6 @@ cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="${CFLAGS} -flto -march=native" \
     -DCMAKE_CXX_FLAGS_RELEASE="${CFLAGS} -flto -march=native" \
     -DCMAKE_INSTALL_PREFIX=%{_local_prefix} \
-    -DCMAKE_INSTALL_RPATH=%{_libdir}/evolution \
     -DCMAKE_BUILD_TYPE=Release \
     -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_OAUTH2_WEBKITGTK=ON -DENABLE_OAUTH2_WEBKITGTK4=ON \
@@ -76,7 +76,6 @@ cd build_ev
 cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_INSTALL_PREFIX=%{_local_prefix} \
-    -DCMAKE_INSTALL_RPATH=%{_libdir}/evolution \
     -DCMAKE_BUILD_TYPE=Release \
     -DENABLE_PLUGINS=all \
     -DENABLE_MAINTAINER_MODE=OFF \
@@ -94,7 +93,6 @@ cd build_ews
 cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
     -DCMAKE_INSTALL_PREFIX=%{_local_prefix} \
-    -DCMAKE_INSTALL_RPATH=%{_libdir}/evolution \
     -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j%{_smp_build_ncpus}
 cmake --install .
@@ -103,6 +101,9 @@ cd ../..
 %install
 # Allow invalid RPATHs temporarily
 export QA_RPATHS=$((0x002))
+
+# Fix RPATH for evolution binary
+chrpath -r %{_libdir}/evolution %{buildroot}%{_bindir}/evolution
 
 # Copy locally installed into buildroot
 mkdir -p %{buildroot}%{_prefix}
