@@ -102,8 +102,12 @@ cd ../..
 # Allow invalid RPATHs temporarily
 export QA_RPATHS=$((0x002))
 
-# Fix RPATH for evolution binary
-chrpath -r %{_libdir}/evolution %{buildroot}%{_bindir}/evolution
+# (Optional debug)
+file %{buildroot}%{_bindir}/evolution
+find %{buildroot} -type f -exec file {} \; | grep ELF
+
+# Apply chrpath to the actual ELF binary
+chrpath -r %{_libdir}/evolution %{buildroot}%{_libdir}/evolution/evolution
 
 # Copy locally installed into buildroot
 mkdir -p %{buildroot}%{_prefix}
