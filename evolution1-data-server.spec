@@ -24,7 +24,7 @@ This spec builds Evolution Data Server (EDS), which is a set of libraries and se
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations -flto"
-export CPPFLAGS="-I%{_includedir}/et -flto -march=native"
+export CPPFLAGS="-I%{_includedir}/et -flto"
 
 ################ Build EDS
 printf "\n%s\n" "#ANCHOR: Build Evolution Data Server"
@@ -47,8 +47,6 @@ printf "\n%s\n" "#ANCHOR: Build Evolution Data Server"
 find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
 
 %files -f filelist.txt
-
-# Include the development symlinks
 %{_libdir}/libcamel-1.2.so
 %{_libdir}/libebackend-1.2.so
 %{_libdir}/libebook-1.2.so
