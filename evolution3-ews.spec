@@ -19,7 +19,7 @@ Requires:       evolution >= %{version}
 This spec builds Evolution EWS plugin.
 
 %prep
-%setup -n evolution-%{version}
+%setup -n evolution-ews-%{version}
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations -flto"
