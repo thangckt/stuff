@@ -10,16 +10,10 @@ URL:            https://gitlab.gnome.org/GNOME/evolution
 
 Source0:        https://gitlab.gnome.org/GNOME/evolution-ews/-/archive/%{version}/evolution-ews-%{version}.tar.gz
 
-BuildRequires:  cmake gcc gcc-c++ gettext pkgconfig intltool itstool
-BuildRequires:  gtk4-devel gdk-pixbuf2-devel webkitgtk6.0-devel webkit2gtk4.1-devel
-BuildRequires:  gnome-online-accounts-devel gnome-autoar-devel gnome-desktop3-devel
-BuildRequires:  gperf gsettings-desktop-schemas-devel
-BuildRequires:  nss-devel yelp-tools openldap-devel gspell-devel highlight
-BuildRequires:  libsecret-devel libgweather4-devel libcanberra-devel libnotify-devel libuuid-devel
-BuildRequires:  libical-devel libical-glib-devel libpst-devel libarchive-devel libnma-devel
-BuildRequires:  libytnef-devel libmspack-devel
+BuildRequires:  cmake gcc gcc-c++ pkgconfig
 
-Requires:       evolution>=3.57.1
+BuildRequires:  evolution >= %{version}
+Requires:       evolution >= %{version}
 
 %description
 This spec builds Evolution EWS plugin.
