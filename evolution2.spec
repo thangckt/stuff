@@ -14,11 +14,13 @@ BuildRequires:  cmake gcc gcc-c++ pkgconfig gettext
 BuildRequires:  gtk4-devel webkitgtk6.0-devel webkit2gtk4.1-devel
 BuildRequires:  gnome-online-accounts-devel gnome-autoar-devel gnome-desktop3-devel gsettings-desktop-schemas-devel
 BuildRequires:  nss-devel yelp-tools openldap-devel gspell-devel
-BuildRequires: libgweather4-devel libcanberra-devel libnotify-devel
-BuildRequires:  gdk-pixbuf2-devel BuildRequires: libpst-devel libarchive-devel libnma-devel libytnef-devel libmspack-devel
+BuildRequires:  libgweather4-devel libcanberra-devel libnotify-devel
+BuildRequires:  gdk-pixbuf2-devel highlight
+BuildRequires:  libpst-devel libarchive-devel libnma-devel libytnef-devel libmspack-devel
 
 BuildRequires:  evolution-data-server >= %{version}
 Requires:       evolution-data-server >= %{version}
+Requires:       gvfs gspell highlight
 
 %description
 This spec builds Evolution PIM (Personal Information Manager).
