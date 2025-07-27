@@ -16,9 +16,6 @@ BuildRequires:  gnome-online-accounts-devel gnome-autoar-devel gnome-desktop3-de
 BuildRequires:  nss-devel yelp-tools openldap-devel gspell-devel
 BuildRequires:  libsecret-devel libgweather4-devel libcanberra-devel libnotify-devel libuuid-devel libical-devel libical-glib-devel
 
-# BuildRequires:  gdk-pixbuf2-devel
-# BuildRequires: libpst-devel libarchive-devel libnma-devel libytnef-devel libmspack-devel
-
 %description
 This spec builds Evolution Data Server (EDS), which is a set of libraries and services
 
@@ -26,7 +23,7 @@ This spec builds Evolution Data Server (EDS), which is a set of libraries and se
 %setup -n evolution-data-server-%{version}
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations -flto -march=native"
+export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations -flto"
 export CPPFLAGS="-I%{_includedir}/et -flto -march=native"
 
 ################ Build EDS

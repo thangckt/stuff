@@ -22,7 +22,7 @@ This spec builds Evolution EWS plugin.
 %setup -n evolution-%{version}
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations -flto -march=native"
+export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations -flto"
 
 ################ Build Evolution EWS plugin
 printf "\n%s\n" "#ANCHOR: Build Evolution EWS plugin"

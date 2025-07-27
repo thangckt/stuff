@@ -32,7 +32,7 @@ This spec builds Evolution PIM (Personal Information Manager).
 %setup -n evolution-%{version}
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations -flto -march=native"
+export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations -flto"
 
 ################ Build Evolution
 printf "\n%s\n" "#ANCHOR: Build Evolution"
