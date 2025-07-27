@@ -124,9 +124,9 @@ find %{buildroot} -name "libevolution-shell.so*"
 
 ## Generate file list (include everything)
 find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
-find %{_libdir} -type f | sed "s|^%{_libdir}||" >> filelist.txt
 
 %files -f filelist.txt
+/usr/lib/lib*.so*
 
 %changelog
 %autochangelog
