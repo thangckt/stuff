@@ -36,7 +36,7 @@ export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declaratio
 
 ################ Build Evolution
 printf "\n%s\n" "#ANCHOR: Build Evolution"
-%cmake .. \
+%cmake \
     -DINCLUDE_INSTALL_DIR:PATH=%{_includedir} \
 	-DLIB_INSTALL_DIR:PATH=%{_libdir} \
 	-DSYSCONF_INSTALL_DIR:PATH=%{_sysconfdir} \

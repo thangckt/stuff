@@ -31,7 +31,7 @@ export CPPFLAGS="-I%{_includedir}/et -flto -march=native"
 
 ################ Build EDS
 printf "\n%s\n" "#ANCHOR: Build Evolution Data Server"
-%cmake .. \
+%cmake \
     -DWITH_SYSTEMDUSERUNITDIR=%{_userunitdir} \
 	-DINCLUDE_INSTALL_DIR:PATH=%{_includedir} \
 	-DLIB_INSTALL_DIR:PATH=%{_libdir} \

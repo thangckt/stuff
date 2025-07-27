@@ -22,13 +22,16 @@ This spec builds Evolution EWS plugin.
 %setup -n evolution-%{version}
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
+export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations -flto -march=native"
 
 ################ Build Evolution EWS plugin
 printf "\n%s\n" "#ANCHOR: Build Evolution EWS plugin"
-%cmake .. \
-    -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-    -DCMAKE_BUILD_TYPE=Release
+%cmake \
+    -DINCLUDE_INSTALL_DIR:PATH=%{_includedir} \
+	-DLIB_INSTALL_DIR:PATH=%{_libdir} \
+	-DSYSCONF_INSTALL_DIR:PATH=%{_sysconfdir} \
+	-DSHARE_INSTALL_PREFIX:PATH=%{_datadir} \
+	-DLIB_SUFFIX=64
 %cmake_build -j%{_smp_build_ncpus}
 
 %install
