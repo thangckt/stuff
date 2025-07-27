@@ -10,14 +10,14 @@ URL:            https://gitlab.gnome.org/GNOME/evolution
 
 Source0:        https://gitlab.gnome.org/GNOME/evolution-data-server/-/archive/%{version}/evolution-data-server-%{version}.tar.gz
 
-BuildRequires:  cmake gcc gcc-c++ gettext pkgconfig intltool itstool
-BuildRequires:  gtk4-devel gdk-pixbuf2-devel webkitgtk6.0-devel webkit2gtk4.1-devel
-BuildRequires:  gnome-online-accounts-devel gnome-autoar-devel gnome-desktop3-devel
-BuildRequires:  gperf gsettings-desktop-schemas-devel
-BuildRequires:  nss-devel yelp-tools openldap-devel gspell-devel highlight
-BuildRequires:  libsecret-devel libgweather4-devel libcanberra-devel libnotify-devel libuuid-devel
-BuildRequires:  libical-devel libical-glib-devel libpst-devel libarchive-devel libnma-devel
-BuildRequires:  libytnef-devel libmspack-devel
+BuildRequires:  cmake gcc gcc-c++ pkgconfig gettext gperf vala
+BuildRequires:  gtk4-devel webkitgtk6.0-devel webkit2gtk4.1-devel
+BuildRequires:  gnome-online-accounts-devel gnome-autoar-devel gnome-desktop3-devel gsettings-desktop-schemas-devel
+BuildRequires:  nss-devel yelp-tools openldap-devel gspell-devel
+BuildRequires:  libsecret-devel libgweather4-devel libcanberra-devel libnotify-devel libuuid-devel libical-devel libical-glib-devel
+
+# BuildRequires:  gdk-pixbuf2-devel
+# BuildRequires: libpst-devel libarchive-devel libnma-devel libytnef-devel libmspack-devel
 
 %description
 This spec builds Evolution Data Server (EDS), which is a set of libraries and services
@@ -46,6 +46,18 @@ printf "\n%s\n" "#ANCHOR: Build Evolution Data Server"
 find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
 
 %files -f filelist.txt
+
+# Include the development symlinks
+%{_libdir}/libcamel-1.2.so
+%{_libdir}/libebackend-1.2.so
+%{_libdir}/libebook-1.2.so
+%{_libdir}/libebook-contacts-1.2.so
+%{_libdir}/libecal-2.0.so
+%{_libdir}/libedata-book-1.2.so
+%{_libdir}/libedata-cal-2.0.so
+%{_libdir}/libedataserver-1.2.so
+%{_libdir}/libedataserverui-1.2.so
+%{_libdir}/libedataserverui4-1.0.so
 
 %changelog
 %autochangelog
