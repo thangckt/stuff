@@ -20,7 +20,7 @@ BuildRequires:  libpst-devel libarchive-devel libnma-devel libytnef-devel libmsp
 
 BuildRequires:  evolution-data-server >= %{version}
 Requires:       evolution-data-server >= %{version}
-Requires:       gvfs gspell highlight
+#Requires:       gvfs gspell highlight
 
 %global __brp_compress true
 %global __brp_mangle_shebangs true
