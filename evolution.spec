@@ -112,6 +112,13 @@ find %{buildroot}/usr/lib/evolution -type f | while read f; do
   file "$f" | grep -q ELF && chrpath -r %{_libdir}/evolution "$f" || :
 done
 
+# ✅ Move .so files manually from /usr/lib to /usr/lib64
+mkdir -p %{buildroot}%{_libdir}
+if [ -d %{buildroot}/usr/lib ]; then
+  find %{buildroot}/usr/lib -maxdepth 1 -name "*.so*" -exec mv -v {} %{buildroot}%{_libdir}/ \;
+  rmdir --ignore-fail-on-non-empty %{buildroot}/usr/lib
+fi
+
 ## Debug
 find %{buildroot} -name "libevolution-shell.so*"
 
