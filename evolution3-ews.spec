@@ -10,8 +10,8 @@ URL:            https://gitlab.gnome.org/GNOME/evolution
 
 Source0:        https://gitlab.gnome.org/GNOME/evolution-ews/-/archive/%{version}/evolution-ews-%{version}.tar.gz
 
-BuildRequires:  cmake gcc gcc-c++ pkgconfig
-BuildRequires:  intltool itstool
+BuildRequires:  cmake gcc gcc-c++ pkgconfig intltool itstool
+BuildRequires:  libmspack-devel
 
 BuildRequires:  evolution >= %{version}
 Requires:       evolution >= %{version}

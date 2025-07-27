@@ -16,7 +16,7 @@ BuildRequires:  gnome-online-accounts-devel gnome-autoar-devel gnome-desktop3-de
 BuildRequires:  nss-devel yelp-tools openldap-devel gspell-devel
 BuildRequires:  libgweather4-devel libcanberra-devel libnotify-devel
 BuildRequires:  gdk-pixbuf2-devel highlight intltool itstool
-BuildRequires:  libpst-devel libarchive-devel libnma-devel libytnef-devel libmspack-devel
+BuildRequires:  libpst-devel libarchive-devel libnma-devel libytnef-devel
 
 BuildRequires:  evolution-data-server >= %{version}
 Requires:       evolution-data-server >= %{version}
