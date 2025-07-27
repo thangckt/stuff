@@ -1,14 +1,14 @@
-### This spec to build Evolution
-# - evolution: https://src.fedoraproject.org/rpms/evolution/blob/rawhide/f/evolution.spec
+### This spec to build Evolution EWS plugin
+# - evolution-ews: https://src.fedoraproject.org/rpms/evolution-ews/blob/rawhide/f/evolution-ews.spec
 
-Name:           evolution
+Name:           evolution-ews
 Version:        3.57.1
 Release:        1%{?dist}
-Summary:        GNOME Evolution Suite
+Summary:        GNOME Evolution EWS plugin
 License:        GPL-2.0-or-later
 URL:            https://gitlab.gnome.org/GNOME/evolution
 
-Source0:        https://gitlab.gnome.org/GNOME/evolution/-/archive/%{version}/evolution-%{version}.tar.gz
+Source0:        https://gitlab.gnome.org/GNOME/evolution-ews/-/archive/%{version}/evolution-ews-%{version}.tar.gz
 
 BuildRequires:  cmake gcc gcc-c++ gettext pkgconfig intltool itstool
 BuildRequires:  gtk4-devel gdk-pixbuf2-devel webkitgtk6.0-devel webkit2gtk4.1-devel
@@ -19,10 +19,10 @@ BuildRequires:  libsecret-devel libgweather4-devel libcanberra-devel libnotify-d
 BuildRequires:  libical-devel libical-glib-devel libpst-devel libarchive-devel libnma-devel
 BuildRequires:  libytnef-devel libmspack-devel
 
-Requires:       evolution-data-server>=3.57.1
+Requires:       evolution>=3.57.1
 
 %description
-This spec builds Evolution PIM (Personal Information Manager) as a unified package.
+This spec builds Evolution EWS plugin.
 
 %prep
 %setup -n evolution-%{version}
@@ -30,15 +30,11 @@ This spec builds Evolution PIM (Personal Information Manager) as a unified packa
 %build
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
 
-################ Build Evolution
-printf "\n%s\n" "#ANCHOR: Build Evolution"
+################ Build Evolution EWS plugin
+printf "\n%s\n" "#ANCHOR: Build Evolution EWS plugin"
 %cmake .. \
     -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DENABLE_PLUGINS=all \
-    -DENABLE_MAINTAINER_MODE=OFF \
-    -DENABLE_GTK_DOC=OFF \
-    -DENABLE_MARKDOWN=OFF
+    -DCMAKE_BUILD_TYPE=Release
 %cmake_build -j%{_smp_build_ncpus}
 
 %install
