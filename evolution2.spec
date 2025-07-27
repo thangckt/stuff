@@ -11,15 +11,11 @@ URL:            https://gitlab.gnome.org/GNOME/evolution
 Source0:        https://gitlab.gnome.org/GNOME/evolution/-/archive/%{version}/evolution-%{version}.tar.gz
 
 BuildRequires:  cmake gcc gcc-c++ pkgconfig gettext
-
-
-# BuildRequires:  gtk4-devel webkitgtk6.0-devel webkit2gtk4.1-devel
-# BuildRequires:  gnome-online-accounts-devel gnome-autoar-devel gnome-desktop3-devel gsettings-desktop-schemas-devel
-# BuildRequires:  nss-devel yelp-tools openldap-devel gspell-devel
-# BuildRequires:  libsecret-devel libgweather4-devel libcanberra-devel libnotify-devel libuuid-devel libical-devel libical-glib-devel
-
-# BuildRequires:  gdk-pixbuf2-devel
-# BuildRequires: libpst-devel libarchive-devel libnma-devel libytnef-devel libmspack-devel
+BuildRequires:  gtk4-devel webkitgtk6.0-devel webkit2gtk4.1-devel
+BuildRequires:  gnome-online-accounts-devel gnome-autoar-devel gnome-desktop3-devel gsettings-desktop-schemas-devel
+BuildRequires:  nss-devel yelp-tools openldap-devel gspell-devel
+BuildRequires: libgweather4-devel libcanberra-devel libnotify-devel
+BuildRequires:  gdk-pixbuf2-devel BuildRequires: libpst-devel libarchive-devel libnma-devel libytnef-devel libmspack-devel
 
 BuildRequires:  evolution-data-server >= %{version}
 Requires:       evolution-data-server >= %{version}
