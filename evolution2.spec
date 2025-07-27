@@ -29,13 +29,16 @@ This spec builds Evolution PIM (Personal Information Manager).
 %setup -n evolution-%{version}
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
+export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations -flto -march=native"
 
 ################ Build Evolution
 printf "\n%s\n" "#ANCHOR: Build Evolution"
 %cmake .. \
-    -DCMAKE_C_FLAGS_RELEASE="%{optflags} -flto -march=native" \
-    -DCMAKE_BUILD_TYPE=Release \
+    -DINCLUDE_INSTALL_DIR:PATH=%{_includedir} \
+	-DLIB_INSTALL_DIR:PATH=%{_libdir} \
+	-DSYSCONF_INSTALL_DIR:PATH=%{_sysconfdir} \
+	-DSHARE_INSTALL_PREFIX:PATH=%{_datadir} \
+	-DLIB_SUFFIX=64 \
     -DENABLE_PLUGINS=all \
     -DENABLE_MAINTAINER_MODE=OFF \
     -DENABLE_GTK_DOC=OFF \

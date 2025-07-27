@@ -26,14 +26,18 @@ This spec builds Evolution Data Server (EDS), which is a set of libraries and se
 %setup -n evolution-data-server-%{version}
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations"
+export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations -flto -march=native"
+export CPPFLAGS="-I%{_includedir}/et -flto -march=native"
 
 ################ Build EDS
 printf "\n%s\n" "#ANCHOR: Build Evolution Data Server"
 %cmake .. \
-    -DCMAKE_C_FLAGS_RELEASE="${CFLAGS} -flto -march=native" \
-    -DCMAKE_CXX_FLAGS_RELEASE="${CFLAGS} -flto -march=native" \
-    -DCMAKE_BUILD_TYPE=Release \
+    -DWITH_SYSTEMDUSERUNITDIR=%{_userunitdir} \
+	-DINCLUDE_INSTALL_DIR:PATH=%{_includedir} \
+	-DLIB_INSTALL_DIR:PATH=%{_libdir} \
+	-DSYSCONF_INSTALL_DIR:PATH=%{_sysconfdir} \
+	-DSHARE_INSTALL_PREFIX:PATH=%{_datadir} \
+	-DLIB_SUFFIX=64 \
     -DWITH_LIBDB=OFF -DENABLE_GTK_DOC=OFF \
     -DENABLE_OAUTH2_WEBKITGTK=ON -DENABLE_OAUTH2_WEBKITGTK4=ON \
     -DENABLE_GTK=ON
