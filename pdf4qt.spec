@@ -18,9 +18,14 @@ PDF4QT is an open-source Qt-based PDF editor and viewer. It supports basic editi
 %autosetup -n PDF4QT-%{version}
 
 %build
+printf "\n%s\n" "#ANCHOR  Install vcpkg"
+git clone https://github.com/Microsoft/vcpkg.git vcpkg_dir
+./vcpkg_dir/bootstrap-vcpkg.sh -disableMetrics
+VCPKG_ROOT=$(pwd)/vcpkg_dir
+
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations -flto"
 
-printf "\n%s\n" "#ANCHOR: Build PDF4QT"
+printf "\n%s\n" "#ANCHOR Build PDF4QT"
 %cmake \
 	-DLIB_INSTALL_DIR:PATH=%{_libdir} \
 	-DSHARE_INSTALL_PREFIX:PATH=%{_datadir} \
