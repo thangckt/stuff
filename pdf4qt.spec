@@ -40,10 +40,10 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})' CMakeLi
 %build
 printf "\n%s\n" "#ANCHOR Build PDF4QT"
 %cmake \
-	-DLIB_INSTALL_DIR:PATH=%{_libdir} \
-	-DSHARE_INSTALL_PREFIX:PATH=%{_datadir} \
-    -DINCLUDE_INSTALL_DIR:PATH=%{_includedir} \
-	-DLIB_SUFFIX=64 \
+    -DLIB_INSTALL_DIR:PATH=lib%{?_libarchsuffix} \
+    -DSHARE_INSTALL_PREFIX:PATH=share \
+    -DINCLUDE_INSTALL_DIR:PATH=include \
+    -DLIB_SUFFIX=64 \
     -DPDF4QT_INSTALL_QT_DEPENDENCIES=OFF \
     -DPDF4QT_INSTALL_DEPENDENCIES=OFF \
     -DQT_NO_MISSING_CATALOG_LANGUAGE_WARNING=ON \
@@ -57,6 +57,8 @@ printf "\n%s\n" "#ANCHOR Build PDF4QT"
 find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
 
 %files -f filelist.txt
+%{_libdir}/libPdf4QtLib*.so
+%{_libdir}/pdf4qt/*.so
 
 %changelog
 %autochangelog
