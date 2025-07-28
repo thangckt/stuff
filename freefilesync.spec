@@ -15,9 +15,9 @@ URL:        http://www.freefilesync.org/
 # upstream does not provide easy automatic downloads of the source, so use the mirror
 #Source0:    http://www.freefilesync.org/download/%%{pkgname}_%%{version}_Source.zip
 Source0:    https://gitlab.com/opensource-tracking/%{pkgname}/-/archive/%{version}/%{pkgname}-%{version}.tar.gz
-Source1:    %{pkgname}.desktop
-Source2:    %{prog2name}.desktop
-Source3:    %{name}.xml
+Source1:    https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/FreeFileSync.desktop
+Source2:    https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/RealTimeSync.desktop
+Source3:    https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/freefilesync.xml
 
 BuildRequires:  gcc-c++ brotli-devel wxGTK-devel ImageMagick unzip
 BuildRequires:  desktop-file-utils patch
@@ -110,6 +110,7 @@ find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
 # Desktop files
 install -Dm0644 %{SOURCE1} %{buildroot}%{_datadir}/applications/%{pkgname}.desktop
 install -Dm0644 %{SOURCE2} %{buildroot}%{_datadir}/applications/%{prog2name}.desktop
+install -Dm0644 %{SOURCE3} %{buildroot}%{_datadir}/mime/packages/%{name}.xml
 
 # MIME type XML
 install -Dm0644 %{SOURCE3} %{buildroot}%{_datadir}/mime/packages/%{name}.xml
