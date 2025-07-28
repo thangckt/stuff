@@ -10,29 +10,15 @@ URL:            https://github.com/JakubMelka/PDF4QT
 Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 
 BuildRequires: cmake ninja-build gcc-c++ git pkgconfig
-BuildRequires: qt6-qtbase-devel qt6-qtsvg-devel qt6-qttools-devel qt6-qtspeech-devel
-BuildRequires: openssl-devel zlib-devel freetype-devel
-BuildRequires: openjpeg2-devel libjpeg-turbo-devel libpng-devel lcms2-devel
-BuildRequires: tbb-devel cups-devel blend2d-devel
+BuildRequires: qt6-qtbase-devel qt6-qtsvg-devel qt6-qttools-devel qt6-qtspeech-devel qt6-qtmultimedia-devel
+BuildRequires: openssl-devel zlib-devel freetype-devel tbb-devel cups-devel
+BuildRequires: openjpeg2-devel libjpeg-turbo-devel libpng-devel lcms2-devel blend2d-devel
 
 %description
 PDF4QT is an open-source Qt-based PDF editor and viewer. It supports basic editing functions and uses Poppler for PDF rendering.
 
 %prep
 %autosetup -n PDF4QT-%{version}
-
-# Write minimal Findlcms2.cmake
-mkdir -p cmake
-cat > cmake/Findlcms2.cmake << 'EOF'
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(LCMS2 REQUIRED lcms2)
-set(lcms2_INCLUDE_DIRS ${LCMS2_INCLUDE_DIRS})
-set(lcms2_LIBRARIES ${LCMS2_LIBRARIES})
-EOF
-
-# Patch CMakeLists.txt to add cmake/ to CMAKE_MODULE_PATH
-sed -i '/include(GNUInstallDirs)/a\
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})' CMakeLists.txt
 
 %build
 printf "\n%s\n" "#ANCHOR Build PDF4QT"
