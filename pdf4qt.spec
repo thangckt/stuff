@@ -40,7 +40,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})' CMakeLi
 %build
 printf "\n%s\n" "#ANCHOR Build PDF4QT"
 %cmake \
-    -DCMAKE_INSTALL_PREFIX=%{_prefix} \
     -DLIB_INSTALL_DIR:PATH=%{_libdir} \
     -DINCLUDE_INSTALL_DIR:PATH=%{_includedir} \
     -DSHARE_INSTALL_PREFIX:PATH=%{_datadir} \
@@ -50,19 +49,37 @@ printf "\n%s\n" "#ANCHOR Build PDF4QT"
     -DCMAKE_BUILD_TYPE=Release
 %cmake_build
 
+## debug PATH
+cat %{_vpath_builddir}/CMakeCache.txt | grep CMAKE_INSTALL_PREFIX
+
 %install
 %cmake_install
+
+## Desktop file
+mkdir -p %{buildroot}%{_datadir}/applications
+cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtDiff.desktop %{buildroot}%{_datadir}/applications/Pdf4qt.Pdf4QtDiff.desktop
+cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtEditor.desktop %{buildroot}%{_datadir}/applications/Pdf4qt.Pdf4QtEditor.desktop
+cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtPageMaster.desktop %{buildroot}%{_datadir}/applications/Pdf4qt.Pdf4QtPageMaster.desktop
+cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtViewer.desktop %{buildroot}%{_datadir}/applications/Pdf4qt.Pdf4QtViewer.desktop
+
+## Icons
+%golabal _icon_dir %{buildroot}%{_datadir}/icons/hicolor/128x128/apps
+mkdir -p %{_icon_dir}
+cp Desktop/128x128/io.github.JakubMelka.Pdf4qt.Pdf4QtDiff.png %{_icon_dir}/Pdf4QtDiff.png
+cp Desktop/128x128/io.github.JakubMelka.Pdf4qt.Pdf4QtEditor.png %{_icon_dir}/Pdf4QtEditor.png
+cp Desktop/128x128/io.github.JakubMelka.Pdf4qt.Pdf4QtPageMaster.png %{_icon_dir}/Pdf4QtPageMaster.png
+cp Desktop/128x128/io.github.JakubMelka.Pdf4qt.Pdf4QtViewer.png %{_icon_dir}/Pdf4QtViewer.png
 
 ## Generate file list (include everything)
 find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
 
 %files -f filelist.txt
 
-/usr/usr/lib/libPdf4QtLib*.so
-/usr/usr/lib/pdf4qt/
+#/usr/usr/lib/libPdf4QtLib*.so
+#/usr/usr/lib/pdf4qt/
 
-#%{_libdir}/libPdf4QtLib*.so
-#%{_libdir}/pdf4qt/
+%{_libdir}/libPdf4QtLib*.so
+%{_libdir}/pdf4qt/
 
 %changelog
 %autochangelog
