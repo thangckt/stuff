@@ -57,8 +57,6 @@ printf "\n%s\n" "#ANCHOR Build PDF4QT"
 find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
 
 %files -f filelist.txt
-%{_libdir}/libPdf4QtLib*.so
-%{_libdir}/pdf4qt/*.so
 
 %changelog
 %autochangelog
