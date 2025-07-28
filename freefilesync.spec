@@ -55,8 +55,12 @@ find . ! -type d \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec sed -i 
 
 # Apply base patches
 %autopatch -p1
-%patch -P 20 -p1  # Fedora/RHEL 9+ base patch
-%patch -P 60 -p1  # Desktop notifications
+
+# Fedora/RHEL 9+ base patch
+%patch -P 20 -p1
+
+# Desktop notifications
+%patch -P 60 -p1
 
 # Apply OpenSSL patch if version < 3
 opensslver=$(openssl version | awk '{print $2}' | cut -d. -f1)
