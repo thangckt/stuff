@@ -23,7 +23,7 @@ VCPKG_ROOT=$(pwd)/vcpkg
 # Clone PDF4QT source code
 git clone https://github.com/JakubMelka/PDF4QT pdf4qt
 cd pdf4qt
-git checkout %{version}
+git checkout v%{version}
 
 # Move source to expected build directory root
 cd ..
