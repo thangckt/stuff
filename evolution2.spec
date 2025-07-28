@@ -46,7 +46,7 @@ printf "\n%s\n" "#ANCHOR: Build Evolution"
     -DENABLE_MAINTAINER_MODE=OFF \
     -DENABLE_GTK_DOC=OFF \
     -DENABLE_MARKDOWN=OFF
-%cmake_build -j%{_smp_build_ncpus}
+%cmake_build
 
 %install
 %cmake_install

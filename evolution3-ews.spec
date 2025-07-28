@@ -33,7 +33,7 @@ printf "\n%s\n" "#ANCHOR: Build Evolution EWS plugin"
 	-DSYSCONF_INSTALL_DIR:PATH=%{_sysconfdir} \
 	-DSHARE_INSTALL_PREFIX:PATH=%{_datadir} \
 	-DLIB_SUFFIX=64
-%cmake_build -j%{_smp_build_ncpus}
+%cmake_build
 
 %install
 %cmake_install
