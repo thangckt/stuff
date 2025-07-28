@@ -10,7 +10,8 @@ URL:            https://github.com/JakubMelka/PDF4QT
 Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 
 BuildRequires: cmake ninja-build gcc-c++ git pkgconfig
-BuildRequires: qt6-qtbase-devel qt6-qtsvg-devel qt6-qttools-devel qt6-qtspeech-devel qt6-qtmultimedia-devel
+BuildRequires: qt6-qtbase-devel qt6-qtsvg-devel qt6-qttools-devel qt6-qtspeech-devel
+BuildRequires: qt6-qtmultimedia-devel qt6-qtpdf-devel
 BuildRequires: openssl-devel zlib-devel freetype-devel tbb-devel cups-devel
 BuildRequires: openjpeg2-devel libjpeg-turbo-devel libpng-devel lcms2-devel blend2d-devel
 
@@ -52,13 +53,10 @@ printf "\n%s\n" "#ANCHOR Build PDF4QT"
 %install
 %cmake_install
 
-%files
-%license LICENSE
-%doc README.md
-%{_bindir}/*
-%{_libdir}/libpdf4qt*.so.*
-%{_datadir}/applications/*.desktop
-%{_datadir}/icons/hicolor/*/apps/*.png
+## Generate file list (include everything)
+find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
+
+%files -f filelist.txt
 
 %changelog
 %autochangelog
