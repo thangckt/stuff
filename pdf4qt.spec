@@ -75,6 +75,8 @@ cp Desktop/128x128/io.github.JakubMelka.Pdf4qt.Pdf4QtViewer.png %{_icon_dir}/io.
 find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
 
 %files -f filelist.txt
+/usr/lib/libPdf4QtLib*.so
+/usr/lib/pdf4qt/lib*.so
 
 %changelog
 %autochangelog

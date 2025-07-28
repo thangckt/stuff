@@ -10,18 +10,28 @@ fetch_gitlab_version() {
     # 1. https://gitlab.com/username/repo -> use tags: (/api/v4/projects/:id/repository/tags)
     # 2. https://gitlab.com/namespace/project -> use releases (/api/v4/projects/:id/releases)
 
-    local repo_url="$1"
-    local project_path
-    project_path=$(echo "${repo_url#https://gitlab.*/}" | sed 's|/|%2F|g')
-    local base_api_url="${repo_url%%://*}://$(echo "$repo_url" | cut -d/ -f3)/api/v4/projects/${project_path}"
+    # Extract base domain and project path
+    local base_url project_path
+    base_url=$(echo "$repo_url" | sed -E 's|^(https://[^/]+).*|\1|')
+    project_path=$(echo "$repo_url" | sed -E 's|https://[^/]+/||; s|/-/.*||')
+    local project_path_encoded
+    project_path_encoded=$(echo "$project_path" | sed 's|/|%2F|g')
+    local base_api_url="${base_url}/api/v4/projects/${project_path_encoded}"
 
-    local new_version
-    # Try to fetch from /releases
-    new_version=$(curl -sL "${base_api_url}/releases" | grep -oP '"tag_name":"v?\K[^"]+' | head -n1)
-    # If no releases, fall back to /repository/tags
-    if [[ -z "$new_version" ]]; then
-        new_version=$(curl -sL "${base_api_url}/repository/tags" | grep -oP '"name":"v?\K[^"]+' | head -n1)
-    fi
+    local new_version=""
+    local tmp_versions=$(mktemp)
+
+    # Try releases API first
+    curl -s "${base_api_url}/releases?per_page=100" | \
+        grep -oP '"tag_name":"v?\K[0-9]+(\.[0-9]+)*' >> "$tmp_versions"
+
+    # Then try tags if releases empty or missing
+    curl -s "${base_api_url}/repository/tags?per_page=100" | \
+        grep -oP '"name":"v?\K[0-9]+(\.[0-9]+)*' >> "$tmp_versions"
+
+    new_version=$(sort -V "$tmp_versions" | tail -n1)
+    rm -f "$tmp_versions"
+
     if [[ -z "$new_version" ]]; then
         echo "Failed to get version for $repo_url" >&2
         return 1
