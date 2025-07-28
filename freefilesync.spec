@@ -50,41 +50,37 @@ It is optimized for backup speed and visual usability.
 %prep
 %setup -n %{pkgname}-%{version}
 
+# Convert CRLF to LF
 find . ! -type d \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec sed -i 's/\r$//' {} +
 
+# Apply base patches
 %autopatch -p1
+%patch -P 20 -p1  # Fedora/RHEL 9+ base patch
+%patch -P 60 -p1  # Desktop notifications
 
-# Fedora / RHEL 9+ distro patch
-%patch -P 20 -p1
+# Apply OpenSSL patch if version < 3
+opensslver=$(openssl version | awk '{print $2}' | cut -d. -f1)
+if [ "$opensslver" -lt 3 ]; then
+    echo "Applying patch 40 for OpenSSL < 3"
+    patch -p1 < %{_sourcedir}/ffs_openssl.patch
+fi
 
-# Check openssl version at build time (simple macro)
-%define openssl_version %(openssl version | awk '{print $2}' | cut -d. -f1)
+# Apply GCC patch if version < 12
+gccver=$(g++ -dumpversion | cut -d. -f1)
+if [ "$gccver" -lt 12 ]; then
+    echo "Applying patch 41 for GCC < 12"
+    patch -p1 < %{_sourcedir}/ffs_no_gcc12.patch
+fi
 
-%if "%{openssl_version}" && "%{openssl_version}" < "3"
-%patch -P 40 -p1
-%endif
+# Apply libcurl patch depending on version
+libcurl_ver=$(rpm -q libcurl-devel --queryformat '%{version}')
+case "$libcurl_ver" in
+    7.71.1) patch -p1 < %{_sourcedir}/ffs_libcurl_7.71.1.patch ;;
+    7.79.1) patch -p1 < %{_sourcedir}/ffs_libcurl_7.79.1.patch ;;
+    *) echo "No libcurl patch needed for version $libcurl_ver" ;;
+esac
 
-# Check gcc version at build time
-%define gcc_version %(g++ -dumpversion | cut -d. -f1)
-
-%if "%{gcc_version}" && "%{gcc_version}" < "12"
-%patch -P 41 -p1
-%endif
-
-%patch -P 60 -p1
-
-# libcurl version for Fedora/RHEL 9+
-%define libcurl_ver %(rpm -q libcurl-devel --queryformat '%{version}')
-
-%if "%{libcurl_ver}" == "7.71.1"
-%patch -P 71 -p1
-%elif "%{libcurl_ver}" == "7.79.1"
-%patch -P 72 -p1
-%else
-# no patch for other versions expected on Fedora 41 / RHEL 9
-%endif
-
-# Fix CXXFLAGS and linking
+# Inject CXXFLAGS and fix linking
 sed -i -e 's|-O3 -DNDEBUG|-DNDEBUG -DZEN_LINUX %{optflags}|g' \
        -e '/linkFlags/s|-s|%{__global_ldflags}|' \
     %{pkgname}/Source/Makefile \
