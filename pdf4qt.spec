@@ -9,8 +9,10 @@ URL:            https://github.com/JakubMelka/PDF4QT
 Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 
 BuildRequires: cmake ninja-build gcc-c++ git
-BuildRequires: qt6-qtbase-devel qt6-qtsvg-devel
-BuildRequires: perl-IPC-Cmd perl-core kernel-headers
+BuildRequires: qt6-qtbase-devel qt6-qtsvg-devel qt6-qttools-devel
+BuildRequires: openssl-devel zlib-devel freetype-devel
+BuildRequires: openjpeg2-devel libjpeg-turbo-devel libpng-devel lcms2-devel
+BuildRequires: tbb-devel
 
 %description
 PDF4QT is an open-source Qt-based PDF editor and viewer. It supports basic editing functions and uses Poppler for PDF rendering.
@@ -18,23 +20,19 @@ PDF4QT is an open-source Qt-based PDF editor and viewer. It supports basic editi
 %prep
 %autosetup -n PDF4QT-%{version}
 
+# Remove vcpkg-related logic from the CMakeLists.txt
+sed -i '/VCPKG/d' CMakeLists.txt
+sed -i '/vcpkg/d' CMakeLists.txt
+
 %build
-printf "\n%s\n" "#ANCHOR Install vcpkg"
-git clone https://github.com/Microsoft/vcpkg.git vcpkg_dir
-./vcpkg_dir/bootstrap-vcpkg.sh -disableMetrics
-VCPKG_ROOT=$(pwd)/vcpkg_dir
-
-#export VCPKG_FORCE_SYSTEM_BINARIES=1
-
 printf "\n%s\n" "#ANCHOR Build PDF4QT"
 %cmake \
 	-DLIB_INSTALL_DIR:PATH=%{_libdir} \
 	-DSHARE_INSTALL_PREFIX:PATH=%{_datadir} \
     -DINCLUDE_INSTALL_DIR:PATH=%{_includedir} \
 	-DLIB_SUFFIX=64 \
-    -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake \
-    -DPDF4QT_INSTALL_QT_DEPENDENCIES=1 \
-    -DPDF4QT_INSTALL_DEPENDENCIES=1 \
+    -DPDF4QT_INSTALL_QT_DEPENDENCIES=OFF \
+    -DPDF4QT_INSTALL_DEPENDENCIES=OFF \
     -DCMAKE_BUILD_TYPE=Release
 %cmake_build
 
