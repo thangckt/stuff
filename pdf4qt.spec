@@ -12,7 +12,7 @@ BuildRequires: cmake ninja-build gcc-c++ git
 BuildRequires: qt6-qtbase-devel qt6-qtsvg-devel qt6-qttools-devel qt6-qtspeech-devel
 BuildRequires: openssl-devel zlib-devel freetype-devel
 BuildRequires: openjpeg2-devel libjpeg-turbo-devel libpng-devel lcms2-devel
-BuildRequires: tbb-devel cups-devel
+BuildRequires: tbb-devel cups-devel lcms2-devel
 
 %description
 PDF4QT is an open-source Qt-based PDF editor and viewer. It supports basic editing functions and uses Poppler for PDF rendering.
