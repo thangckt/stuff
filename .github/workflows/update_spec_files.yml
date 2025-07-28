@@ -18,7 +18,7 @@ jobs:
     ### Update the .spec files
       - name: Update .spec files
         run: |
-          bash update_spec_version.sh
+          bash 0update_spec_version.sh
 
     ### Update the repository
       - name: Commit and Push Changes      # Commit all changed files back to the repository
