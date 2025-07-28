@@ -12,25 +12,17 @@ BuildRequires:  cmake ninja-build gcc-c++ git
 BuildRequires:  qt6-qtbase-devel qt6-qtsvg-devel
 
 %description
-OVITO is a scientific data visualization and analysis software for atomistic, molecular and other particle-based simulations.
+PDF4QT is an open-source Qt-based PDF editor and viewer. It supports basic editing functions and uses Poppler for PDF rendering.
 
 %prep
+%autosetup -n PDF4QT-%{version}
+
+%build
 # Install vcpkg
 git clone https://github.com/Microsoft/vcpkg.git
 ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
 VCPKG_ROOT=$(pwd)/vcpkg
 
-# Clone PDF4QT source code
-git clone https://github.com/JakubMelka/PDF4QT pdf4qt
-cd pdf4qt
-git checkout v%{version}
-
-# Move source to expected build directory root
-cd ..
-cp -a pdf4qt/. ./
-rm -rf pdf4qt
-
-%build
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations -flto"
 
 printf "\n%s\n" "#ANCHOR: Build PDF4QT"
@@ -42,15 +34,18 @@ printf "\n%s\n" "#ANCHOR: Build PDF4QT"
     -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake \
     -DPDF4QT_INSTALL_QT_DEPENDENCIES=0 \
     -DCMAKE_BUILD_TYPE=Release
-%cmake_build -j%{?_smp_build_ncpus}
+%cmake_build
 
 %install
 %cmake_install
 
-## Generate file list (include everything)
-find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
-
-%files -f filelist.txt
+%files
+%license LICENSE
+%doc README.md
+%{_bindir}/*
+%{_libdir}/libpdf4qt*.so.*
+%{_datadir}/applications/*.desktop
+%{_datadir}/icons/hicolor/*/apps/*.png
 
 %changelog
 %autochangelog
