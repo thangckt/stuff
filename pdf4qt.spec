@@ -47,7 +47,7 @@ printf "\n%s\n" "#ANCHOR Build PDF4QT"
     -DPDF4QT_INSTALL_DEPENDENCIES=OFF \
     -DQT_NO_MISSING_CATALOG_LANGUAGE_WARNING=ON \
     -DCMAKE_BUILD_TYPE=Release
-%cmake_build
+%cmake_build -j$(nproc)
 
 ## debug PATH
 cat %{_vpath_builddir}/CMakeCache.txt | grep CMAKE_INSTALL_PREFIX
@@ -56,15 +56,18 @@ cat %{_vpath_builddir}/CMakeCache.txt | grep CMAKE_INSTALL_PREFIX
 %cmake_install
 
 ## Desktop file
-mkdir -p %{buildroot}%{_datadir}/applications
-cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtDiff.desktop %{buildroot}%{_datadir}/applications/Pdf4qt.Pdf4QtDiff.desktop
-cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtEditor.desktop %{buildroot}%{_datadir}/applications/Pdf4qt.Pdf4QtEditor.desktop
-cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtPageMaster.desktop %{buildroot}%{_datadir}/applications/Pdf4qt.Pdf4QtPageMaster.desktop
-cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtViewer.desktop %{buildroot}%{_datadir}/applications/Pdf4qt.Pdf4QtViewer.desktop
+%global _app_dir %{buildroot}%{_datadir}/applications
+mkdir -p %{_app_dir}
+cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4Qt.desktop %{_app_dir}/Pdf4qt.Pdf4Qt.desktop
+cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtDiff.desktop %{_app_dir}/Pdf4qt.Pdf4QtDiff.desktop
+cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtEditor.desktop %{_app_dir}/Pdf4qt.Pdf4QtEditor.desktop
+cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtPageMaster.desktop %{_app_dir}/Pdf4qt.Pdf4QtPageMaster.desktop
+cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtViewer.desktop %{_app_dir}/Pdf4qt.Pdf4QtViewer.desktop
 
 ## Icons
-%golabal _icon_dir %{buildroot}%{_datadir}/icons/hicolor/128x128/apps
+%global _icon_dir %{buildroot}%{_datadir}/icons/hicolor/128x128/apps
 mkdir -p %{_icon_dir}
+cp Desktop/128x128/io.github.JakubMelka.Pdf4qt.Pdf4Qt.png %{_icon_dir}/Pdf4Qt.png
 cp Desktop/128x128/io.github.JakubMelka.Pdf4qt.Pdf4QtDiff.png %{_icon_dir}/Pdf4QtDiff.png
 cp Desktop/128x128/io.github.JakubMelka.Pdf4qt.Pdf4QtEditor.png %{_icon_dir}/Pdf4QtEditor.png
 cp Desktop/128x128/io.github.JakubMelka.Pdf4qt.Pdf4QtPageMaster.png %{_icon_dir}/Pdf4QtPageMaster.png
