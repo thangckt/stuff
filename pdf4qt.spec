@@ -1,4 +1,5 @@
-### REF: https://www.ovito.org/docs/current/development/build_linux.html
+### REF: https://github.com/JakubMelka/PDF4QT?tab=readme-ov-file#compiling-from-sources
+# Note: the official guide used VCPKG, but on Linux systems, there is no need for it.
 
 Name:           pdf4qt
 Version:        1.5.1.0
