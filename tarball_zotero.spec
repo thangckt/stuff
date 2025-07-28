@@ -2,7 +2,7 @@
 ### building Zotero from source (dependences: nodejs, npm) is quite complex and may still have issues -> Use the official binary (Recommended)
 
 Name:           zotero
-Version:        7.0.20
+Version:        7.0.22
 Release:        1%{?dist}
 Summary:        Zotero Reference Manager
 
