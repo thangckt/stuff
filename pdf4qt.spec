@@ -40,7 +40,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})' CMakeLi
 %build
 printf "\n%s\n" "#ANCHOR Build PDF4QT"
 %cmake \
-    -DLIB_INSTALL_DIR:PATH=lib%{?_libarchsuffix} \
+    -DLIB_INSTALL_DIR:PATH=lib64 \
     -DSHARE_INSTALL_PREFIX:PATH=share \
     -DINCLUDE_INSTALL_DIR:PATH=include \
     -DLIB_SUFFIX=64 \
@@ -57,6 +57,8 @@ printf "\n%s\n" "#ANCHOR Build PDF4QT"
 find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
 
 %files -f filelist.txt
+%{_libdir}/libPdf4QtLib*.so
+%{_libdir}/pdf4qt/
 
 %changelog
 %autochangelog
