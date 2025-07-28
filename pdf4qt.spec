@@ -21,8 +21,9 @@ PDF4QT is an open-source Qt-based PDF editor and viewer. It supports basic editi
 %autosetup -n PDF4QT-%{version}
 
 # Remove vcpkg-related logic from the CMakeLists.txt
-sed -i '/VCPKG/d' CMakeLists.txt
-sed -i '/vcpkg/d' CMakeLists.txt
+sed -i '/CMAKE_TOOLCHAIN_FILE/ s/^/#/' CMakeLists.txt
+sed -i '/vcpkg/ s/^/#/' CMakeLists.txt
+sed -i '/VCPKG/ s/^/#/' CMakeLists.txt
 
 %build
 printf "\n%s\n" "#ANCHOR Build PDF4QT"
