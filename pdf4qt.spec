@@ -21,6 +21,19 @@ PDF4QT is an open-source Qt-based PDF editor and viewer. It supports basic editi
 %prep
 %autosetup -n PDF4QT-%{version}
 
+# Write minimal Findlcms2.cmake
+mkdir -p cmake
+cat > cmake/Findlcms2.cmake << 'EOF'
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LCMS2 REQUIRED lcms2)
+set(lcms2_INCLUDE_DIRS ${LCMS2_INCLUDE_DIRS})
+set(lcms2_LIBRARIES ${LCMS2_LIBRARIES})
+EOF
+
+# Patch CMakeLists.txt to add cmake/ to CMAKE_MODULE_PATH
+sed -i '/include(GNUInstallDirs)/a\
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})' CMakeLists.txt
+
 %build
 printf "\n%s\n" "#ANCHOR Build PDF4QT"
 %cmake \
