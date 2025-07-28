@@ -26,11 +26,11 @@ Patch3:  03_sftp.patch
 Patch5:  05_traditional_view.patch
 Patch6:  06_icon_loader.patch
 Patch7:  07_libssh2.patch
-Patch20: ffs_distro_fedora.patch    # Keep for Fedora/RHEL 9+
-Patch40: ffs_openssl.patch          # Openssl < 3 patch (if needed)
-Patch41: ffs_no_gcc12.patch         # gcc < 12 patch (if needed)
+Patch20: ffs_distro_fedora.patch
+Patch40: ffs_openssl.patch
+Patch41: ffs_no_gcc12.patch
 Patch60: ffs_desktop_notifications.patch
-Patch71: ffs_libcurl_7.71.1.patch   # Curl patch for common supported versions
+Patch71: ffs_libcurl_7.71.1.patch
 Patch72: ffs_libcurl_7.79.1.patch
 
 BuildRequires:  gcc-c++ brotli-devel wxGTK-devel ImageMagick unzip
