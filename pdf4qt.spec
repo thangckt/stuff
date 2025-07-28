@@ -25,16 +25,11 @@ mkdir -p cmake
 cat > cmake/Findlcms2.cmake << 'EOF'
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LCMS2 REQUIRED lcms2)
-set(lcms2_INCLUDE_DIRS ${LCMS2_INCLUDE_DIRS})
-set(lcms2_LIBRARIES ${LCMS2_LIBRARIES})
-EOF
-
-# Write minimal Findblend2d.cmake
-cat > cmake/Findblend2d.cmake << 'EOF'
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(BLEND2D REQUIRED blend2d)
-set(blend2d_INCLUDE_DIRS ${BLEND2D_INCLUDE_DIRS})
-set(blend2d_LIBRARIES ${BLEND2D_LIBRARIES})
+add_library(lcms2::lcms2 UNKNOWN IMPORTED)
+set_target_properties(lcms2::lcms2 PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${LCMS2_INCLUDE_DIRS}"
+    IMPORTED_LOCATION "${LCMS2_LINK_LIBRARIES}"
+)
 EOF
 
 # Add cmake/ to CMAKE_MODULE_PATH
