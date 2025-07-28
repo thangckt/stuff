@@ -20,19 +20,18 @@ Source2:    %{prog2name}.desktop
 Source3:    %{name}.xml
 
 # these patches support only some new distros
-Patch0:         00_allow_parallel_ops.patch
-Patch1:         01_no_check_updates.patch
-Patch3:         03_sftp.patch
-Patch5:         05_traditional_view.patch
-Patch6:         06_icon_loader.patch
-Patch7:         07_libssh2.patch
-Patch20:        ffs_distro_fedora.patch
-Patch40:        ffs_openssl.patch
-Patch41:        ffs_no_gcc12.patch
-Patch60:        ffs_desktop_notifications.patch
-Patch70:        ffs_libcurl_7.61.1.patch
-Patch71:        ffs_libcurl_7.71.1.patch
-Patch72:        ffs_libcurl_7.79.1.patch
+Patch0:  00_allow_parallel_ops.patch
+Patch1:  01_no_check_updates.patch
+Patch3:  03_sftp.patch
+Patch5:  05_traditional_view.patch
+Patch6:  06_icon_loader.patch
+Patch7:  07_libssh2.patch
+Patch20: ffs_distro_fedora.patch    # Keep for Fedora/RHEL 9+
+Patch40: ffs_openssl.patch          # Openssl < 3 patch (if needed)
+Patch41: ffs_no_gcc12.patch         # gcc < 12 patch (if needed)
+Patch60: ffs_desktop_notifications.patch
+Patch71: ffs_libcurl_7.71.1.patch   # Curl patch for common supported versions
+Patch72: ffs_libcurl_7.79.1.patch
 
 BuildRequires:  gcc-c++ brotli-devel wxGTK-devel ImageMagick unzip
 BuildRequires:  desktop-file-utils patch
@@ -50,38 +49,42 @@ It is optimized for backup speed and visual usability.
 
 %prep
 %setup -n %{pkgname}-%{version}
+
 find . ! -type d \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec sed -i 's/\r$//' {} +
 
 %autopatch -p1
 
-# Apply distro-specific patch
+# Fedora / RHEL 9+ distro patch
 %patch -P 20 -p1
 
-# Patch for OpenSSL < 3
-opensslver=$(openssl version | awk '{print $2}' | cut -d. -f1)
-if [ "$opensslver" -lt 3 ]; then
-    %patch -P 40 -p1
-fi
+# Check openssl version at build time (simple macro)
+%define openssl_version %(openssl version | awk '{print $2}' | cut -d. -f1)
 
-# Patch for g++ < 12
-gppver=$(g++ -dumpversion | cut -d. -f1)
-if [ "$gppver" -lt 12 ]; then
-    %patch -P 41 -p1
-fi
+%if "%{openssl_version}" && "%{openssl_version}" < "3"
+%patch -P 40 -p1
+%endif
 
-# Patch for desktop notifications
+# Check gcc version at build time
+%define gcc_version %(g++ -dumpversion | cut -d. -f1)
+
+%if "%{gcc_version}" && "%{gcc_version}" < "12"
+%patch -P 41 -p1
+%endif
+
 %patch -P 60 -p1
 
-# libcurl version-specific patches
-libcurl_ver=$(rpm -q libcurl-devel --queryformat '%{version}')
-case "$libcurl_ver" in
-    7.61.1) %patch -P 70 -p1 ;;
-    7.79.1) %patch -P 72 -p1 ;;
-    7.85.0|7.87.0|7.88.1) echo "libcurl $libcurl_ver: no patch needed" ;;
-    *) %patch -P 71 -p1 ;;
-esac
+# libcurl version for Fedora/RHEL 9+
+%define libcurl_ver %(rpm -q libcurl-devel --queryformat '%{version}')
 
-# Inject CXXFLAGS and fix linking
+%if "%{libcurl_ver}" == "7.71.1"
+%patch -P 71 -p1
+%elif "%{libcurl_ver}" == "7.79.1"
+%patch -P 72 -p1
+%else
+# no patch for other versions expected on Fedora 41 / RHEL 9
+%endif
+
+# Fix CXXFLAGS and linking
 sed -i -e 's|-O3 -DNDEBUG|-DNDEBUG -DZEN_LINUX %{optflags}|g' \
        -e '/linkFlags/s|-s|%{__global_ldflags}|' \
     %{pkgname}/Source/Makefile \
