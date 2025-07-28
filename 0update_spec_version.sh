@@ -128,6 +128,12 @@ spec_files="ovito.spec"
 new_version=$(fetch_gitlab_version "$repo_url")
 update_spec_version "$spec_files" "$new_version"
 
+#####ANCHOR FreeFileSync
+repo_url="https://gitlab.com/opensource-tracking/FreeFileSync"
+spec_files="freefilesync.spec"
+new_version=$(fetch_gitlab_version "$repo_url")
+update_spec_version "$spec_files" "$new_version"
+
 #####ANCHOR Evolution
 repo_url="https://gitlab.gnome.org/GNOME/evolution"
 spec_files="evolution2.spec"

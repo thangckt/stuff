@@ -76,11 +76,5 @@ find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
 
 %files -f filelist.txt
 
-#/usr/usr/lib/libPdf4QtLib*.so
-#/usr/usr/lib/pdf4qt/
-
-%{_libdir}/libPdf4QtLib*.so
-%{_libdir}/pdf4qt/
-
 %changelog
 %autochangelog
