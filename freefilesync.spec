@@ -45,9 +45,8 @@ Provides:       mimehandler(application/x-freefilesync-real)
 Provides:       mimehandler(application/x-freefilesync-batch)
 
 %description
-FreeFileSync is an open-source software that helps synchronize files
-and folders on Windows, Linux, and macOS. It is optimized for backup
-speed and visual usability.
+FreeFileSync is an open-source software that helps synchronize files and folders on Windows, Linux, and macOS.
+It is optimized for backup speed and visual usability.
 
 %prep
 %setup -n %{pkgname}-%{version}
@@ -56,30 +55,30 @@ find . ! -type d \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec sed -i 
 %autopatch -p1
 
 # Apply distro-specific patch
-%patch20 -p1
+%patch -P 20 -p1
 
 # Patch for OpenSSL < 3
 opensslver=$(openssl version | awk '{print $2}' | cut -d. -f1)
 if [ "$opensslver" -lt 3 ]; then
-    %patch40 -p1
+    %patch -P 40 -p1
 fi
 
 # Patch for g++ < 12
 gppver=$(g++ -dumpversion | cut -d. -f1)
 if [ "$gppver" -lt 12 ]; then
-    %patch41 -p1
+    %patch -P 41 -p1
 fi
 
 # Patch for desktop notifications
-%patch60 -p1
+%patch -P 60 -p1
 
 # libcurl version-specific patches
 libcurl_ver=$(rpm -q libcurl-devel --queryformat '%{version}')
 case "$libcurl_ver" in
-    7.61.1) %patch70 -p1 ;;
-    7.79.1) %patch72 -p1 ;;
+    7.61.1) %patch -P 70 -p1 ;;
+    7.79.1) %patch -P 72 -p1 ;;
     7.85.0|7.87.0|7.88.1) echo "libcurl $libcurl_ver: no patch needed" ;;
-    *) %patch71 -p1 ;;
+    *) %patch -P 71 -p1 ;;
 esac
 
 # Inject CXXFLAGS and fix linking
