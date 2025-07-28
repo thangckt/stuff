@@ -15,13 +15,20 @@ BuildRequires:  qt6-qtbase-devel qt6-qtsvg-devel
 OVITO is a scientific data visualization and analysis software for atomistic, molecular and other particle-based simulations.
 
 %prep
-%autosetup -n PDF4QT-v%{version}
+%autosetup -n PDF4QT-%{version}
+
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -fPIC -Wno-sign-compare -Wno-deprecated-declarations -flto"
 
 printf "\n%s\n" "#ANCHOR: Build PDF4QT"
-%cmake -DPDF4QT_INSTALL_QT_DEPENDENCIES=0 -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake -DCMAKE_INSTALL_PREFIX='/' -DCMAKE_BUILD_TYPE=Release
+%cmake \
+	-DLIB_INSTALL_DIR:PATH=%{_libdir} \
+	-DSHARE_INSTALL_PREFIX:PATH=%{_datadir} \
+	-DLIB_SUFFIX=64 \
+    -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake \
+    -DPDF4QT_INSTALL_QT_DEPENDENCIES=0 \
+    -DCMAKE_BUILD_TYPE=Release
 %cmake_build -j%{?_smp_build_ncpus}
 
 %install
