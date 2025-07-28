@@ -19,20 +19,6 @@ Source1:    %{pkgname}.desktop
 Source2:    %{prog2name}.desktop
 Source3:    %{name}.xml
 
-# these patches support only some new distros
-Patch0:  00_allow_parallel_ops.patch
-Patch1:  01_no_check_updates.patch
-Patch3:  03_sftp.patch
-Patch5:  05_traditional_view.patch
-Patch6:  06_icon_loader.patch
-Patch7:  07_libssh2.patch
-Patch20: ffs_distro_fedora.patch
-Patch40: ffs_openssl.patch
-Patch41: ffs_no_gcc12.patch
-Patch60: ffs_desktop_notifications.patch
-Patch71: ffs_libcurl_7.71.1.patch
-Patch72: ffs_libcurl_7.79.1.patch
-
 BuildRequires:  gcc-c++ brotli-devel wxGTK-devel ImageMagick unzip
 BuildRequires:  desktop-file-utils patch
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(libselinux) pkgconfig(zlib)
@@ -53,34 +39,50 @@ It is optimized for backup speed and visual usability.
 # Convert CRLF to LF
 find . ! -type d \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec sed -i 's/\r$//' {} +
 
-# Apply base patches
-%autopatch -p1
+# Define the base URL for patches
+%global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
+
+# Download patches into build root
+for patch in \
+    00_allow_parallel_ops.patch \
+    ffs_distro_fedora.patch \
+    ffs_desktop_notifications.patch \
+    ffs_openssl.patch \
+    ffs_no_gcc12.patch \
+    ffs_libcurl_7.71.1.patch \
+    ffs_libcurl_7.79.1.patch; do
+    echo "Downloading $patch"
+    curl -L -o "$patch" "%{patch_base_url}/$patch"
+done
+
+# Apply base patch to allow parallel make
+patch -p1 < 00_allow_parallel_ops.patch
 
 # Fedora/RHEL 9+ base patch
-%patch -P 20 -p1
+patch -p1 < ffs_distro_fedora.patch
 
 # Desktop notifications
-%patch -P 60 -p1
+patch -p1 < ffs_desktop_notifications.patch
 
 # Apply OpenSSL patch if version < 3
 opensslver=$(openssl version | awk '{print $2}' | cut -d. -f1)
 if [ "$opensslver" -lt 3 ]; then
-    echo "Applying patch 40 for OpenSSL < 3"
-    patch -p1 < %{_sourcedir}/ffs_openssl.patch
+    echo "Applying patch for OpenSSL < 3"
+    patch -p1 < ffs_openssl.patch
 fi
 
 # Apply GCC patch if version < 12
 gccver=$(g++ -dumpversion | cut -d. -f1)
 if [ "$gccver" -lt 12 ]; then
-    echo "Applying patch 41 for GCC < 12"
-    patch -p1 < %{_sourcedir}/ffs_no_gcc12.patch
+    echo "Applying patch for GCC < 12"
+    patch -p1 < ffs_no_gcc12.patch
 fi
 
 # Apply libcurl patch depending on version
 libcurl_ver=$(rpm -q libcurl-devel --queryformat '%{version}')
 case "$libcurl_ver" in
-    7.71.1) patch -p1 < %{_sourcedir}/ffs_libcurl_7.71.1.patch ;;
-    7.79.1) patch -p1 < %{_sourcedir}/ffs_libcurl_7.79.1.patch ;;
+    7.71.1) patch -p1 < ffs_libcurl_7.71.1.patch ;;
+    7.79.1) patch -p1 < ffs_libcurl_7.79.1.patch ;;
     *) echo "No libcurl patch needed for version $libcurl_ver" ;;
 esac
 
