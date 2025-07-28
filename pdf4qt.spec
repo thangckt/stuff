@@ -53,24 +53,6 @@ cat %{_vpath_builddir}/CMakeCache.txt | grep CMAKE_INSTALL_PREFIX
 %install
 %cmake_install
 
-## Desktop file
-%global _app_dir %{buildroot}%{_datadir}/applications
-mkdir -p %{_app_dir}
-cp Desktop/io.github.JakubMelka.Pdf4qt.desktop %{_app_dir}/Pdf4qt.desktop
-cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtDiff.desktop %{_app_dir}/Pdf4qt.Pdf4QtDiff.desktop
-cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtEditor.desktop %{_app_dir}/Pdf4qt.Pdf4QtEditor.desktop
-cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtPageMaster.desktop %{_app_dir}/Pdf4qt.Pdf4QtPageMaster.desktop
-cp Desktop/io.github.JakubMelka.Pdf4qt.Pdf4QtViewer.desktop %{_app_dir}/Pdf4qt.Pdf4QtViewer.desktop
-
-## Icons
-%global _icon_dir %{buildroot}%{_datadir}/icons/hicolor/128x128/apps
-mkdir -p %{_icon_dir}
-cp Desktop/128x128/io.github.JakubMelka.Pdf4qt.png %{_icon_dir}/io.github.JakubMelka.Pdf4qt.png
-cp Desktop/128x128/io.github.JakubMelka.Pdf4qt.Pdf4QtDiff.png %{_icon_dir}/io.github.JakubMelka.Pdf4qt.Pdf4QtDiff.png
-cp Desktop/128x128/io.github.JakubMelka.Pdf4qt.Pdf4QtEditor.png %{_icon_dir}/io.github.JakubMelka.Pdf4qt.Pdf4QtEditor.png
-cp Desktop/128x128/io.github.JakubMelka.Pdf4qt.Pdf4QtPageMaster.png %{_icon_dir}/io.github.JakubMelka.Pdf4qt.Pdf4QtPageMaster.png
-cp Desktop/128x128/io.github.JakubMelka.Pdf4qt.Pdf4QtViewer.png %{_icon_dir}/io.github.JakubMelka.Pdf4qt.Pdf4QtViewer.png
-
 ## Generate file list (include everything)
 find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
 
