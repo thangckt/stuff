@@ -8,8 +8,9 @@ License:        LGPLv3
 URL:            https://github.com/JakubMelka/PDF4QT
 Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 
-BuildRequires:  cmake ninja-build gcc-c++ git
-BuildRequires:  qt6-qtbase-devel qt6-qtsvg-devel
+BuildRequires: cmake ninja-build gcc-c++ git
+BuildRequires: qt6-qtbase-devel qt6-qtsvg-devel
+BuildRequires: perl-IPC-Cmd kernel-headers
 
 %description
 PDF4QT is an open-source Qt-based PDF editor and viewer. It supports basic editing functions and uses Poppler for PDF rendering.
