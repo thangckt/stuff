@@ -18,7 +18,7 @@ Source0:    https://gitlab.com/opensource-tracking/%{pkgname}/-/archive/%{versio
 
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
 BuildRequires:  desktop-file-utils patch
-BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(gtk+-2.0) pkgconfig(zlib) pkgconfig(wx_base-3.3)
+BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(gtk+-2.0) pkgconfig(zlib)
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
 BuildRequires:  gtk+-devel gtk2-devel wxGTK-devel glib2-devel openssl openssl-devel
 
