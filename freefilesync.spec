@@ -19,7 +19,7 @@ Source0:    https://gitlab.com/opensource-tracking/%{pkgname}/-/archive/%{versio
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
 BuildRequires:  desktop-file-utils patch
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(gtk+-2.0) pkgconfig(zlib)
-BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
+BuildRequires:  libcurl-devel libssh2-devel libselinux-devel libmspack-devel
 BuildRequires:  gtk+-devel gtk2-devel wxGTK-devel glib2-devel openssl openssl-devel
 
 Requires:       hicolor-icon-theme xdg-utils
@@ -37,20 +37,23 @@ It is optimized for backup speed and visual usability.
 # Remove wxWidgets exception guard
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
 
-## build wxWidgets 3.3
+## THA: build wxWidgets 3.3
 curl -L -O https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.0/wxWidgets-3.3.0.tar.bz2
 tar xf wxWidgets-3.3.0.tar.bz2
 cd wxWidgets-3.3.0
 mkdir buildgtk
 cd buildgtk
-../configure --prefix=/opt/wx33
+
+%global wxprefix %{buildroot}%{_libdir}/wx33
+../configure --prefix=%{wxprefix}
 make -j$(nproc)
-make install
+make install DESTDIR=%{buildroot}
 
 %build
-export PKG_CONFIG_PATH=/opt/wx33/lib/pkgconfig:$PKG_CONFIG_PATH
-export LD_LIBRARY_PATH=/opt/wx33/lib:$LD_LIBRARY_PATH
+export PKG_CONFIG_PATH=%{wxprefix}/lib/pkgconfig:$PKG_CONFIG_PATH
+export LD_LIBRARY_PATH=%{wxprefix}/lib:$LD_LIBRARY_PATH
 
+## THA: build FreeFileSync
 %make_build -C %{pkgname}/Source
 %make_build -C %{pkgname}/Source/%{prog2name}
 
