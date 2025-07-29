@@ -19,7 +19,7 @@ Source3:    https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/fre
 
 BuildRequires:  gcc-c++ brotli-devel wxGTK-devel ImageMagick unzip
 BuildRequires:  desktop-file-utils patch
-BuildRequires:  gtk+-devel
+BuildRequires:  gtk+-devel wxGTK3-devel
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(libselinux) pkgconfig(zlib)
 BuildRequires:  libcurl-devel libssh2-devel openssl openssl-devel
 
@@ -35,20 +35,28 @@ It is optimized for backup speed and visual usability.
 %prep
 %setup -n %{pkgname}-%{version}
 
-# Define the base URL for patches
+# Download and apply patches
 %global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
 
-# Download patches into build root
-for patch in \
+# List of patches to apply
+%if 0%{?fedora} < 41 && 0%{?rhel} < 9
+# Apply legacy compatibility patches
+%global patches \
     00_allow_parallel_ops.patch \
-    ffs_distro_fedora.patch \
-    ffs_desktop_notifications.patch \
-    ffs_openssl.patch \
     ffs_no_gcc12.patch \
     ffs_libcurl_7.71.1.patch \
-    ffs_libcurl_7.79.1.patch; do
-    echo "ANCHOR: Downloading $patch"
+    ffs_libcurl_7.79.1.patch
+%else
+# Minimal patch set
+%global patches \
+    00_allow_parallel_ops.patch
+%endif
+
+for patch in %{patches}; do
+    echo "Downloading $patch"
     curl -L -o "$patch" "%{patch_base_url}/$patch"
+    echo "Applying $patch"
+    patch -p1 < "$patch"
 done
 
 
