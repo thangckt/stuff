@@ -54,9 +54,9 @@ make install
 popd
 
 %build
-export PATH=%{_builddir}/wx33build/bin:$PATH
-export WX_CONFIG=%{_builddir}/wx33build/bin/wx-config
-export PKG_CONFIG_PATH=%{_builddir}/wx33build/lib/pkgconfig:$PKG_CONFIG_PATH
+export PATH=%{wxprefix}/bin:$PATH
+export WX_CONFIG=%{wxprefix}/bin/wx-config
+export PKG_CONFIG_PATH=%{wxprefix}lib/pkgconfig:$PKG_CONFIG_PATH
 
 ##THA: Double-check you're using correct wx-config
 echo "WX version: $($WX_CONFIG --version)"
