@@ -20,7 +20,7 @@ BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
 BuildRequires:  desktop-file-utils patch
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(gtk+-2.0) pkgconfig(libselinux) pkgconfig(zlib)
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
-BuildRequires:  gtk+-devel gtk2-devel wxGTK-devel glib2-devel openssl openssl-devel
+BuildRequires:  gtk+-devel gtk2-devel wxGTK-devel wxBase-devel glib2-devel openssl openssl-devel
 
 Requires:       hicolor-icon-theme xdg-utils
 Provides:       mimehandler(application/x-freefilesync-ffs)
