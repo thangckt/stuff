@@ -16,11 +16,11 @@ Source0:    https://gitlab.com/opensource-tracking/%{pkgname}/-/archive/%{versio
 
 %global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
 
-BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip curl
+BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
 BuildRequires:  desktop-file-utils patch
-BuildRequires:  gtk+-devel wxGTK-devel
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(libselinux) pkgconfig(zlib)
-BuildRequires:  libcurl-devel libssh2-devel openssl openssl-devel
+BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
+BuildRequires:  gtk+-devel wxGTK-devel glib2-devel openssl openssl-devel
 
 Requires:       hicolor-icon-theme xdg-utils
 Provides:       mimehandler(application/x-freefilesync-ffs)
@@ -53,6 +53,9 @@ find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
 install -Dm0644 "%{patch_base_url}/FreeFileSync.desktop" %{buildroot}%{_datadir}/applications/FreeFileSync.desktop
 install -Dm0644 "%{patch_base_url}/RealTimeSync.desktop" %{buildroot}%{_datadir}/applications/RealTimeSync.desktop
 
+# MIME type XML
+install -Dm0644 "%{patch_base_url}/xml.desktop" %{buildroot}%{_datadir}/mime/packages/freefilesync.xml
+
 # Icons
 unzip -j %{pkgname}/Build/Resources/Icons.zip -d .
 
@@ -69,6 +72,11 @@ for res in 16 22 24 32 48 64 96 128 256; do
     convert start_sync.png ${ff} ${rr} ${dir}/mimetypes/application-x-freefilesync-ffs.png
     convert %{prog2name}.png ${ff} ${rr} ${dir}/mimetypes/application-x-freefilesync-real.png
 done
+
+%posttrans
+update-desktop-database &>/dev/null || :
+gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+update-mime-database -n %{_datadir}/mime &>/dev/null || :
 
 %files
 %license License.txt
