@@ -19,9 +19,9 @@ Source0:    https://gitlab.com/opensource-tracking/%{pkgname}/-/archive/%{versio
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
 BuildRequires:  desktop-file-utils patch
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel libmspack-devel
-BuildRequires:  gtk+-devel gtk2-devel wxGTK-devel glib2-devel openssl openssl-devel
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(gtk+-2.0) pkgconfig(zlib)
 BuildRequires:  pkgconfig(expat) pkgconfig(liblzma) pkgconfig(webkit2gtk-4.0)
+BuildRequires:  webkit2gtk3-devel xz-devel gtk3-devel gtk2-devel wxGTK-devel glib2-devel openssl openssl-devel
 
 Requires:       hicolor-icon-theme xdg-utils
 Provides:       mimehandler(application/x-freefilesync-ffs)
@@ -39,15 +39,14 @@ It is optimized for backup speed and visual usability.
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
 
 ## THA: build wxWidgets 3.3
-curl -L -O https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.0/wxWidgets-3.3.0.tar.bz2
-tar xf wxWidgets-3.3.0.tar.bz2
-cd wxWidgets-3.3.0
+curl -L -O https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWidgets-3.3.1.tar.bz2
+tar xf wxWidgets-3.3.1.tar.bz2
+cd wxWidgets-3.3.1
 mkdir buildgtk
 cd buildgtk
 
 %global wxprefix %{buildroot}%{_libdir}/wx33
-../configure --prefix=%{wxprefix} --with-gtk=3 --disable-static \
-  --enable-unicode --enable-webview --with-expat=sys --with-lzma=sys
+../configure --prefix=%{wxprefix} --with-gtk=3 --enable-webview --with-expat=sys
 make -j$(nproc)
 make install DESTDIR=%{buildroot}
 
