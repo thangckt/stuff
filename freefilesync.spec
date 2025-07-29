@@ -37,6 +37,8 @@ It is optimized for backup speed and visual usability.
 # Remove wxWidgets exception check that causes build failure
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
 
+# Fix for older wxWidgets lacking wxApp::Appearance
+sed -i 's|using ColorTheme = wxApp::Appearance;.*|using ColorTheme = int; // fallback|' FreeFileSync/Source/wx+/darkmode.h
 
 %build
 %make_build -C %{pkgname}/Source
