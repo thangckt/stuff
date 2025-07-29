@@ -14,6 +14,8 @@ URL:        http://www.freefilesync.org/
 #Source0:    http://www.freefilesync.org/download/%%{pkgname}_%%{version}_Source.zip
 Source0:    https://gitlab.com/opensource-tracking/%{pkgname}/-/archive/%{version}/%{pkgname}-%{version}.tar.gz
 
+%global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
+
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip curl
 BuildRequires:  desktop-file-utils patch
 BuildRequires:  gtk+-devel wxGTK-devel
@@ -29,25 +31,8 @@ Provides:       mimehandler(application/x-freefilesync-batch)
 FreeFileSync is an open-source software that helps synchronize files and folders on Windows, Linux, and macOS.
 It is optimized for backup speed and visual usability.
 
-%global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
-
-# Define the patch set based on Fedora/RHEL version
-%if 0%{?fedora} < 41 && 0%{?rhel} < 9
-%define patch_list 00_allow_parallel_ops.patch ffs_no_gcc12.patch ffs_libcurl_7.71.1.patch ffs_libcurl_7.79.1.patch
-%else
-%define patch_list 00_allow_parallel_ops.patch
-%endif
-
 %prep
 %setup -n %{pkgname}-%{version}
-
-for patch in %{patch_list}; do
-    echo "THA: Downloading $patch"
-    curl -L -o "$patch" "%{patch_base_url}/$patch"
-    echo "THA: Applying $patch"
-    patch -p1 < "$patch"
-done
-
 
 %build
 %make_build -C %{pkgname}/Source
@@ -68,9 +53,6 @@ find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
 install -Dm0644 "%{patch_base_url}/FreeFileSync.desktop" %{buildroot}%{_datadir}/applications/FreeFileSync.desktop
 install -Dm0644 "%{patch_base_url}/RealTimeSync.desktop" %{buildroot}%{_datadir}/applications/RealTimeSync.desktop
 
-# MIME type XML
-install -Dm0644 "%{patch_base_url}/xml.desktop" %{buildroot}%{_datadir}/mime/packages/freefilesync.xml
-
 # Icons
 unzip -j %{pkgname}/Build/Resources/Icons.zip -d .
 
@@ -87,19 +69,6 @@ for res in 16 22 24 32 48 64 96 128 256; do
     convert start_sync.png ${ff} ${rr} ${dir}/mimetypes/application-x-freefilesync-ffs.png
     convert %{prog2name}.png ${ff} ${rr} ${dir}/mimetypes/application-x-freefilesync-real.png
 done
-
-%post
-touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-
-%postun
-if [ "$1" = 0 ]; then
-    touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-fi
-
-%posttrans
-update-desktop-database &>/dev/null || :
-gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-update-mime-database -n %{_datadir}/mime &>/dev/null || :
 
 %files
 %license License.txt
