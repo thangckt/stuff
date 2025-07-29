@@ -19,7 +19,7 @@ Source1:    https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWi
 
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
-BuildRequires:  gtk3-devel gtk+-devel wxGTK-devel glib2-devel openssl-devel expat-devel
+BuildRequires:  gtk3-devel gtk+-devel wxGTK-devel glib-devel openssl-devel expat-devel
 BuildRequires:  desktop-file-utils libmspack-devel libsecret-devel gspell-devel libnotify-devel webkit2gtk4.1-devel gstreamer1-devel
 BuildRequires:  pkgconfig(zlib) pkgconfig(expat) pkgconfig(liblzma) pkgconfig(libmspack) pkgconfig(libcurl) pkgconfig(libssh2)
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(webkit2gtk-4.1) pkgconfig(libselinux)
