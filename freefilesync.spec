@@ -34,10 +34,11 @@ It is optimized for backup speed and visual usability.
 %prep
 %setup -n %{pkgname}-%{version}
 
-# Embed patch inline to bypass wxWidgets exception guard
-cat > allow-wx-exceptions.patch << 'EOF'
+# Only patch if the offending line is still present
+if grep -q '#error why is wxWidgets uncaught exception handling enabled!?' FreeFileSync/Source/application.cpp; then
+  echo "Patching wx exception guard..."
+  cat > allow-wx-exceptions.patch << 'EOF'
 diff --git a/FreeFileSync/Source/application.cpp b/FreeFileSync/Source/application.cpp
-index 1234567..89abcde 100644
 --- a/FreeFileSync/Source/application.cpp
 +++ b/FreeFileSync/Source/application.cpp
 @@ -240,9 +240,6 @@
@@ -49,7 +50,10 @@ index 1234567..89abcde 100644
 -#endif
 EOF
 
-patch -p1 < allow-wx-exceptions.patch
+  patch -p1 < allow-wx-exceptions.patch
+else
+  echo "Patch not needed: already applied or upstream removed the line."
+fi
 
 
 %build
