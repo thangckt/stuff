@@ -1,5 +1,8 @@
 ### REF: https://gitlab.com/bgstack15/stackrpms/-/blob/master/freefilesync/freefilesync.spec?ref_type=heads
 
+%global pkgname FreeFileSync
+%global prog2name RealTimeSync
+
 Name:       freefilesync
 Version:    14.4
 Release:    1%{?dist}
@@ -23,10 +26,6 @@ Requires:       hicolor-icon-theme xdg-utils
 Provides:       mimehandler(application/x-freefilesync-ffs)
 Provides:       mimehandler(application/x-freefilesync-real)
 Provides:       mimehandler(application/x-freefilesync-batch)
-
-### Macros Section
-%global pkgname FreeFileSync
-%global prog2name RealTimeSync
 
 %description
 FreeFileSync is an open-source software that helps synchronize files and folders on Windows, Linux, and macOS.
