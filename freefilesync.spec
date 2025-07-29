@@ -33,14 +33,9 @@ It is optimized for backup speed and visual usability.
 
 # Define the patch set based on Fedora/RHEL version
 %if 0%{?fedora} < 41 && 0%{?rhel} < 9
-%define patch_list \
-    00_allow_parallel_ops.patch \
-    ffs_no_gcc12.patch \
-    ffs_libcurl_7.71.1.patch \
-    ffs_libcurl_7.79.1.patch
+%define patch_list 00_allow_parallel_ops.patch ffs_no_gcc12.patch ffs_libcurl_7.71.1.patch ffs_libcurl_7.79.1.patch
 %else
-%define patch_list \
-    00_allow_parallel_ops.patch
+%define patch_list 00_allow_parallel_ops.patch
 %endif
 
 %prep
