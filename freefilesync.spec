@@ -20,8 +20,9 @@ BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(gtk+-2.0) pkgconfig(zlib)
 BuildRequires:  pkgconfig(expat) pkgconfig(liblzma) pkgconfig(webkit2gtk-4.0)
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
-BuildRequires:  webkit2gtk3-devel gtk3-devel gtk2-devel gtk+-devel wxGTK-devel glib2-devel openssl-devel
+BuildRequires:  gtk3-devel gtk2-devel gtk+-devel wxGTK-devel glib2-devel openssl-devel
 BuildRequires:  desktop-file-utils libmspack-devel lzma-sdk-devel sdl2-compat-devel utf8proc-devel gstreamermm-devel
+BuildRequires:  libsecret-devel gspell-devel libnotify-devel webkit2gtk4.1-devel gstreamer1-devel
 
 Requires:       hicolor-icon-theme xdg-utils
 Provides:       mimehandler(application/x-freefilesync-ffs)
@@ -45,7 +46,7 @@ curl -L -O https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWid
 tar xf wxWidgets-3.3.1.tar.bz2
 pushd wxWidgets-3.3.1
 mkdir buildgtk && cd buildgtk
-../configure --prefix=%{wxprefix} --with-gtk=3 --enable-webview --with-expat=sys
+../configure --prefix=%{wxprefix} --with-gtk=3 --disable-gtk2 --enable-webview --with-expat=sys
 make -j$(nproc)
 make install
 popd
@@ -54,8 +55,8 @@ popd
 export PATH=%{wxprefix}/bin:$PATH
 export WX_CONFIG=%{wxprefix}/bin/wx-config
 export PKG_CONFIG_PATH=%{wxprefix}/lib/pkgconfig:$PKG_CONFIG_PATH
-export CPPFLAGS="-I%{wxprefix}/include"
-export LDFLAGS="-L%{wxprefix}/lib"
+export CPPFLAGS="$($WX_CONFIG --cxxflags)"
+export LDFLAGS="$($WX_CONFIG --libs)"
 
 # Double-check you're using correct wx-config
 echo "WX version: $($WX_CONFIG --version)"
