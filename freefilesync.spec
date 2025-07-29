@@ -21,7 +21,7 @@ BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(gtk+-2.0) pkg
 BuildRequires:  pkgconfig(expat) pkgconfig(liblzma) pkgconfig(webkit2gtk-4.0)
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
 BuildRequires:  webkit2gtk3-devel gtk3-devel gtk2-devel wxGTK-devel glib2-devel openssl-devel
-BuildRequires:  desktop-file-utils libmspack-devel lzma-sdk-devel sdl2-compat-devel
+BuildRequires:  desktop-file-utils libmspack-devel lzma-sdk-devel sdl2-compat-devel utf8proc-devel gstreamermm-devel
 
 Requires:       hicolor-icon-theme xdg-utils
 Provides:       mimehandler(application/x-freefilesync-ffs)
