@@ -18,11 +18,11 @@ Source1:    https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWi
 %global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
 
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
-BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(zlib) pkgconfig(expat)
-BuildRequires:  pkgconfig(liblzma) pkgconfig(libmspack) pkgconfig(webkit2gtk-4.1)
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
-BuildRequires:  gtk3-devel gtk+-devel wxGTK-devel glib2-devel openssl-devel
+BuildRequires:  gtk3-devel gtk+-devel wxGTK-devel glib2-devel openssl-devel expat-devel
 BuildRequires:  desktop-file-utils libmspack-devel libsecret-devel gspell-devel libnotify-devel webkit2gtk4.1-devel gstreamer1-devel
+BuildRequires:  pkgconfig(zlib) pkgconfig(expat) pkgconfig(lzma) pkgconfig(libmspack) pkgconfig(libcurl) pkgconfig(libssh2)
+BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(webkit2gtk-4.1) pkgconfig(libselinux)
 
 Requires:       hicolor-icon-theme xdg-utils
 Provides:       mimehandler(application/x-freefilesync-ffs)
@@ -40,21 +40,23 @@ FreeFileSync is an open-source software that helps synchronize files and folders
 # Remove wxWidgets exception guard
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
 
+# Remove hardcoded GTK2 usage from FreeFileSync makefile
+sed -i 's/pkg-config --cflags gtk+-2.0//g' FreeFileSync/Source/Makefile
+sed -i 's|-isystem/usr/include/gtk-2.0||g' FreeFileSync/Source/Makefile
+
 ##THA: Build wxWidgets 3.3.1
 tar xf %{SOURCE1}
 pushd wxWidgets-3.3.1
 mkdir buildgtk && cd buildgtk
-../configure --prefix=%{wxprefix} --with-gtk=3 --enable-webview --with-expat=sys
+../configure --prefix=%{wxprefix} --with-gtk=3 --enable-webview
 make -j$(nproc)
 make install
 popd
 
 %build
-export PATH=%{wxprefix}/bin:$PATH
-export WX_CONFIG=%{wxprefix}/bin/wx-config
-export PKG_CONFIG_PATH=%{wxprefix}/lib/pkgconfig:$PKG_CONFIG_PATH
-export CPPFLAGS="$($WX_CONFIG --cxxflags)"
-export LDFLAGS="$($WX_CONFIG --libs)"
+export PATH=%{_builddir}/wx33build/bin:$PATH
+export WX_CONFIG=%{_builddir}/wx33build/bin/wx-config
+export PKG_CONFIG_PATH=%{_builddir}/wx33build/lib/pkgconfig:$PKG_CONFIG_PATH
 
 ##THA: Double-check you're using correct wx-config
 echo "WX version: $($WX_CONFIG --version)"
@@ -65,7 +67,11 @@ else
     echo "✅ GTK3 confirmed"
 fi
 
-## THA: build FreeFileSync
+# Add required flags
+export CPPFLAGS="$($WX_CONFIG --cxxflags) $(pkg-config --cflags glib-2.0) $(pkg-config --cflags openssl libcurl libssh2 libselinux)"
+export LDFLAGS="$($WX_CONFIG --libs) $(pkg-config --libs openssl libcurl libssh2 libselinux)"
+
+## THA: Build FreeFileSync and RealTimeSync
 %make_build -C %{pkgname}/Source
 %make_build -C %{pkgname}/Source/%{prog2name}
 
