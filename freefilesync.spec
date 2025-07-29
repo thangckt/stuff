@@ -18,10 +18,8 @@ Source1:    https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWi
 %global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
 
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
-BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(gtk+-2.0) pkgconfig(zlib)
-BuildRequires:  pkgconfig(expat) pkgconfig(liblzma) pkgconfig(webkit2gtk-4.0)
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
-BuildRequires:  gtk3-devel gtk2-devel gtk+-devel wxGTK-devel glib2-devel openssl-devel
+BuildRequires:  gtk3-devel gtk+-devel wxGTK-devel glib2-devel openssl-devel
 BuildRequires:  desktop-file-utils libmspack-devel libsecret-devel gspell-devel libnotify-devel webkit2gtk4.1-devel gstreamer1-devel
 
 Requires:       hicolor-icon-theme xdg-utils
