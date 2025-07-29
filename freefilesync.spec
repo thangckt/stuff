@@ -34,26 +34,8 @@ It is optimized for backup speed and visual usability.
 %prep
 %setup -n %{pkgname}-%{version}
 
-# Only patch if the offending line is still present
-if grep -q '#error why is wxWidgets uncaught exception handling enabled!?' FreeFileSync/Source/application.cpp; then
-  echo "Patching wx exception guard..."
-  cat > allow-wx-exceptions.patch << 'EOF'
-diff --git a/FreeFileSync/Source/application.cpp b/FreeFileSync/Source/application.cpp
---- a/FreeFileSync/Source/application.cpp
-+++ b/FreeFileSync/Source/application.cpp
-@@ -240,9 +240,6 @@
-     #include <wx/msw/private.h>
- #endif
-
--#if wxUSE_EXCEPTIONS
--#error why is wxWidgets uncaught exception handling enabled!?
--#endif
-EOF
-
-  patch -p1 < allow-wx-exceptions.patch
-else
-  echo "Patch not needed: already applied or upstream removed the line."
-fi
+# Remove wxWidgets exception check that causes build failure
+sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
 
 
 %build
