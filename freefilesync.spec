@@ -19,7 +19,7 @@ Source3:    https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/fre
 
 BuildRequires:  gcc-c++ brotli-devel wxGTK-devel ImageMagick unzip
 BuildRequires:  desktop-file-utils patch
-BuildRequires:  gtk+-devel wxGTK3-devel
+BuildRequires:  gtk+-devel wxGTK-devel
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(libselinux) pkgconfig(zlib)
 BuildRequires:  libcurl-devel libssh2-devel openssl openssl-devel
 
