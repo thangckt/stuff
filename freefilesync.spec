@@ -18,10 +18,9 @@ Source0:    https://gitlab.com/opensource-tracking/%{pkgname}/-/archive/%{versio
 
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
 BuildRequires:  desktop-file-utils patch
-BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(gtk+-2.0) pkgconfig(zlib)
+BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(gtk+-2.0) pkgconfig(zlib) pkgconfig(wx_base-3.3)
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
 BuildRequires:  gtk+-devel gtk2-devel wxGTK-devel glib2-devel openssl openssl-devel
-BuildRequires:  wxGTK-0
 
 Requires:       hicolor-icon-theme xdg-utils
 Provides:       mimehandler(application/x-freefilesync-ffs)
@@ -38,7 +37,20 @@ It is optimized for backup speed and visual usability.
 # Remove wxWidgets exception guard
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
 
+## build wxWidgets 3.3
+wget https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.0/wxWidgets-3.3.0.tar.bz2
+tar xf wxWidgets-3.3.0.tar.bz2
+cd wxWidgets-3.3.0
+mkdir buildgtk
+cd buildgtk
+../configure --prefix=/opt/wx33
+make -j$(nproc)
+make install
+
 %build
+export PKG_CONFIG_PATH=/opt/wx33/lib/pkgconfig:$PKG_CONFIG_PATH
+export LD_LIBRARY_PATH=/opt/wx33/lib:$LD_LIBRARY_PATH
+
 %make_build -C %{pkgname}/Source
 %make_build -C %{pkgname}/Source/%{prog2name}
 
