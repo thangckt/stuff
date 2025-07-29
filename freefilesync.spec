@@ -29,8 +29,7 @@ Provides:       mimehandler(application/x-freefilesync-real)
 Provides:       mimehandler(application/x-freefilesync-batch)
 
 %description
-FreeFileSync is an open-source software that helps synchronize files and folders on Windows, Linux, and macOS.
-It is optimized for backup speed and visual usability.
+FreeFileSync is an open-source software that helps synchronize files and folders on Windows, Linux, and macOS. It is optimized for backup speed and visual usability.
 
 %global wxprefix %{_builddir}/wx33build
 
