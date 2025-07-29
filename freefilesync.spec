@@ -34,11 +34,11 @@ It is optimized for backup speed and visual usability.
 %prep
 %setup -n %{pkgname}-%{version}
 
-# Remove wxWidgets exception check that causes build failure
+# Remove wxWidgets exception guard
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
 
-# Fix for older wxWidgets lacking wxApp::Appearance
-sed -i 's|using ColorTheme = wxApp::Appearance;.*|using ColorTheme = int; // fallback|' FreeFileSync/Source/wx+/darkmode.h
+# Replace unsupported wxApp::Appearance with a dummy fallback for older wxWidgets
+sed -i 's|using ColorTheme = wxApp::Appearance;.*|using ColorTheme = int; // fallback|' FreeFileSync/wx+/darkmode.h
 
 %build
 %make_build -C %{pkgname}/Source
