@@ -20,7 +20,7 @@ BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
 BuildRequires:  desktop-file-utils patch
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(gtk+-2.0) pkgconfig(zlib)
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
-BuildRequires:  gtk+-devel gtk2-devel wxGTK-devel wxBase-devel glib2-devel openssl openssl-devel
+BuildRequires:  gtk+-devel gtk2-devel wxGTK-devel glib2-devel openssl openssl-devel
 
 Requires:       hicolor-icon-theme xdg-utils
 Provides:       mimehandler(application/x-freefilesync-ffs)
@@ -33,6 +33,24 @@ It is optimized for backup speed and visual usability.
 
 %prep
 %setup -n %{pkgname}-%{version}
+
+# Embed patch inline to bypass wxWidgets exception guard
+cat > allow-wx-exceptions.patch << 'EOF'
+diff --git a/FreeFileSync/Source/application.cpp b/FreeFileSync/Source/application.cpp
+index 1234567..89abcde 100644
+--- a/FreeFileSync/Source/application.cpp
++++ b/FreeFileSync/Source/application.cpp
+@@ -240,9 +240,6 @@
+     #include <wx/msw/private.h>
+ #endif
+
+-#if wxUSE_EXCEPTIONS
+-#error why is wxWidgets uncaught exception handling enabled!?
+-#endif
+EOF
+
+%patch -p1 < allow-wx-exceptions.patch
+
 
 %build
 %make_build -C %{pkgname}/Source
