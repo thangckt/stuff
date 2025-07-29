@@ -14,8 +14,6 @@ URL:        http://www.freefilesync.org/
 #Source0:    http://www.freefilesync.org/download/%%{pkgname}_%%{version}_Source.zip
 Source0:    https://gitlab.com/opensource-tracking/%{pkgname}/-/archive/%{version}/%{pkgname}-%{version}.tar.gz
 
-%global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
-
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip curl
 BuildRequires:  desktop-file-utils patch
 BuildRequires:  gtk+-devel wxGTK-devel
@@ -31,23 +29,24 @@ Provides:       mimehandler(application/x-freefilesync-batch)
 FreeFileSync is an open-source software that helps synchronize files and folders on Windows, Linux, and macOS.
 It is optimized for backup speed and visual usability.
 
-%prep
-%setup -n %{pkgname}-%{version}
+%global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
 
-## Apply legacy compatibility patches for older Fedora/RHEL versions
+# Define the patch set based on Fedora/RHEL version
 %if 0%{?fedora} < 41 && 0%{?rhel} < 9
-%global patches \
+%define patch_list \
     00_allow_parallel_ops.patch \
     ffs_no_gcc12.patch \
     ffs_libcurl_7.71.1.patch \
     ffs_libcurl_7.79.1.patch
 %else
-## Minimal patch set for newer Fedora/RHEL versions
-%global patches \
+%define patch_list \
     00_allow_parallel_ops.patch
 %endif
 
-for patch in %{patches}; do
+%prep
+%setup -n %{pkgname}-%{version}
+
+for patch in %{patch_list}; do
     echo "THA: Downloading $patch"
     curl -L -o "$patch" "%{patch_base_url}/$patch"
     echo "THA: Applying $patch"
