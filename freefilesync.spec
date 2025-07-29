@@ -18,9 +18,10 @@ Source0:    https://gitlab.com/opensource-tracking/%{pkgname}/-/archive/%{versio
 
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
 BuildRequires:  desktop-file-utils patch
-BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(gtk+-2.0) pkgconfig(zlib)
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel libmspack-devel
 BuildRequires:  gtk+-devel gtk2-devel wxGTK-devel glib2-devel openssl openssl-devel
+BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(gtk+-2.0) pkgconfig(zlib)
+BuildRequires:  pkgconfig(expat) pkgconfig(liblzma) pkgconfig(webkit2gtk-4.0)
 
 Requires:       hicolor-icon-theme xdg-utils
 Provides:       mimehandler(application/x-freefilesync-ffs)
@@ -45,13 +46,17 @@ mkdir buildgtk
 cd buildgtk
 
 %global wxprefix %{buildroot}%{_libdir}/wx33
-../configure --prefix=%{wxprefix}
+../configure --prefix=%{wxprefix} --with-gtk=3 --disable-static \
+  --enable-unicode --enable-webview --with-expat=sys --with-lzma=sys
 make -j$(nproc)
 make install DESTDIR=%{buildroot}
 
 %build
+export PATH=%{wxprefix}/bin:$PATH
+export WX_CONFIG=%{wxprefix}/bin/wx-config
 export PKG_CONFIG_PATH=%{wxprefix}/lib/pkgconfig:$PKG_CONFIG_PATH
-export LD_LIBRARY_PATH=%{wxprefix}/lib:$LD_LIBRARY_PATH
+export CPPFLAGS="-I%{wxprefix}/include"
+export LDFLAGS="-L%{wxprefix}/lib"
 
 ## THA: build FreeFileSync
 %make_build -C %{pkgname}/Source
