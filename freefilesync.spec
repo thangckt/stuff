@@ -49,7 +49,7 @@ index 1234567..89abcde 100644
 -#endif
 EOF
 
-%patch -p1 < allow-wx-exceptions.patch
+patch -p1 < allow-wx-exceptions.patch
 
 
 %build
