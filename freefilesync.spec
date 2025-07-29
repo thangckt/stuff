@@ -13,11 +13,10 @@ URL:        http://www.freefilesync.org/
 # upstream does not provide easy automatic downloads of the source, so use the mirror
 #Source0:    http://www.freefilesync.org/download/%%{pkgname}_%%{version}_Source.zip
 Source0:    https://gitlab.com/opensource-tracking/%{pkgname}/-/archive/%{version}/%{pkgname}-%{version}.tar.gz
-Source1:    https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/FreeFileSync.desktop
-Source2:    https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/RealTimeSync.desktop
-Source3:    https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/freefilesync.xml
 
-BuildRequires:  gcc-c++ brotli-devel wxGTK-devel ImageMagick unzip
+%global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
+
+BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip curl
 BuildRequires:  desktop-file-utils patch
 BuildRequires:  gtk+-devel wxGTK-devel
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(libselinux) pkgconfig(zlib)
@@ -35,27 +34,23 @@ It is optimized for backup speed and visual usability.
 %prep
 %setup -n %{pkgname}-%{version}
 
-# Download and apply patches
-%global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
-
-# List of patches to apply
+## Apply legacy compatibility patches for older Fedora/RHEL versions
 %if 0%{?fedora} < 41 && 0%{?rhel} < 9
-# Apply legacy compatibility patches
 %global patches \
     00_allow_parallel_ops.patch \
     ffs_no_gcc12.patch \
     ffs_libcurl_7.71.1.patch \
     ffs_libcurl_7.79.1.patch
 %else
-# Minimal patch set
+## Minimal patch set for newer Fedora/RHEL versions
 %global patches \
     00_allow_parallel_ops.patch
 %endif
 
 for patch in %{patches}; do
-    echo "Downloading $patch"
+    echo "THA: Downloading $patch"
     curl -L -o "$patch" "%{patch_base_url}/$patch"
-    echo "Applying $patch"
+    echo "THA: Applying $patch"
     patch -p1 < "$patch"
 done
 
@@ -76,12 +71,11 @@ popd
 find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
 
 # Desktop files
-install -Dm0644 %{SOURCE1} %{buildroot}%{_datadir}/applications/%{pkgname}.desktop
-install -Dm0644 %{SOURCE2} %{buildroot}%{_datadir}/applications/%{prog2name}.desktop
-install -Dm0644 %{SOURCE3} %{buildroot}%{_datadir}/mime/packages/%{name}.xml
+install -Dm0644 "%{patch_base_url}/FreeFileSync.desktop" %{buildroot}%{_datadir}/applications/FreeFileSync.desktop
+install -Dm0644 "%{patch_base_url}/RealTimeSync.desktop" %{buildroot}%{_datadir}/applications/RealTimeSync.desktop
 
 # MIME type XML
-install -Dm0644 %{SOURCE3} %{buildroot}%{_datadir}/mime/packages/%{name}.xml
+install -Dm0644 "%{patch_base_url}/xml.desktop" %{buildroot}%{_datadir}/mime/packages/freefilesync.xml
 
 # Icons
 unzip -j %{pkgname}/Build/Resources/Icons.zip -d .
