@@ -52,7 +52,6 @@ for patch in \
 done
 
 
-
 %build
 %make_build -C %{pkgname}/Source
 %make_build -C %{pkgname}/Source/%{prog2name}
