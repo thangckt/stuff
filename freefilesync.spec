@@ -44,7 +44,7 @@ curl -L -O https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWid
 tar xf wxWidgets-3.3.1.tar.bz2
 pushd wxWidgets-3.3.1
 mkdir buildgtk && cd buildgtk
-../configure --prefix=%{wxprefix} --with-gtk=3 --disable-gtk2 --enable-webview --with-expat=sys
+../configure --prefix=%{wxprefix} --with-gtk=3 --enable-webview --with-expat=sys
 make -j$(nproc)
 make install
 popd
