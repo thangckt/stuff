@@ -1,5 +1,10 @@
 ### REF: https://gitlab.com/bgstack15/stackrpms/-/blob/master/freefilesync/freefilesync.spec?ref_type=heads
 
+### Macros Section
+%global pkgname FreeFileSync
+%global prog2name RealTimeSync
+
+
 Name:       freefilesync
 Version:    14.4
 Release:    1%{?dist}
@@ -24,16 +29,15 @@ Provides:       mimehandler(application/x-freefilesync-ffs)
 Provides:       mimehandler(application/x-freefilesync-real)
 Provides:       mimehandler(application/x-freefilesync-batch)
 
-### Macros Section
-%global pkgname FreeFileSync
-%global prog2name RealTimeSync
-
 %description
 FreeFileSync is an open-source software that helps synchronize files and folders on Windows, Linux, and macOS.
 It is optimized for backup speed and visual usability.
 
 %prep
 %setup -n %{pkgname}-%{version}
+
+# Convert CRLF to LF
+find . ! -type d \( -name '*.c' -o -name '*.cpp' -o -name '*.h' \) -exec sed -i 's/\r$//' {} +
 
 # Define the base URL for patches
 %global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
@@ -47,11 +51,46 @@ for patch in \
     ffs_no_gcc12.patch \
     ffs_libcurl_7.71.1.patch \
     ffs_libcurl_7.79.1.patch; do
-    echo "ANCHOR: Downloading $patch"
+    echo "Downloading $patch"
     curl -L -o "$patch" "%{patch_base_url}/$patch"
 done
 
+# Apply base patch to allow parallel make
+patch -p1 < 00_allow_parallel_ops.patch
 
+# Fedora/RHEL 9+ base patch
+patch -p1 < ffs_distro_fedora.patch
+
+# Desktop notifications
+patch -p1 < ffs_desktop_notifications.patch
+
+# Apply OpenSSL patch if version < 3
+opensslver=$(openssl version | awk '{print $2}' | cut -d. -f1)
+if [ "$opensslver" -lt 3 ]; then
+    echo "Applying patch for OpenSSL < 3"
+    patch -p1 < ffs_openssl.patch
+fi
+
+# Apply GCC patch if version < 12
+gccver=$(g++ -dumpversion | cut -d. -f1)
+if [ "$gccver" -lt 12 ]; then
+    echo "Applying patch for GCC < 12"
+    patch -p1 < ffs_no_gcc12.patch
+fi
+
+# Apply libcurl patch depending on version
+libcurl_ver=$(rpm -q libcurl-devel --queryformat '%{version}')
+case "$libcurl_ver" in
+    7.71.1) patch -p1 < ffs_libcurl_7.71.1.patch ;;
+    7.79.1) patch -p1 < ffs_libcurl_7.79.1.patch ;;
+    *) echo "No libcurl patch needed for version $libcurl_ver" ;;
+esac
+
+# Inject CXXFLAGS and fix linking
+sed -i -e 's|-O3 -DNDEBUG|-DNDEBUG -DZEN_LINUX %{optflags}|g' \
+       -e '/linkFlags/s|-s|%{__global_ldflags}|' \
+    %{pkgname}/Source/Makefile \
+    %{pkgname}/Source/%{prog2name}/Makefile
 
 %build
 %make_build -C %{pkgname}/Source
