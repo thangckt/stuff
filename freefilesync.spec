@@ -38,7 +38,7 @@ It is optimized for backup speed and visual usability.
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
 
 ## build wxWidgets 3.3
-wget https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.0/wxWidgets-3.3.0.tar.bz2
+curl -L -O https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.0/wxWidgets-3.3.0.tar.bz2
 tar xf wxWidgets-3.3.0.tar.bz2
 cd wxWidgets-3.3.0
 mkdir buildgtk
