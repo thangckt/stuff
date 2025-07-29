@@ -13,6 +13,7 @@ URL:        http://www.freefilesync.org/
 # upstream does not provide easy automatic downloads of the source, so use the mirror
 #Source0:    http://www.freefilesync.org/download/%%{pkgname}_%%{version}_Source.zip
 Source0:    https://gitlab.com/opensource-tracking/%{pkgname}/-/archive/%{version}/%{pkgname}-%{version}.tar.gz
+Source1:    https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWidgets-3.3.1.tar.bz2
 
 %global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
 
@@ -34,14 +35,13 @@ FreeFileSync is an open-source software that helps synchronize files and folders
 %global wxprefix %{_builddir}/wx33build
 
 %prep
-%setup -n %{pkgname}-%{version}
+%setup -n %{pkgname}-%{version} -a 1
 
 # Remove wxWidgets exception guard
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
 
-## THA: Build wxWidgets 3.3.1
-curl -L -O https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWidgets-3.3.1.tar.bz2
-tar xf wxWidgets-3.3.1.tar.bz2
+##THA: Build wxWidgets 3.3.1
+tar xf %{SOURCE1}
 pushd wxWidgets-3.3.1
 mkdir buildgtk && cd buildgtk
 ../configure --prefix=%{wxprefix} --with-gtk=3 --enable-webview --with-expat=sys
@@ -56,8 +56,14 @@ export PKG_CONFIG_PATH=%{wxprefix}/lib/pkgconfig:$PKG_CONFIG_PATH
 export CPPFLAGS="$($WX_CONFIG --cxxflags)"
 export LDFLAGS="$($WX_CONFIG --libs)"
 
-# Double-check you're using correct wx-config
+##THA: Double-check you're using correct wx-config
 echo "WX version: $($WX_CONFIG --version)"
+if $WX_CONFIG --cxxflags | grep -q gtk-2.0; then
+    echo "❌ GTK2 still in use!"
+    exit 1
+else
+    echo "✅ GTK3 confirmed"
+fi
 
 ## THA: build FreeFileSync
 %make_build -C %{pkgname}/Source
