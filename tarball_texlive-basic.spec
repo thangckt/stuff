@@ -1,13 +1,14 @@
 ### REF: https://tug.org/texlive/
 
-Name:           texlive
+Name:           texlive-basic
 Version:        2025
 Release:        1%{?dist}
 Summary:        TeX Live distribution
 
 License:        GPLv2+
 URL:            https://tug.org/texlive/
-Source0:        http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+#Source0:        http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{version}/install-tl-unx.tar.gz
 
 ExclusiveArch:  x86_64
 
@@ -15,19 +16,19 @@ BuildRequires:  perl wget tar xz
 Requires:       perl
 
 %description
-TeX Live provides a comprehensive TeX system for GNU/Linux. This RPM installs a full TeX Live tree in /opt/texlive.
+TeX Live provides a comprehensive TeX system for GNU/Linux. This RPM installs a basic TeX Live tree in /opt/texlive.
 
 %prep
 %autosetup -n install-tl-*
 
 # Create a custom install profile
 cat > texlive.profile <<EOF
-selected_scheme scheme-full
+selected_scheme scheme-basic
 TEXDIR /opt/texlive/%{version}
 TEXMFCONFIG ~/.texlive%{version}/texmf-config
 TEXMFVAR ~/.texlive%{version}/texmf-var
 binary_x86_64-linux 1
-collection-basic 1
+collection-latexextra 1
 option_doc 0
 option_src 0
 EOF

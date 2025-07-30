@@ -13,17 +13,14 @@ URL:        http://www.freefilesync.org/
 Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{version}/FreeFileSync-%{version}.tar.gz
 Source1:    https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWidgets-3.3.1.tar.bz2
 
+%global debugsource_package %{nil}
+
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
 BuildRequires:  gtk3-devel gtk+-devel wxGTK-devel glib2-devel openssl-devel expat-devel
 BuildRequires:  desktop-file-utils libmspack-devel libsecret-devel gspell-devel libnotify-devel webkit2gtk4.1-devel gstreamer1-devel
 BuildRequires:  pkgconfig(zlib) pkgconfig(expat) pkgconfig(liblzma) pkgconfig(libmspack) pkgconfig(libcurl) pkgconfig(libssh2)
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(webkit2gtk-4.1) pkgconfig(libselinux) pkgconfig(glib-2.0) pkgconfig(libidn2)
-
-Requires:       hicolor-icon-theme xdg-utils
-Provides:       mimehandler(application/x-freefilesync-ffs)
-Provides:       mimehandler(application/x-freefilesync-real)
-Provides:       mimehandler(application/x-freefilesync-batch)
 
 %description
 FreeFileSync is an open-source software that helps synchronize files and folders on Windows, Linux, and macOS. It is optimized for backup speed and visual usability.
@@ -122,8 +119,8 @@ unzip -j FreeFileSync/Build/Resources/Icons.zip -d .
 for res in 48 64 128; do
     dir=%{buildroot}%{_datadir}/icons/hicolor/${res}x${res}
     mkdir -p ${dir}/apps ${dir}/mimetypes
-    convert FreeFileSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/FreeFileSync.png
-    convert RealTimeSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/RealTimeSync.png
+    magick convert FreeFileSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/FreeFileSync.png
+    magick convert RealTimeSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/RealTimeSync.png
 done
 
 
