@@ -46,6 +46,8 @@ rustup-init -y
 . "$HOME/.cargo/env"
 
 # Build
+sed -i "s#. version.sh#. ./version.sh#g" build.sh
+sed -i "s#. prepare_vscode.sh#. ./prepare_vscode.sh#g" build.sh
 . ./get_repo.sh
 . ./build.sh
 
