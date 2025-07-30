@@ -1,5 +1,6 @@
 ### REF: https://gitlab.com/bgstack15/stackrpms/-/blob/master/freefilesync/freefilesync.spec?ref_type=heads
 # - https://github.com/PhantomX/chinforpms/blob/main/_pasture/freefilesync/freefilesync.spec
+# Note: wxWidgets>3.3 is required. It is better to build it in another spec file.
 
 Name:       freefilesync
 Version:    14.4
