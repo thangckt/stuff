@@ -81,6 +81,10 @@ echo "THA: building FreeFileSync"
 %make_build -C %{pkgname}/Source
 %make_build -C %{pkgname}/Source/%{prog2name}
 
+echo "THA: Debugging build output"
+ls freefilesync-*/FreeFileSync
+ls freefilesync-*/RealTimeSync
+
 %install
 echo "THA: install step"
 install -d %{buildroot}%{_bindir} %{buildroot}%{_datadir}/%{name}
