@@ -26,7 +26,8 @@ mkdir extracted
 cd extracted
 tar -xf %{SOURCE0}
 texlive_dir=$(ls -d install-tl-* | head -n1)
-mv $texlive_dir ../
+mv "$texlive_dir" ../texlive_dir
+cd ..
 
 # Create a custom install profile
 cat > texlive.profile <<EOF
@@ -45,7 +46,7 @@ EOF
 
 %install
 mkdir -p %{buildroot}/opt
-%{buildroot}/texlive_dir/install-tl -profile texlive.profile -no-interaction -gui text
+./texlive_dir/install-tl -profile texlive.profile -no-interaction -gui text
 
 # Symlink binaries to /usr/bin
 mkdir -p %{buildroot}%{_bindir}
