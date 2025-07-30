@@ -44,7 +44,7 @@ sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
 sed -i 's/pkg-config --cflags gtk+-2.0//g' FreeFileSync/Source/Makefile
 sed -i 's|-isystem/usr/include/gtk-2.0||g' FreeFileSync/Source/Makefile
 
-##THA: Build wxWidgets 3.3.1
+##✅THA: Build wxWidgets 3.3.1
 tar xf %{SOURCE1}
 pushd wxWidgets-3.3.1
 mkdir buildgtk && cd buildgtk
@@ -58,14 +58,14 @@ export PATH=%{wxprefix}/bin:$PATH
 export WX_CONFIG=%{wxprefix}/bin/wx-config
 export PKG_CONFIG_PATH=%{wxprefix}lib/pkgconfig:$PKG_CONFIG_PATH
 
-##THA: Double-check you're using correct wx-config
+##✅THA: Double-check you're using correct wx-config
 echo "WX version: $($WX_CONFIG --version)"
 
 # Add required flags
 export CXXFLAGS="$($WX_CONFIG --cxxflags) $(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux)"
 export LDFLAGS="$($WX_CONFIG --libs) $(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libselinux)"
 
-## THA: Build FreeFileSync and RealTimeSync
+##✅THA: Build FreeFileSync and RealTimeSync
 %make_build -C %{pkgname}/Source
 %make_build -C %{pkgname}/Source/%{prog2name}
 
