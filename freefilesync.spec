@@ -12,7 +12,6 @@ URL:        http://www.freefilesync.org/
 # upstream does not provide easy automatic downloads of the source, so use the mirror
 #Source0:    http://www.freefilesync.org/download/%FreeFileSync_%%{version}_Source.zip
 Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{version}/FreeFileSync-%{version}.tar.gz
-Source1:    https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWidgets-3.3.1.tar.bz2
 
 %global debug_package %{nil}
 %global _enable_debug_package 0
@@ -26,13 +25,15 @@ BuildRequires:  desktop-file-utils libmspack-devel libsecret-devel gspell-devel 
 BuildRequires:  pkgconfig(zlib) pkgconfig(expat) pkgconfig(liblzma) pkgconfig(libmspack) pkgconfig(libcurl) pkgconfig(libssh2)
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(webkit2gtk-4.1) pkgconfig(libselinux) pkgconfig(glib-2.0) pkgconfig(libidn2)
 
+Requires: wxWidgets >= 3.3.0
+
 %description
 FreeFileSync is an open-source software that helps synchronize files and folders on Windows, Linux, and macOS. It is optimized for backup speed and visual usability.
 
 %global wxprefix %{_builddir}/wx33build
 
 %prep
-%setup -n FreeFileSync-%{version} -a 1
+%setup -n FreeFileSync-%{version}
 
 # Remove wxWidgets exception guard
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
@@ -51,24 +52,11 @@ sed -i '1i#define MAX_SFTP_READ_SIZE 30000\n#define MAX_SFTP_OUTGOING_SIZE 30000
 sed -i '/class SysColorsHook/,/^}/ s/^/\/\/ /' wx+/darkmode.cpp
 sed -i '/refGlobalColorHook()/ s/^/\/\/ /' wx+/darkmode.cpp
 
-## Build wxWidgets 3.3.1
-tar xf %{SOURCE1}
-pushd wxWidgets-3.3.1
-mkdir buildgtk && cd buildgtk
-../configure --prefix=%{wxprefix} --with-gtk=3 --enable-webview
-make -j$(nproc)
-make install
-popd
-
 
 %build
-export PATH=%{wxprefix}/bin:$PATH
-export WX_CONFIG=%{wxprefix}/bin/wx-config
-export PKG_CONFIG_PATH=%{wxprefix}lib/pkgconfig:$PKG_CONFIG_PATH
-
-# Add required flags
-export CXXFLAGS="$($WX_CONFIG --cxxflags) $(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux)"
-export LDFLAGS="$($WX_CONFIG --libs) $(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libselinux)"
+export PATH=%{_bindir}:$PATH
+export CXXFLAGS="$(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux wxgtk3u-3.3)"
+export LDFLAGS="$(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libselinux wxgtk3u-3.3)"
 
 ## Build FreeFileSync and RealTimeSync
 %make_build -C FreeFileSync/Source
@@ -127,39 +115,12 @@ for res in 48 64 128; do
     magick convert RealTimeSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/RealTimeSync.png
 done
 
-#### Install bundled wxWidgets 3.3 libraries
-mkdir -p %{buildroot}%{_libdir}/%{name}/
-cp -a %{wxprefix}/lib/libwx_*.so.* %{buildroot}%{_libdir}/%{name}/
-
-# Rename binaries and create wrappers
-mv %{buildroot}%{_bindir}/FreeFileSync %{buildroot}%{_bindir}/FreeFileSync.bin
-mv %{buildroot}%{_bindir}/RealTimeSync %{buildroot}%{_bindir}/RealTimeSync.bin
-
-# Wrapper for FreeFileSync
-cat > %{buildroot}%{_bindir}/FreeFileSync <<EOF
-#!/bin/bash
-export LD_LIBRARY_PATH=%{_libdir}/%{name}:\$LD_LIBRARY_PATH
-exec %{_bindir}/FreeFileSync.bin "\$@"
-EOF
-chmod +x %{buildroot}%{_bindir}/FreeFileSync
-
-# Wrapper for RealTimeSync
-cat > %{buildroot}%{_bindir}/RealTimeSync <<EOF
-#!/bin/bash
-export LD_LIBRARY_PATH=%{_libdir}/%{name}:\$LD_LIBRARY_PATH
-exec %{_bindir}/RealTimeSync.bin "\$@"
-EOF
-chmod +x %{buildroot}%{_bindir}/RealTimeSync
-
 
 %files
 %license License.txt
 %doc Changelog.txt
 %{_bindir}/FreeFileSync
 %{_bindir}/RealTimeSync
-%{_libdir}/%{name}/libwx_*.so.*
-%{_bindir}/FreeFileSync.bin
-%{_bindir}/RealTimeSync.bin
 %{_datadir}/applications/FreeFileSync.desktop
 %{_datadir}/applications/RealTimeSync.desktop
 %{_datadir}/icons/hicolor/*x*/*/*.png
