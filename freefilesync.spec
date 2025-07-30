@@ -59,6 +59,7 @@ make -j$(nproc)
 make install
 popd
 
+
 %build
 export PATH=%{wxprefix}/bin:$PATH
 export WX_CONFIG=%{wxprefix}/bin/wx-config
@@ -68,8 +69,8 @@ export PKG_CONFIG_PATH=%{wxprefix}lib/pkgconfig:$PKG_CONFIG_PATH
 export CXXFLAGS="$($WX_CONFIG --cxxflags) $(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux)"
 export LDFLAGS="$($WX_CONFIG --libs) $(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libselinux)"
 
-## Build FreeFileSync and RealTimeSync
 echo "THA: building FreeFileSync"
+## Build FreeFileSync and RealTimeSync
 %make_build -C FreeFileSync/Source
 %make_build -C FreeFileSync/Source/RealTimeSync
 
@@ -109,21 +110,13 @@ StartupNotify=true
 Categories=Utility;
 EOF
 
-# Icons
+## Icons
 unzip -j FreeFileSync/Build/Resources/Icons.zip -d .
-
-ff=" -filter Lanczos"
 for res in 16 22 24 32 48 64 96 128 256; do
     dir=%{buildroot}%{_datadir}/icons/hicolor/${res}x${res}
-    rr=" -resize ${res}x${res}"
     mkdir -p ${dir}/apps ${dir}/mimetypes
-
-    convert FreeFileSync.png ${ff} ${rr} ${dir}/apps/FreeFileSync.png
-    convert RealTimeSync.png ${ff} ${rr} ${dir}/apps/RealTimeSync.png
-
-    convert cfg_batch.png ${ff} ${rr} ${dir}/mimetypes/application-x-freefilesync-batch.png
-    convert start_sync.png ${ff} ${rr} ${dir}/mimetypes/application-x-freefilesync-ffs.png
-    convert RealTimeSync.png ${ff} ${rr} ${dir}/mimetypes/application-x-freefilesync-real.png
+    convert FreeFileSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/FreeFileSync.png
+    convert RealTimeSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/RealTimeSync.png
 done
 
 
