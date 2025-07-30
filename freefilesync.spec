@@ -126,12 +126,39 @@ for res in 48 64 128; do
     magick convert RealTimeSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/RealTimeSync.png
 done
 
+#### Install bundled wxWidgets 3.3 libraries
+mkdir -p %{buildroot}%{_libdir}/%{name}/
+cp -a %{wxprefix}/lib/libwx_*.so.* %{buildroot}%{_libdir}/%{name}/
+
+# Rename binaries and create wrappers
+mv %{buildroot}%{_bindir}/FreeFileSync %{buildroot}%{_bindir}/FreeFileSync.bin
+mv %{buildroot}%{_bindir}/RealTimeSync %{buildroot}%{_bindir}/RealTimeSync.bin
+
+# Wrapper for FreeFileSync
+cat > %{buildroot}%{_bindir}/FreeFileSync <<EOF
+#!/bin/bash
+export LD_LIBRARY_PATH=%{_libdir}/%{name}:\$LD_LIBRARY_PATH
+exec %{_bindir}/FreeFileSync.bin "\$@"
+EOF
+chmod +x %{buildroot}%{_bindir}/FreeFileSync
+
+# Wrapper for RealTimeSync
+cat > %{buildroot}%{_bindir}/RealTimeSync <<EOF
+#!/bin/bash
+export LD_LIBRARY_PATH=%{_libdir}/%{name}:\$LD_LIBRARY_PATH
+exec %{_bindir}/RealTimeSync.bin "\$@"
+EOF
+chmod +x %{buildroot}%{_bindir}/RealTimeSync
+
 
 %files
 %license License.txt
 %doc Changelog.txt
 %{_bindir}/FreeFileSync
 %{_bindir}/RealTimeSync
+%{_libdir}/%{name}/libwx_*.so.*
+%{_bindir}/FreeFileSync.bin
+%{_bindir}/RealTimeSync.bin
 %{_datadir}/applications/FreeFileSync.desktop
 %{_datadir}/applications/RealTimeSync.desktop
 %{_datadir}/icons/hicolor/*x*/*/*.png
