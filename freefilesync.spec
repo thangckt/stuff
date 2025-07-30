@@ -39,6 +39,7 @@ FreeFileSync is an open-source software that helps synchronize files and folders
 
 # Remove wxWidgets exception guard
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
+sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/RealTimeSync/application.cpp
 
 # Remove hardcoded GTK2 usage from FreeFileSync makefile
 sed -i 's/pkg-config --cflags gtk+-2.0//g' FreeFileSync/Source/Makefile
