@@ -13,6 +13,8 @@ URL:        http://www.freefilesync.org/
 Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{version}/FreeFileSync-%{version}.tar.gz
 Source1:    https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWidgets-3.3.1.tar.bz2
 
+%global debug_package %{nil}
+%global _enable_debug_package 0
 %global debugsource_package %{nil}
 %global debugsource_build 0
 
