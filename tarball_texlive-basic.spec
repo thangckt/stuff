@@ -25,7 +25,8 @@ TeX Live provides a comprehensive TeX system for GNU/Linux. This RPM installs a 
 mkdir extracted
 cd extracted
 tar -xf %{SOURCE0}
-%global texlive_dir $(ls -d install-tl-* | head -n1)
+texlive_dir=$(ls -d install-tl-* | head -n1)
+mv $texlive_dir ../
 
 # Create a custom install profile
 cat > texlive.profile <<EOF
@@ -44,7 +45,7 @@ EOF
 
 %install
 mkdir -p %{buildroot}/opt
-%{texlive_dir}/install-tl -profile texlive.profile -no-interaction -gui text
+%{buildroot}/texlive_dir/install-tl -profile texlive.profile -no-interaction -gui text
 
 # Symlink binaries to /usr/bin
 mkdir -p %{buildroot}%{_bindir}
