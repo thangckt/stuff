@@ -75,7 +75,7 @@ export LDFLAGS="$($WX_CONFIG --libs) $(pkg-config --libs gtk+-3.0 openssl libcur
 
 echo "THA:-Debug: list binaries"
 ls -l FreeFileSync/Build/Bin/
-
+ls -l FreeFileSync/
 
 %install
 # Manually install compiled binaries
@@ -84,7 +84,7 @@ install -Dm755 FreeFileSync/Build/Bin/RealTimeSync_x86_64 %{buildroot}%{_bindir}
 
 # Install resource files used at runtime (icons, translations, config templates, etc.)
 mkdir -p %{buildroot}%{_datadir}/%{name}
-cp -a FreeFileSync/Resources/* %{buildroot}%{_datadir}/%{name}/
+cp -a FreeFileSync/* %{buildroot}%{_datadir}/%{name}/
 
 # Ensure no scripts marked executable
 find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
