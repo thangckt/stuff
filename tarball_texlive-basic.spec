@@ -13,7 +13,7 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 ExclusiveArch:  x86_64
 
 Provides: texlive
-Conflicts: texlive-*  # prevents conflict with DNF-installed texlive
+Conflicts: texlive-*
 
 BuildRequires:  perl wget tar xz
 Requires:       perl
@@ -52,16 +52,21 @@ for bin in %{buildroot}/opt/texlive/%{version}/bin/x86_64-linux/*; do
     install -D -m 755 $bin %{buildroot}%{_bindir}/$(basename $bin)
 done
 
-## Validate build output before packaging:
-%check
-%{buildroot}%{_bindir}/latex -version
-%{buildroot}%{_bindir}/tlmgr --version
-
 ## export some environment variables (PATH, MANPATH, etc.).
 mkdir -p %{buildroot}/etc/profile.d
 cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
 export PATH=/opt/texlive/%{version}/bin/x86_64-linux:\$PATH
 EOF
+
+
+## Validate build output before packaging:
+%check
+%{buildroot}%{_bindir}/latex -version
+%{buildroot}%{_bindir}/tlmgr --version
+
+%post
+%{buildroot}%{_bindir}/tlmgr update --self --all || :
+
 
 %files
 /opt/texlive
