@@ -69,22 +69,20 @@ export PKG_CONFIG_PATH=%{wxprefix}lib/pkgconfig:$PKG_CONFIG_PATH
 export CXXFLAGS="$($WX_CONFIG --cxxflags) $(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux)"
 export LDFLAGS="$($WX_CONFIG --libs) $(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libselinux)"
 
-echo "THA: building FreeFileSync"
 ## Build FreeFileSync and RealTimeSync
 %make_build -C FreeFileSync/Source
 %make_build -C FreeFileSync/Source/RealTimeSync
 
-echo "THA: Debugging build output"
-ls -l FreeFileSync/Source/
-ls -l FreeFileSync/Source/RealTimeSync
+echo "THA:-Debug: list binaries"
+ls -l FreeFileSync/Build/Bin/
 
 
 %install
-# Manually install binaries
-install -Dm755 FreeFileSync/Source/FreeFileSync %{buildroot}%{_bindir}/FreeFileSync
-install -Dm755 FreeFileSync/Source/RealTimeSync %{buildroot}%{_bindir}/RealTimeSync
+# Manually install compiled binaries
+install -Dm755 FreeFileSync/Build/Bin/FreeFileSync_x86_64 %{buildroot}%{_bindir}/FreeFileSync
+install -Dm755 FreeFileSync/Build/Bin/RealTimeSync_x86_64 %{buildroot}%{_bindir}/RealTimeSync
 
-# Install data directory (used for translations and config templates)
+# Install resource files used at runtime (icons, translations, config templates, etc.)
 mkdir -p %{buildroot}%{_datadir}/%{name}
 cp -a FreeFileSync/Resources/* %{buildroot}%{_datadir}/%{name}/
 
@@ -103,6 +101,7 @@ Terminal=false
 Type=Application
 StartupNotify=true
 Categories=Utility;
+MimeType=application/x-freefilesync-ffs;application/x-freefilesync-batch;
 EOF
 
 cat > %{buildroot}%{_datadir}/applications/RealTimeSync.desktop <<EOF
@@ -115,11 +114,12 @@ Terminal=false
 Type=Application
 StartupNotify=true
 Categories=Utility;
+MimeType=application/x-freefilesync-real;
 EOF
 
 ## Icons
 unzip -j FreeFileSync/Build/Resources/Icons.zip -d .
-for res in 16 22 24 32 48 64 96 128 256; do
+for res in 48 64 128; do
     dir=%{buildroot}%{_datadir}/icons/hicolor/${res}x${res}
     mkdir -p ${dir}/apps ${dir}/mimetypes
     convert FreeFileSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/FreeFileSync.png
