@@ -14,6 +14,7 @@ Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{vers
 Source1:    https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWidgets-3.3.1.tar.bz2
 
 %global debugsource_package %{nil}
+%global debugsource_build 0
 
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
