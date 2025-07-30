@@ -16,6 +16,8 @@ ExclusiveArch:  x86_64 aarch64
 %global vscode_arch arm64
 %endif
 
+%global debug_package %{nil}
+
 BuildRequires:  gcc gcc-c++ make pkgconf git jq fakeroot ripgrep
 BuildRequires:  python3 nodejs-npm rustup libX11-devel libxkbfile-devel libsecret-devel krb5-devel
 Requires:       libX11 libxkbfile libsecret krb5-libs libstdc++ ripgrep
