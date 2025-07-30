@@ -23,9 +23,12 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
 %setup -q -n wxWidgets-%{version}
 
 %build
-mkdir build && cd build
+rm -rf build
+mkdir build
+pushd build
 ../configure --prefix=%{_prefix} --with-gtk=3 --enable-webview
-make -j$(nproc)
+%make_build
+popd
 
 %install
 rm -rf %{buildroot}
