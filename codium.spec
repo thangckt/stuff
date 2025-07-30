@@ -1,7 +1,7 @@
 ### REF: https://gitlab.com/athenaos/packages/applications/vscodium/-/blob/main/rpm/vscodium.spec?ref_type=heads
 
 Name:           codium
-Version:        1.102.24914
+Version:        1.102.35058
 Release:        5%{?dist}
 Summary:        Free/Libre Open Source Software Binaries of VSCode
 
