@@ -22,7 +22,7 @@ BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
 BuildRequires:  gtk3-devel gtk+-devel wxGTK-devel glib2-devel openssl-devel expat-devel
 BuildRequires:  desktop-file-utils libmspack-devel libsecret-devel gspell-devel libnotify-devel webkit2gtk4.1-devel gstreamer1-devel
 BuildRequires:  pkgconfig(zlib) pkgconfig(expat) pkgconfig(liblzma) pkgconfig(libmspack) pkgconfig(libcurl) pkgconfig(libssh2)
-BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(webkit2gtk-4.1) pkgconfig(libselinux) pkgconfig(glib-2.0)
+BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(webkit2gtk-4.1) pkgconfig(libselinux) pkgconfig(glib-2.0) pkgconfig(libidn2)
 
 Requires:       hicolor-icon-theme xdg-utils
 Provides:       mimehandler(application/x-freefilesync-ffs)
@@ -68,7 +68,7 @@ else
 fi
 
 # Add required flags
-export CPPFLAGS="$($WX_CONFIG --cxxflags) $(pkg-config --cflags glib-2.0 openssl libcurl libssh2 libselinux)"
+export CXXFLAGS="$($WX_CONFIG --cxxflags) $(pkg-config --cflags glib-2.0 openssl libcurl libssh2 libselinux)"
 export LDFLAGS="$($WX_CONFIG --libs) $(pkg-config --libs openssl libcurl libssh2 libselinux)"
 
 ## THA: Build FreeFileSync and RealTimeSync
