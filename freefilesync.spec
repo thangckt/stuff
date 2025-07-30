@@ -81,7 +81,8 @@ echo "THA: building FreeFileSync"
 echo "THA: install step"
 install -d %{buildroot}%{_bindir} %{buildroot}%{_datadir}/%{name}
 
-install -m 0755 %{pkgname}/Source/%{pkgname} %{pkgname}/Source/%{prog2name} -t %{buildroot}%{_bindir}
+install -m 0755 %{pkgname} %{pkgname}/Source/%{prog2name} -t %{buildroot}%{_bindir}
+cp -a %{pkgname}/Build/Resources/* %{buildroot}%{_datadir}/%{name}
 
 # Ensure no scripts marked executable
 find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
