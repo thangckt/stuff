@@ -33,8 +33,12 @@ cd ..
 cat > texlive.profile <<EOF
 selected_scheme scheme-basic
 TEXDIR %{buildroot}/opt/texlive/%{version}
-TEXMFCONFIG %{buildroot}/opt/texlive/%{version}/texmf-config
+TEXMFLOCAL %{buildroot}/opt/texlive/%{version}/texmf-local
+TEXMFSYSVAR %{buildroot}/opt/texlive/%{version}/texmf-var
+TEXMFSYSCONFIG %{buildroot}/opt/texlive/%{version}/texmf-config
 TEXMFVAR %{buildroot}/opt/texlive/%{version}/texmf-var
+TEXMFCONFIG %{buildroot}/opt/texlive/%{version}/texmf-config
+TEXMFHOME %{buildroot}/opt/texlive/%{version}/texmf-home
 binary_x86_64-linux 1
 collection-latexextra 1
 option_doc 0
