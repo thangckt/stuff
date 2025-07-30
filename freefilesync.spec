@@ -48,8 +48,8 @@ sed -i 's|-isystem/usr/include/gtk-2.0||g' FreeFileSync/Source/Makefile
 sed -i '1i#define MAX_SFTP_READ_SIZE 30000\n#define MAX_SFTP_OUTGOING_SIZE 30000' FreeFileSync/Source/afs/sftp.cpp
 
 # Patch out use of wxColorHook for wxWidgets 3.3+
-sed -i '/class SysColorsHook/,/^}/ s/^/\/\/ /' FreeFileSync/Source/wx+/darkmode.cpp
-sed -i '/refGlobalColorHook()/ s/^/\/\/ /' FreeFileSync/Source/wx+/darkmode.cpp
+sed -i '/class SysColorsHook/,/^}/ s/^/\/\/ /' wx+/darkmode.cpp
+sed -i '/refGlobalColorHook()/ s/^/\/\/ /' wx+/darkmode.cpp
 
 ##💲 Build wxWidgets 3.3.1
 tar xf %{SOURCE1}
