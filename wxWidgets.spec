@@ -27,7 +27,7 @@ rm -rf build
 mkdir build
 pushd build
 ../configure --prefix=%{_prefix} --with-gtk=3 --enable-webview
-make -j($nproc)
+make -j$(nproc)
 popd
 
 %install
