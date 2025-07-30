@@ -16,10 +16,10 @@ ExclusiveArch:  x86_64 aarch64
 %global vscode_arch arm64
 %endif
 
-BuildRequires:  gcc gcc-c++ make pkgconf git jq fakeroot ripgrep
-BuildRequires:  python3 nodejs-npm rust cargo
-BuildRequires:  libX11-devel libxkbfile-devel libsecret-devel krb5-devel
+%global debug_package %{nil}
 
+BuildRequires:  gcc gcc-c++ make pkgconf git jq fakeroot ripgrep
+BuildRequires:  python3 nodejs-npm libX11-devel libxkbfile-devel libsecret-devel krb5-devel
 Requires:       libX11 libxkbfile libsecret krb5-libs libstdc++ ripgrep
 
 %description
@@ -99,6 +99,8 @@ rm -rf %{buildroot}/usr/share/vscodium/resources/app/node_modules.asar.unpacked 
 # Strip native binaries
 find %{buildroot}/usr/share/vscodium -type f -executable -exec strip --strip-unneeded '{}' + 2>/dev/null || :
 
+# Remove duplicate native modules to avoid build-id collisions
+find %{buildroot}/usr/share/vscodium -type f -path "*/obj.target/*" -name "*.node" -delete
 
 %files
 %license LICENSE
