@@ -15,9 +15,9 @@ URL:        http://www.freefilesync.org/
 Source0:    https://gitlab.com/opensource-tracking/%{pkgname}/-/archive/%{version}/%{pkgname}-%{version}.tar.gz
 Source1:    https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWidgets-3.3.1.tar.bz2
 
-Source2: https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/FreeFileSync.desktop
-Source3: https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/RealTimeSync.desktop
-Source4: https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/xml.desktop
+Source2: https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/FreeFileSync.desktop?ref_type=heads&inline=false
+Source3: https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/RealTimeSync.desktop?ref_type=heads&inline=false
+Source4: https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/xml.desktop?ref_type=heads&inline=false
 
 %global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
 
@@ -133,6 +133,3 @@ update-mime-database -n %{_datadir}/mime &>/dev/null || :
 
 %changelog
 %autochangelog
-
-
-https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/RealTimeSync.desktop?ref_type=heads&inline=false
