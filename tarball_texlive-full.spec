@@ -13,7 +13,7 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 ExclusiveArch:  x86_64
 
 Provides: texlive
-Conflicts: texlive-*  # prevents conflict with DNF-installed texlive
+Conflicts: texlive-*
 
 BuildRequires:  perl wget tar xz
 Requires:       perl
@@ -22,14 +22,23 @@ Requires:       perl
 TeX Live provides a comprehensive TeX system for GNU/Linux. This RPM installs a full TeX Live tree in /opt/texlive.
 
 %prep
-%autosetup -n install-tl-*
+mkdir extracted
+cd extracted
+tar -xf %{SOURCE0}
+texlive_dir=$(ls -d install-tl-* | head -n1)
+mv "$texlive_dir" ../texlive_dir
+cd ..
 
 # Create a custom install profile
 cat > texlive.profile <<EOF
-selected_scheme scheme-full
-TEXDIR /opt/texlive/%{version}
-TEXMFCONFIG /opt/texlive/%{version}/texmf-config
-TEXMFVAR /opt/texlive/%{version}/texmf-var
+selected_scheme scheme-basic
+TEXDIR %{buildroot}/opt/texlive/%{version}
+TEXMFLOCAL %{buildroot}/opt/texlive/%{version}/texmf-local
+TEXMFSYSVAR %{buildroot}/opt/texlive/%{version}/texmf-var
+TEXMFSYSCONFIG %{buildroot}/opt/texlive/%{version}/texmf-config
+TEXMFVAR %{buildroot}/opt/texlive/%{version}/texmf-var
+TEXMFCONFIG %{buildroot}/opt/texlive/%{version}/texmf-config
+TEXMFHOME %{buildroot}/opt/texlive/%{version}/texmf-home
 binary_x86_64-linux 1
 collection-latexextra 1
 option_doc 0
@@ -41,7 +50,7 @@ EOF
 
 %install
 mkdir -p %{buildroot}/opt
-./install-tl -profile texlive.profile -no-interaction -gui text
+./texlive_dir/install-tl -profile texlive.profile -no-interaction -gui text
 
 # Symlink binaries to /usr/bin
 mkdir -p %{buildroot}%{_bindir}
@@ -49,16 +58,20 @@ for bin in %{buildroot}/opt/texlive/%{version}/bin/x86_64-linux/*; do
     install -D -m 755 $bin %{buildroot}%{_bindir}/$(basename $bin)
 done
 
-## Validate build output before packaging:
-%check
-%{buildroot}%{_bindir}/latex -version
-%{buildroot}%{_bindir}/tlmgr --version
-
 ## export some environment variables (PATH, MANPATH, etc.).
 mkdir -p %{buildroot}/etc/profile.d
 cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
 export PATH=/opt/texlive/%{version}/bin/x86_64-linux:\$PATH
 EOF
+
+## Validate build output before packaging:
+%check
+%{buildroot}%{_bindir}/latex -version
+%{buildroot}%{_bindir}/tlmgr --version
+
+%post
+%{buildroot}%{_bindir}/tlmgr update --self --all || :
+
 
 %files
 /opt/texlive

@@ -26,7 +26,7 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
 rm -rf build
 mkdir build
 pushd build
-../configure --prefix=%{_prefix} --with-gtk=3 --enable-webview
+../configure --prefix=%{_prefix} --with-gtk=3 --enable-webview --disable-bakefile --without-aclocaldir
 make -j$(nproc)
 popd
 
@@ -36,6 +36,10 @@ make -C build DESTDIR=%{buildroot} install
 
 # Remove unused libtool files
 find %{buildroot} -name "*.la" -delete
+
+# Remove bakefile and aclocal stuff (if still created)
+rm -rf %{buildroot}%{_datadir}/bakefile
+rm -f %{buildroot}%{_datadir}/aclocal/wxwin.m4
 
 %files
 %license docs/licence.txt
