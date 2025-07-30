@@ -16,9 +16,11 @@ ExclusiveArch:  x86_64 aarch64
 %global vscode_arch arm64
 %endif
 
-BuildRequires: gcc gcc-c++ make pkgconf git jq fakeroot ripgrep
-BuildRequires: python3 nodejs-npm rustup libX11-devel libxkbfile-devel libsecret-devel krb5-devel
-Requires:      libX11 libxkbfile libsecret krb5-libs libstdc++ ripgrep
+BuildRequires:  gcc gcc-c++ make pkgconf git jq fakeroot ripgrep
+BuildRequires:  python3 nodejs-npm rust cargo
+BuildRequires:  libX11-devel libxkbfile-devel libsecret-devel krb5-devel
+
+Requires:       libX11 libxkbfile libsecret krb5-libs libstdc++ ripgrep
 
 %description
 VSCodium is a community-driven, freely-licensed binary distribution of Microsoft’s VS Code.
@@ -41,13 +43,11 @@ export CI_BUILD="no"
 export OS_NAME="linux"
 export DISABLE_UPDATE="yes"
 
-# Rust setup
-rustup-init -y
-. "$HOME/.cargo/env"
-
-# Build
+# Patch shell script paths to be POSIX-compatible
 sed -i "s#. version.sh#. ./version.sh#g" build.sh
 sed -i "s#. prepare_vscode.sh#. ./prepare_vscode.sh#g" build.sh
+
+# Build
 . ./get_repo.sh
 . ./build.sh
 
@@ -55,7 +55,7 @@ sed -i "s#. prepare_vscode.sh#. ./prepare_vscode.sh#g" build.sh
 mkdir -p %{buildroot}/usr/share/vscodium
 cp -r VSCode-linux-%{vscode_arch}/* %{buildroot}/usr/share/vscodium/
 
-# Replace statically included binary with system copy. It allows the usage of Fedora ripgrep binary that includes build-id
+# Replace bundled ripgrep with system binary
 ln -sf /usr/bin/rg %{buildroot}/usr/share/vscodium/resources/app/node_modules/@vscode/ripgrep/bin/rg
 
 # Symlink binary
@@ -87,10 +87,18 @@ EOF
 install -D -m644 VSCode-linux-%{vscode_arch}/resources/app/resources/linux/code.png \
   %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
 
-# Strip development-only and unnecessary files to reduce package size
+# Strip test files and unnecessary language packs
 rm -rf %{buildroot}/usr/share/vscodium/resources/app/extensions/*/test
 find %{buildroot}/usr/share/vscodium/resources/app/extensions -name "package.nls.*.json" \
   ! -name "package.nls.en.json" -delete
+
+# Remove unpacked node_modules and dev files
+rm -rf %{buildroot}/usr/share/vscodium/resources/app/node_modules.asar.unpacked \
+       %{buildroot}/usr/share/vscodium/resources/app/node_modules/@vscode/test-electron
+
+# Strip native binaries
+find %{buildroot}/usr/share/vscodium -type f -executable -exec strip --strip-unneeded '{}' + 2>/dev/null || :
+
 
 %files
 %license LICENSE
