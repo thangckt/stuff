@@ -4,7 +4,6 @@ Name:           codium
 Version:        1.102.35058
 Release:        5%{?dist}
 Summary:        Free/Libre Open Source Software Binaries of VSCode
-
 License:        MIT
 URL:            https://github.com/VSCodium/vscodium
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
