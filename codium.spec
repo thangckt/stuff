@@ -29,6 +29,9 @@ This package builds it from the official source using a reproducible process.
 %prep
 %autosetup -n vscodium-%{version}
 
+# Remove rustup usage (use system Rust)
+sed -i '/rustup target add/d' build_cli.sh
+
 %build
 # Environment setup
 export PATH=%{_bindir}:$PATH
