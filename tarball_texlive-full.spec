@@ -12,6 +12,9 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 
 ExclusiveArch:  x86_64
 
+Provides: texlive
+Conflicts: texlive-*  # prevents conflict with DNF-installed texlive
+
 BuildRequires:  perl wget tar xz
 Requires:       perl
 
@@ -25,8 +28,8 @@ TeX Live provides a comprehensive TeX system for GNU/Linux. This RPM installs a 
 cat > texlive.profile <<EOF
 selected_scheme scheme-full
 TEXDIR /opt/texlive/%{version}
-TEXMFCONFIG ~/.texlive%{version}/texmf-config
-TEXMFVAR ~/.texlive%{version}/texmf-var
+TEXMFCONFIG /opt/texlive/%{version}/texmf-config
+TEXMFVAR /opt/texlive/%{version}/texmf-var
 binary_x86_64-linux 1
 collection-latexextra 1
 option_doc 0
@@ -38,17 +41,30 @@ EOF
 
 %install
 mkdir -p %{buildroot}/opt
-./install-tl -profile texlive.profile -portable -no-interaction -gui text
+./install-tl -profile texlive.profile -no-interaction -gui text
 
 # Symlink binaries to /usr/bin
 mkdir -p %{buildroot}%{_bindir}
 for bin in %{buildroot}/opt/texlive/%{version}/bin/x86_64-linux/*; do
-    ln -s /opt/texlive/%{version}/bin/x86_64-linux/$(basename $bin) %{buildroot}%{_bindir}/$(basename $bin)
+    install -D -m 755 $bin %{buildroot}%{_bindir}/$(basename $bin)
 done
+
+## Validate build output before packaging:
+%check
+%{buildroot}%{_bindir}/latex -version
+%{buildroot}%{_bindir}/tlmgr --version
+
+## export some environment variables (PATH, MANPATH, etc.).
+mkdir -p %{buildroot}/etc/profile.d
+cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
+export PATH=/opt/texlive/%{version}/bin/x86_64-linux:\$PATH
+EOF
 
 %files
 /opt/texlive
 %{_bindir}/*
+%license /opt/texlive/%{version}/LICENSE.CTAN
+%config(noreplace) /etc/profile.d/texlive.sh
 
 %changelog
 %autochangelog
