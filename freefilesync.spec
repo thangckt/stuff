@@ -1,7 +1,5 @@
 ### REF: https://gitlab.com/bgstack15/stackrpms/-/blob/master/freefilesync/freefilesync.spec?ref_type=heads
-
-%global pkgname FreeFileSync
-%global prog2name RealTimeSync
+# - https://github.com/PhantomX/chinforpms/blob/main/_pasture/freefilesync/freefilesync.spec
 
 Name:       freefilesync
 Version:    14.4
@@ -11,15 +9,9 @@ License:    GPLv3
 URL:        http://www.freefilesync.org/
 
 # upstream does not provide easy automatic downloads of the source, so use the mirror
-#Source0:    http://www.freefilesync.org/download/%%{pkgname}_%%{version}_Source.zip
-Source0:    https://gitlab.com/opensource-tracking/%{pkgname}/-/archive/%{version}/%{pkgname}-%{version}.tar.gz
+#Source0:    http://www.freefilesync.org/download/%FreeFileSync_%%{version}_Source.zip
+Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{version}/FreeFileSync-%{version}.tar.gz
 Source1:    https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWidgets-3.3.1.tar.bz2
-
-Source2: https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/FreeFileSync.desktop?ref_type=heads&inline=false
-Source3: https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/RealTimeSync.desktop?ref_type=heads&inline=false
-Source4: https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/xml.desktop?ref_type=heads&inline=false
-
-%global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
 
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
@@ -39,7 +31,7 @@ FreeFileSync is an open-source software that helps synchronize files and folders
 %global wxprefix %{_builddir}/wx33build
 
 %prep
-%setup -n %{pkgname}-%{version} -a 1
+%setup -n FreeFileSync-%{version} -a 1
 
 # Remove wxWidgets exception guard
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
@@ -78,31 +70,47 @@ export LDFLAGS="$($WX_CONFIG --libs) $(pkg-config --libs gtk+-3.0 openssl libcur
 
 ## Build FreeFileSync and RealTimeSync
 echo "THA: building FreeFileSync"
-%make_build -C %{pkgname}/Source
-%make_build -C %{pkgname}/Source/%{prog2name}
+%make_build -C FreeFileSync/Source
+%make_build -C FreeFileSync/Source/RealTimeSync
 
-echo "THA: Debugging build output"
-ls freefilesync-*/FreeFileSync
-ls freefilesync-*/RealTimeSync
 
-%install
 echo "THA: install step"
-install -d %{buildroot}%{_bindir} %{buildroot}%{_datadir}/%{name}
-
-cp -a %{pkgname}/Build/Resources/* %{buildroot}%{_datadir}/%{name}
+%install
+%make_install -C FreeFileSync/Source
+%make_install -C FreeFileSync/Source/RealTimeSync
 
 # Ensure no scripts marked executable
 find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
 
-# Desktop files
-install -Dm0644 %{SOURCE2} %{buildroot}%{_datadir}/applications/FreeFileSync.desktop
-install -Dm0644 %{SOURCE3} %{buildroot}%{_datadir}/applications/RealTimeSync.desktop
+## Desktop files
+mkdir -p %{buildroot}%{_datadir}/applications
 
-# MIME type XML
-install -Dm0644 %{SOURCE4} %{buildroot}%{_datadir}/mime/packages/freefilesync.xml
+cat > %{buildroot}%{_datadir}/applications/FreeFileSync.desktop <<EOF
+[Desktop Entry]
+Name=FreeFileSync
+GenericName=File synchronization
+Exec=FreeFileSync
+Icon=FreeFileSync
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Utility;
+EOF
+
+cat > %{buildroot}%{_datadir}/applications/RealTimeSync.desktop <<EOF
+[Desktop Entry]
+Name=RealTimeSync
+GenericName=Automated Synchronization
+Exec=RealTimeSync
+Icon=RealTimeSync
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Utility;
+EOF
 
 # Icons
-unzip -j %{pkgname}/Build/Resources/Icons.zip -d .
+unzip -j FreeFileSync/Build/Resources/Icons.zip -d .
 
 ff=" -filter Lanczos"
 for res in 16 22 24 32 48 64 96 128 256; do
@@ -110,30 +118,24 @@ for res in 16 22 24 32 48 64 96 128 256; do
     rr=" -resize ${res}x${res}"
     mkdir -p ${dir}/apps ${dir}/mimetypes
 
-    convert %{pkgname}.png ${ff} ${rr} ${dir}/apps/%{pkgname}.png
-    convert %{prog2name}.png ${ff} ${rr} ${dir}/apps/%{prog2name}.png
+    convert FreeFileSync.png ${ff} ${rr} ${dir}/apps/FreeFileSync.png
+    convert RealTimeSync.png ${ff} ${rr} ${dir}/apps/RealTimeSync.png
 
     convert cfg_batch.png ${ff} ${rr} ${dir}/mimetypes/application-x-freefilesync-batch.png
     convert start_sync.png ${ff} ${rr} ${dir}/mimetypes/application-x-freefilesync-ffs.png
-    convert %{prog2name}.png ${ff} ${rr} ${dir}/mimetypes/application-x-freefilesync-real.png
+    convert RealTimeSync.png ${ff} ${rr} ${dir}/mimetypes/application-x-freefilesync-real.png
 done
 
-%posttrans
-update-desktop-database &>/dev/null || :
-gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-update-mime-database -n %{_datadir}/mime &>/dev/null || :
 
 %files
 %license License.txt
 %doc Changelog.txt
-%{_bindir}/%{pkgname}
-%{_bindir}/%{prog2name}
-%{_datadir}/applications/%{pkgname}.desktop
-%{_datadir}/applications/%{prog2name}.desktop
+%{_bindir}/FreeFileSync
+%{_bindir}/RealTimeSync
+%{_datadir}/applications/FreeFileSync.desktop
+%{_datadir}/applications/RealTimeSync.desktop
 %{_datadir}/icons/hicolor/*x*/*/*.png
-%{_datadir}/mime/packages/%{name}.xml
 %{_datadir}/%{name}
-%ghost %config(noreplace) %{_datadir}/%{name}/GlobalSettings.xml
 
 %changelog
 %autochangelog
