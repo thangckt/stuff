@@ -32,9 +32,9 @@ cd ..
 # Create a custom install profile
 cat > texlive.profile <<EOF
 selected_scheme scheme-basic
-TEXDIR /opt/texlive/%{version}
-TEXMFCONFIG /opt/texlive/%{version}/texmf-config
-TEXMFVAR /opt/texlive/%{version}/texmf-var
+TEXDIR %{buildroot}/opt/texlive/%{version}
+TEXMFCONFIG %{buildroot}/opt/texlive/%{version}/texmf-config
+TEXMFVAR %{buildroot}/opt/texlive/%{version}/texmf-var
 binary_x86_64-linux 1
 collection-latexextra 1
 option_doc 0
@@ -59,7 +59,6 @@ mkdir -p %{buildroot}/etc/profile.d
 cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
 export PATH=/opt/texlive/%{version}/bin/x86_64-linux:\$PATH
 EOF
-
 
 ## Validate build output before packaging:
 %check
