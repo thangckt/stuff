@@ -15,6 +15,10 @@ URL:        http://www.freefilesync.org/
 Source0:    https://gitlab.com/opensource-tracking/%{pkgname}/-/archive/%{version}/%{pkgname}-%{version}.tar.gz
 Source1:    https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWidgets-3.3.1.tar.bz2
 
+Source2: https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/FreeFileSync.desktop
+Source3: https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/RealTimeSync.desktop
+Source4: https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/xml.desktop
+
 %global patch_base_url https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync
 
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
@@ -87,11 +91,11 @@ cp -a %{pkgname}/Build/Resources/* %{buildroot}%{_datadir}/%{name}
 find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
 
 # Desktop files
-install -Dm0644 "%{patch_base_url}/FreeFileSync.desktop" %{buildroot}%{_datadir}/applications/FreeFileSync.desktop
-install -Dm0644 "%{patch_base_url}/RealTimeSync.desktop" %{buildroot}%{_datadir}/applications/RealTimeSync.desktop
+install -Dm0644 %{SOURCE2} %{buildroot}%{_datadir}/applications/FreeFileSync.desktop
+install -Dm0644 %{SOURCE3} %{buildroot}%{_datadir}/applications/RealTimeSync.desktop
 
 # MIME type XML
-install -Dm0644 "%{patch_base_url}/xml.desktop" %{buildroot}%{_datadir}/mime/packages/freefilesync.xml
+install -Dm0644 %{SOURCE4} %{buildroot}%{_datadir}/mime/packages/freefilesync.xml
 
 # Icons
 unzip -j %{pkgname}/Build/Resources/Icons.zip -d .
@@ -129,3 +133,6 @@ update-mime-database -n %{_datadir}/mime &>/dev/null || :
 
 %changelog
 %autochangelog
+
+
+https://gitlab.com/bgstack15/stackrpms/-/raw/master/freefilesync/RealTimeSync.desktop?ref_type=heads&inline=false
