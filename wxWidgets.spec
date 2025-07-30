@@ -27,15 +27,12 @@ rm -rf build
 mkdir build
 pushd build
 ../configure --prefix=%{_prefix} --with-gtk=3 --enable-webview
-%make_build
+make -j($nproc)
 popd
 
 %install
 rm -rf %{buildroot}
-%make_build -C build DESTDIR=%{buildroot} install || true
-
-# Clean up failed or missing bakefile directory
-rm -rf %{buildroot}%{_datadir}/bakefile
+make -C build DESTDIR=%{buildroot} install
 
 # Remove unused libtool files
 find %{buildroot} -name "*.la" -delete
