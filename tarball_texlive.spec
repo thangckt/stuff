@@ -10,6 +10,7 @@ URL:            https://tug.org/texlive/
 Source0:        http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
 
 ExclusiveArch:  x86_64
+
 BuildRequires:  perl wget tar xz
 Requires:       perl
 
