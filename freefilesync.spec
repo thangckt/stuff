@@ -45,7 +45,7 @@ sed -i 's/pkg-config --cflags gtk+-2.0//g' FreeFileSync/Source/Makefile
 sed -i 's|-isystem/usr/include/gtk-2.0||g' FreeFileSync/Source/Makefile
 
 # Fix undefined MAX_SFTP_READ_SIZE in afs/sftp.cpp
-sed -i '/SFTP_OPTIMAL_BLOCK_SIZE_READ/i #define MAX_SFTP_READ_SIZE 32506' FreeFileSync/Source/afs/sftp.cpp
+sed -i '1i#define MAX_SFTP_READ_SIZE 32506' FreeFileSync/Source/afs/sftp.cpp
 
 ##💲 Build wxWidgets 3.3.1
 tar xf %{SOURCE1}
