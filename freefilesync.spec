@@ -68,9 +68,6 @@ export PATH=%{wxprefix}/bin:$PATH
 export WX_CONFIG=%{wxprefix}/bin/wx-config
 export PKG_CONFIG_PATH=%{wxprefix}lib/pkgconfig:$PKG_CONFIG_PATH
 
-##💲 Double-check you're using correct wx-config
-echo "THA: WX version: $($WX_CONFIG --version)"
-
 # Add required flags
 export CXXFLAGS="$($WX_CONFIG --cxxflags) $(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux)"
 export LDFLAGS="$($WX_CONFIG --libs) $(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libselinux)"
