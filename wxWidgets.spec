@@ -26,7 +26,7 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
 rm -rf build
 mkdir build
 pushd build
-../configure --prefix=%{_prefix} --with-gtk=3 --enable-webview --disable-bakefile --without-aclocaldir
+../configure --prefix=%{_prefix} --with-gtk=3 --enable-webview
 make -j$(nproc)
 popd
 
