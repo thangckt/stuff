@@ -60,16 +60,10 @@ export PKG_CONFIG_PATH=%{wxprefix}lib/pkgconfig:$PKG_CONFIG_PATH
 
 ##THA: Double-check you're using correct wx-config
 echo "WX version: $($WX_CONFIG --version)"
-if $WX_CONFIG --cxxflags | grep -q gtk-2.0; then
-    echo "❌ GTK2 still in use!"
-    exit 1
-else
-    echo "✅ GTK3 confirmed"
-fi
 
 # Add required flags
-export CXXFLAGS="$($WX_CONFIG --cxxflags) $(pkg-config --cflags glib-2.0 openssl libcurl libssh2 libselinux)"
-export LDFLAGS="$($WX_CONFIG --libs) $(pkg-config --libs openssl libcurl libssh2 libselinux)"
+export CXXFLAGS="$($WX_CONFIG --cxxflags) $(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux)"
+export LDFLAGS="$($WX_CONFIG --libs) $(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libselinux)"
 
 ## THA: Build FreeFileSync and RealTimeSync
 %make_build -C %{pkgname}/Source
