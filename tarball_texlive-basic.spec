@@ -22,7 +22,10 @@ Requires:       perl
 TeX Live provides a comprehensive TeX system for GNU/Linux. This RPM installs a basic TeX Live tree in /opt/texlive.
 
 %prep
-%autosetup -n install-tl-*
+mkdir extracted
+cd extracted
+tar -xf %{SOURCE0}
+cd install-tl-*
 
 # Create a custom install profile
 cat > texlive.profile <<EOF
