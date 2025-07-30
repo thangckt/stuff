@@ -58,7 +58,7 @@ sed -i '1i#define MAX_SFTP_READ_SIZE 30000\n#define MAX_SFTP_OUTGOING_SIZE 30000
 sed -i '/class SysColorsHook/,/^}/ s/^/\/\/ /' wx+/darkmode.cpp
 sed -i '/refGlobalColorHook()/ s/^/\/\/ /' wx+/darkmode.cpp
 
-##💲 Build wxWidgets 3.3.1
+## Build wxWidgets 3.3.1
 tar xf %{SOURCE1}
 pushd wxWidgets-3.3.1
 mkdir buildgtk && cd buildgtk
@@ -76,7 +76,7 @@ export PKG_CONFIG_PATH=%{wxprefix}lib/pkgconfig:$PKG_CONFIG_PATH
 export CXXFLAGS="$($WX_CONFIG --cxxflags) $(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux)"
 export LDFLAGS="$($WX_CONFIG --libs) $(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libselinux)"
 
-##💲 Build FreeFileSync and RealTimeSync
+## Build FreeFileSync and RealTimeSync
 echo "THA: building FreeFileSync"
 %make_build -C %{pkgname}/Source
 %make_build -C %{pkgname}/Source/%{prog2name}
