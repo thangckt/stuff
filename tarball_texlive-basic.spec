@@ -55,7 +55,9 @@ mkdir -p %{buildroot}/opt
 # Symlink binaries to /usr/bin
 mkdir -p %{buildroot}%{_bindir}
 for bin in %{buildroot}/opt/texlive/%{version}/bin/x86_64-linux/*; do
-    install -D -m 755 $bin %{buildroot}%{_bindir}/$(basename $bin)
+    if [ -f "$bin" ] && [ -x "$bin" ]; then
+        ln -s /opt/texlive/%{version}/bin/x86_64-linux/$(basename "$bin") %{buildroot}%{_bindir}/
+    fi
 done
 
 ## export some environment variables (PATH, MANPATH, etc.).
