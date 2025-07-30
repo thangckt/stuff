@@ -29,9 +29,6 @@ This package builds it from the official source using a reproducible process.
 %prep
 %autosetup -n vscodium-%{version}
 
-# Remove rustup usage (use system Rust)
-sed -i '/rustup target add/d' build_cli.sh
-
 %build
 # Environment setup
 export PATH=%{_bindir}:$PATH
@@ -46,9 +43,9 @@ export CI_BUILD="no"
 export OS_NAME="linux"
 export DISABLE_UPDATE="yes"
 
-# Patch shell script paths to be POSIX-compatible
-sed -i "s#. version.sh#. ./version.sh#g" build.sh
-sed -i "s#. prepare_vscode.sh#. ./prepare_vscode.sh#g" build.sh
+# Rust setup
+rustup-init -y
+. "$HOME/.cargo/env"
 
 # Build
 . ./get_repo.sh
