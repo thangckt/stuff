@@ -43,6 +43,8 @@ sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
 # Remove hardcoded GTK2 usage from FreeFileSync makefile
 sed -i 's/pkg-config --cflags gtk+-2.0//g' FreeFileSync/Source/Makefile
 sed -i 's|-isystem/usr/include/gtk-2.0||g' FreeFileSync/Source/Makefile
+sed -i 's/pkg-config --cflags gtk+-2.0//g' FreeFileSync/Source/RealTimeSync/Makefile
+sed -i 's|-isystem/usr/include/gtk-2.0||g' FreeFileSync/Source/RealTimeSync/Makefile
 
 # Fix undefined MAX_SFTP_* constants in afs/sftp.cpp
 sed -i '1i#define MAX_SFTP_READ_SIZE 30000\n#define MAX_SFTP_OUTGOING_SIZE 30000' FreeFileSync/Source/afs/sftp.cpp
