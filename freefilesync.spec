@@ -74,18 +74,25 @@ echo "THA: building FreeFileSync"
 %make_build -C FreeFileSync/Source
 %make_build -C FreeFileSync/Source/RealTimeSync
 
+echo "THA: Debugging build output"
+ls -l FreeFileSync/Source/
+ls -l FreeFileSync/Source/RealTimeSync
 
-echo "THA: install step"
+
 %install
-%make_install -C FreeFileSync/Source
-%make_install -C FreeFileSync/Source/RealTimeSync
+# Manually install binaries
+install -Dm755 FreeFileSync/Source/FreeFileSync %{buildroot}%{_bindir}/FreeFileSync
+install -Dm755 FreeFileSync/Source/RealTimeSync %{buildroot}%{_bindir}/RealTimeSync
+
+# Install data directory (used for translations and config templates)
+mkdir -p %{buildroot}%{_datadir}/%{name}
+cp -a FreeFileSync/Resources/* %{buildroot}%{_datadir}/%{name}/
 
 # Ensure no scripts marked executable
 find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
 
 ## Desktop files
 mkdir -p %{buildroot}%{_datadir}/applications
-
 cat > %{buildroot}%{_datadir}/applications/FreeFileSync.desktop <<EOF
 [Desktop Entry]
 Name=FreeFileSync
