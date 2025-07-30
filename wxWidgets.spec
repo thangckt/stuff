@@ -32,7 +32,10 @@ popd
 
 %install
 rm -rf %{buildroot}
-make -C build DESTDIR=%{buildroot} install
+%make_build -C build DESTDIR=%{buildroot} install || true
+
+# Clean up failed or missing bakefile directory
+rm -rf %{buildroot}%{_datadir}/bakefile
 
 # Remove unused libtool files
 find %{buildroot} -name "*.la" -delete

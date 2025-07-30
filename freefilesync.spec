@@ -22,15 +22,13 @@ BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
 BuildRequires:  gtk3-devel gtk+-devel wxGTK-devel glib2-devel openssl-devel expat-devel
 BuildRequires:  desktop-file-utils libmspack-devel libsecret-devel gspell-devel libnotify-devel webkit2gtk4.1-devel gstreamer1-devel
-BuildRequires:  pkgconfig(zlib) pkgconfig(expat) pkgconfig(liblzma) pkgconfig(libmspack) pkgconfig(libcurl) pkgconfig(libssh2)
-BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(webkit2gtk-4.1) pkgconfig(libselinux) pkgconfig(glib-2.0) pkgconfig(libidn2)
-
-Requires: wxWidgets >= 3.3.0
+BuildRequires:  pkgconfig(liblzma) pkgconfig(libmspack) pkgconfig(libcurl) pkgconfig(libssh2)
+BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(webkit2gtk-4.1) pkgconfig(libselinux) pkgconfig(libidn2)
+BuildRequires:  wxWidgets >= 3.3.0
+Requires:       wxWidgets >= 3.3.0
 
 %description
 FreeFileSync is an open-source software that helps synchronize files and folders on Windows, Linux, and macOS. It is optimized for backup speed and visual usability.
-
-%global wxprefix %{_builddir}/wx33build
 
 %prep
 %setup -n FreeFileSync-%{version}
@@ -65,6 +63,7 @@ export LDFLAGS="$(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libselinux 
 echo "THA:-Debug: list binaries"
 ls -l FreeFileSync/Build/Bin/
 ls -l FreeFileSync/Build/
+
 
 %install
 # Manually install compiled binaries
