@@ -1,7 +1,6 @@
 ### REF: https://tug.org/texlive/
-# Note: use "texlive-Full" to avoid the package "texlive-full" from Fedora repo.
 
-Name:           texlive-Full
+Name:           texlive-full
 Version:        2025
 Release:        1%{?dist}
 Summary:        TeX Live distribution
