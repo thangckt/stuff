@@ -13,10 +13,10 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 ExclusiveArch:  x86_64
 
 ## Force replace the Fedora TeX Live
-Obsoletes:      texlive-core
-Obsoletes:      texlive-dist
-Obsoletes:      texlive-latex
-Provides:       texlive
+Obsoletes: texlive-core < 2025
+Obsoletes: texlive-dist < 2025
+Obsoletes: texlive-latex < 2025
+Provides:  texlive
 
 BuildRequires:  perl wget tar xz
 Requires:       perl
