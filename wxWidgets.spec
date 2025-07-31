@@ -50,7 +50,6 @@ find %{buildroot} -name "*.la" -delete
 %{_libdir}/pkgconfig/wx*.pc
 %{_includedir}/wx-3.3/
 %{_libdir}/wx/
-%{_datadir}/aclocal/wxwin.m4
 
 %changelog
 %autochangelog
