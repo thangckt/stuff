@@ -50,10 +50,6 @@ sed -i '1i#define MAX_SFTP_READ_SIZE 30000\n#define MAX_SFTP_OUTGOING_SIZE 30000
 sed -i '/class SysColorsHook/,/^}/ s/^/\/\/ /' wx+/darkmode.cpp
 sed -i '/refGlobalColorHook()/ s/^/\/\/ /' wx+/darkmode.cpp
 
-# Append zen include directory to compiler flags in FreeFileSync Makefiles
-echo 'INCLUDE += -I../../zen' >> FreeFileSync/Source/Makefile
-echo 'INCLUDE += -I../../zen' >> FreeFileSync/Source/RealTimeSync/Makefile
-
 %build
 export PATH=%{_bindir}:$PATH
 
@@ -62,8 +58,8 @@ export CXXFLAGS_FFS="$(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl lib
 export LDFLAGS_FFS="$(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libselinux wxgtk3u-3.3)"
 
 ## Build FreeFileSync and RealTimeSync. Pass CXXFLAGS and LDFLAGS directly to make
-%make_build -C FreeFileSync/Source CXXFLAGS="$CXXFLAGS_FFS" LDFLAGS="$LDFLAGS_FFS" INCLUDE="$CXXFLAGS_FFS"
-%make_build -C FreeFileSync/Source/RealTimeSync CXXFLAGS="$CXXFLAGS_FFS" LDFLAGS="$LDFLAGS_FFS" INCLUDE="$CXXFLAGS_FFS"
+%make_build -C FreeFileSync/Source CXXFLAGS="$CXXFLAGS_FFS" LDFLAGS="$LDFLAGS_FFS"
+%make_build -C FreeFileSync/Source/RealTimeSync CXXFLAGS="$CXXFLAGS_FFS" LDFLAGS="$LDFLAGS_FFS"
 
 echo "THA:-Debug: list binaries"
 ls -l FreeFileSync/Build/Bin/
