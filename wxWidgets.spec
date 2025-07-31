@@ -38,9 +38,20 @@ find %{buildroot} -name "*.la" -delete
 %files
 %license docs/licence.txt
 %{_bindir}/wx-config
+%{_bindir}/wxrc
+%{_bindir}/wxrc-3.3
 %{_libdir}/libwx_*.so.*
+
+# Pkgconfig and headers
+%{_libdir}/pkgconfig/wx*.pc
 %{_includedir}/wx-3.3/
 %{_libdir}/wx/
+
+# Other libraries and resources
+%{_datadir}/locale/*/LC_MESSAGES/wxstd-3.3.mo
+%{_datadir}/aclocal/wxwin.m4
+%{_datadir}/bakefile/presets/*.bkl
+%{_datadir}/bakefile/presets/wx_presets.py
 
 %changelog
 %autochangelog
