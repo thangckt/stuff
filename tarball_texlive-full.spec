@@ -83,19 +83,21 @@ find %{buildroot}/opt/texlive/%{version}/texmf-var -type f \( -name '*.log' -o -
 
 %post
 ## registers each binary file in opt/ folder of TeX Live 2025
-for f in /opt/texlive/2025/bin/x86_64-linux/*; do
-    name=$(basename "$f")
-    if [ -f "/usr/bin/$name" ] || command -v "$name" >/dev/null 2>&1; then
-        alternatives --install "/usr/bin/$name" "$name" "$f" 100
+for bin in $(ls /opt/texlive/%{version}/bin/x86_64-linux); do
+    altname="${bin%%-*}"  # crude base name
+    if [ -f "/usr/bin/$altname" ] && [ ! -L "/usr/bin/$altname" ]; then
+        mv "/usr/bin/$altname" "/usr/bin/${altname}.backup-by-texlive-full"
     fi
+    alternatives --install /usr/bin/$altname $altname /opt/texlive/%{version}/bin/x86_64-linux/$bin 100
 done
 
 %preun
 ## Uninstall alternatives
-if [ "$1" = "0" ]; then  # Uninstall only
-  for f in /opt/texlive/2025/bin/x86_64-linux/*; do
-      name=$(basename "$f")
-      alternatives --remove "$name" "$f"
+if [ "$1" -eq 0 ]; then  # final removal
+  for bin in $(ls /opt/texlive/%{version}/bin/x86_64-linux); do
+    altname="${bin%%-*}"
+    alternatives --remove $altname /opt/texlive/%{version}/bin/x86_64-linux/$bin
+    [ -f "/usr/bin/${altname}.backup-by-texlive-full" ] && mv "/usr/bin/${altname}.backup-by-texlive-full" "/usr/bin/$altname"
   done
 fi
 
