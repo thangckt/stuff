@@ -12,7 +12,7 @@ Source0:    %{url}/releases/download/v%{version}/wxWidgets-%{version}.tar.bz2
 %global debug_package %{nil}
 %global debugsource_package %{nil}
 
-BuildRequires: gcc-c++ gtk3-devel webkit2gtk4.1-devel
+BuildRequires: gcc-c++ gtk3-devel webkit2gtk4.1-devel SDL3-devel libmspack-devel
 BuildRequires: pkgconfig(glib-2.0) pkgconfig(zlib) pkgconfig(expat)
 
 %description
@@ -22,22 +22,15 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
 %prep
 %setup -q -n wxWidgets-%{version}
 
-# Fix broken install due to missing bakefile directory
-sed -i '/^install::/,/^$/ {
-  /bakefile\/presets/ d
-}' Makefile.in
-
 %build
-rm -rf build
-mkdir build
-pushd build
-../configure --prefix=%{_prefix} --with-gtk=3 --enable-webview
+# Perform an in-source build to simplify path handling. This avoids issues with relative paths in out-of-source builds for some make targets.
+# The configure script and make will be run directly from the extracted source directory.
+./configure --prefix=%{_prefix} --with-gtk=3 --enable-webview
 make -j$(nproc)
-popd
 
 %install
 rm -rf %{buildroot}
-make -C build DESTDIR=%{buildroot} install
+make DESTDIR=%{buildroot} install
 
 # Remove unused libtool files
 find %{buildroot} -name "*.la" -delete
