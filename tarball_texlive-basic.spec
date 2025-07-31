@@ -80,9 +80,6 @@ export MANPATH=/opt/texlive/%{version}/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=/opt/texlive/%{version}/texmf-dist/doc/info:\$INFOPATH
 EOF
 
-%post
-# Run tlmgr update from the installed location
-/opt/texlive/%{version}/bin/x86_64-linux/tlmgr update --self --all || :
 
 %files
 /opt/texlive

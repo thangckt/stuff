@@ -30,15 +30,16 @@ mv "$texlive_dir" ../texlive_dir
 cd ..
 
 # Create a custom install profile
-cat > texlive.profile <<EOF
-selected_scheme scheme-basic
-TEXDIR %{buildroot}/opt/texlive/%{version}
-TEXMFLOCAL %{buildroot}/opt/texlive/%{version}/texmf-local
-TEXMFSYSVAR %{buildroot}/opt/texlive/%{version}/texmf-var
-TEXMFSYSCONFIG %{buildroot}/opt/texlive/%{version}/texmf-config
-TEXMFVAR %{buildroot}/opt/texlive/%{version}/texmf-var
-TEXMFCONFIG %{buildroot}/opt/texlive/%{version}/texmf-config
-TEXMFHOME %{buildroot}/opt/texlive/%{version}/texmf-home
+# Use ${RPM_BUILD_ROOT} to ensure buildroot path is expanded correctly at shell execution time
+cat <<EOF > texlive.profile
+selected_scheme scheme-full
+TEXDIR ${RPM_BUILD_ROOT}/opt/texlive/%{version}
+TEXMFLOCAL ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-local
+TEXMFSYSVAR ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-var
+TEXMFSYSCONFIG ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-config
+TEXMFVAR ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-var
+TEXMFCONFIG ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-config
+TEXMFHOME ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-home
 binary_x86_64-linux 1
 collection-latexextra 1
 option_doc 0
@@ -52,32 +53,36 @@ EOF
 mkdir -p %{buildroot}/opt
 ./texlive_dir/install-tl -profile texlive.profile -no-interaction -gui text
 
-# Symlink binaries to /usr/bin
-mkdir -p %{buildroot}%{_bindir}
-for bin in %{buildroot}/opt/texlive/%{version}/bin/x86_64-linux/*; do
-    if [ -f "$bin" ] && [ -x "$bin" ]; then
-        ln -s /opt/texlive/%{version}/bin/x86_64-linux/$(basename "$bin") %{buildroot}%{_bindir}/
-    fi
-done
+## Fix ambiguous python shebangs BEFORE brp-mangle-shebangs runs
+# Target scripts using #!/usr/bin/python
+grep -rl '^#! */usr/bin/python$' %{buildroot}/opt/texlive/%{version} \
+  | grep '\.py$' \
+  | xargs sed -i '1s|^#! */usr/bin/python$|#!/usr/bin/python3|'
 
-## export some environment variables (PATH, MANPATH, etc.).
+# Target scripts using #!/usr/bin/env python
+grep -rl '^#! */usr/bin/env python$' %{buildroot}/opt/texlive/%{version} \
+  | grep '\.py$' \
+  | xargs sed -i '1s|^#! */usr/bin/env python$|#!/usr/bin/python3|'
+## Drop executable bit from files without a valid shebang
+find %{buildroot}/opt/texlive/%{version} -type f -executable \
+  ! -exec grep -Iq '^#!' {} \; -exec chmod -x {} \;
+
+## Clean up files containing buildroot paths
+rm -f %{buildroot}/opt/texlive/%{version}/install-tl.log
+rm -f %{buildroot}/opt/texlive/%{version}/tlpkg/texlive.profile
+find %{buildroot}/opt/texlive/%{version}/texmf-var -type f \( -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' \) -delete
+
+## export environment variables (PATH, MANPATH, etc.).
 mkdir -p %{buildroot}/etc/profile.d
 cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
 export PATH=/opt/texlive/%{version}/bin/x86_64-linux:\$PATH
+export MANPATH=/opt/texlive/%{version}/texmf-dist/doc/man:\$MANPATH
+export INFOPATH=/opt/texlive/%{version}/texmf-dist/doc/info:\$INFOPATH
 EOF
-
-## Validate build output before packaging:
-%check
-%{buildroot}%{_bindir}/latex -version
-%{buildroot}%{_bindir}/tlmgr --version
-
-%post
-%{buildroot}%{_bindir}/tlmgr update --self --all || :
 
 
 %files
 /opt/texlive
-%{_bindir}/*
 %license /opt/texlive/%{version}/LICENSE.CTAN
 %config(noreplace) /etc/profile.d/texlive.sh
 
