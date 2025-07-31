@@ -31,12 +31,14 @@ Requires:       wxGTK3 >= 3.3.0
 FreeFileSync is an open-source software that helps synchronize files and folders on Windows, Linux, and macOS. It is optimized for backup speed and visual usability.
 
 Patch0: https://raw.githubusercontent.com/thangckt/stuff/refs/heads/copr_spec/patch/FreeFileSync/00_zen_string-traits_wxstring-support.patch
+Patch1: https://raw.githubusercontent.com/thangckt/stuff/refs/heads/copr_spec/patch/FreeFileSync/01_zen_type-traits_cstdint.patch
 
 %prep
 %setup -n FreeFileSync-%{version}
 
-# Apply patch
-%autopatch -p1
+# Apply all patches
+%autopatch -p1 -a
+
 
 # Remove wxWidgets exception guard
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
@@ -59,7 +61,7 @@ sed -i '/refGlobalColorHook()/ s/^/\/\/ /' wx+/darkmode.cpp
 export PATH=%{_bindir}:$PATH
 
 ## Ensure CXXFLAGS are passed directly to make, not just exported. The makefiles might not automatically pick up exported CXXFLAGS
-export CXXFLAGS_FFS="$(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux wxgtk3) -I%{_builddir}/FreeFileSync-%{version} -I%{_builddir}/FreeFileSync-%{version}/zenXml"
+export CXXFLAGS_FFS="$(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux wxgtk3) -std=c++20 -I%{_builddir}/FreeFileSync-%{version} -I%{_builddir}/FreeFileSync-%{version}/zenXml"
 export LDFLAGS_FFS="$(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libselinux wxgtk3)"
 
 ## Build FreeFileSync and RealTimeSync. Pass CXXFLAGS and LDFLAGS directly to make

@@ -1,0 +1,7 @@
+--- a/zen/type_traits.h
++++ b/zen/type_traits.h
+@@ -7,6 +7,7 @@
+ #pragma once
+ #include <algorithm>
++#include <cstdint>
+ #include <type_traits>
