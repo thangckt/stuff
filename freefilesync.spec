@@ -24,7 +24,6 @@ BuildRequires:  gtk3-devel gtk+-devel wxGTK-devel glib2-devel openssl-devel expa
 BuildRequires:  desktop-file-utils libmspack-devel libsecret-devel gspell-devel libnotify-devel webkit2gtk4.1-devel gstreamer1-devel
 BuildRequires:  pkgconfig(liblzma) pkgconfig(libmspack) pkgconfig(libcurl) pkgconfig(libssh2) pkgconfig(glib-2.0) pkgconfig(zlib) pkgconfig(expat)
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(webkit2gtk-4.1) pkgconfig(libselinux) pkgconfig(libidn2)
-BindRequires:   pkgconfig(wx_gtk3u-3.3)
 BuildRequires:  wxWidgets >= 3.3.0
 Requires:       wxWidgets >= 3.3.0
 
