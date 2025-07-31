@@ -13,6 +13,7 @@ Source0:    %{url}/releases/download/v%{version}/wxWidgets-%{version}.tar.bz2
 %global debugsource_package %{nil}
 
 BuildRequires: gcc-c++ cmake gtk3-devel webkit2gtk4.1-devel
+BuildRequires: nanosvg-devel libmspack-devel xz-devel SDL3-devel
 BuildRequires: pkgconfig(glib-2.0) pkgconfig(zlib) pkgconfig(expat)
 
 %description
@@ -23,26 +24,21 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
 %setup -q -n wxWidgets-%{version}
 
 %build
-%cmake -DwxBUILD_SHARED=ON \
-       -DwxBUILD_MONOLITHIC=OFF \
-       -DwxBUILD_TOOLKIT=gtk3 \
-       -DwxUSE_WEBVIEW=ON \
-       -DwxUSE_WEBVIEW_WEBKIT=ON \
-       -DwxUSE_WEBVIEW_EDGE=OFF \
-       -DwxUSE_WEBVIEW_IE=OFF \
-       -DwxUSE_RPATH=OFF \
-       -DCMAKE_INSTALL_LIBDIR=%{_libdir}
+%cmake  -DwxBUILD_SHARED=ON \
+        -DwxBUILD_MONOLITHIC=OFF \
+        -DwxBUILD_TOOLKIT=gtk3 \
+        -DwxUSE_WEBVIEW=ON \
+        -DwxUSE_LIBLZMA=ON \
+        -DwxUSE_LIBSDL=ON \
+        -DwxUSE_LIBMSPACK=ON
 %cmake_build
 
 %install
 rm -rf %{buildroot}
 %cmake_install
 
-
 %files
 %license docs/licence.txt
-
-# Binaries and config tools
 %{_bindir}/wx-config
 %{_bindir}/wxrc*
 
