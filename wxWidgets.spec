@@ -22,8 +22,10 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
 %prep
 %setup -q -n wxWidgets-%{version}
 
-# Work around broken bakefile install (Remove or comment out the bakefile-related install section)
-sed -i '/^install-data-local:/,/^$/d' build/Makefile.in
+# Fix broken install due to missing bakefile directory
+sed -i '/^install::/,/^$/ {
+  /bakefile\/presets/ d
+}' Makefile.in
 
 %build
 rm -rf build
