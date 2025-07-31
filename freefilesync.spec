@@ -54,8 +54,8 @@ sed -i '/refGlobalColorHook()/ s/^/\/\/ /' wx+/darkmode.cpp
 export PATH=%{_bindir}:$PATH
 
 ## Ensure CXXFLAGS are passed directly to make, not just exported. The makefiles might not automatically pick up exported CXXFLAGS
-export CXXFLAGS_FFS="$(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux wxwidgets wx_gtk3u-3.3) -I%{_builddir}/FreeFileSync-%{version}"
-export LDFLAGS_FFS="$(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libselinux wxwidgets wx_gtk3u-3.3)"
+export CXXFLAGS_FFS="$(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux wxWidgets -I%{_builddir}/FreeFileSync-%{version} )"
+export LDFLAGS_FFS="$(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libselinux wxWidgets)"
 
 ## Build FreeFileSync and RealTimeSync. Pass CXXFLAGS and LDFLAGS directly to make
 %make_build -C FreeFileSync/Source CXXFLAGS="$CXXFLAGS_FFS" LDFLAGS="$LDFLAGS_FFS"
