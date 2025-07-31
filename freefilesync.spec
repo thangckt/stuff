@@ -13,15 +13,12 @@ URL:        http://www.freefilesync.org/
 #Source0:    http://www.freefilesync.org/download/%FreeFileSync_%%{version}_Source.zip
 Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{version}/FreeFileSync-%{version}.tar.gz
 
-Source1: https://raw.githubusercontent.com/thangckt/stuff/refs/heads/copr_spec/patch/FreeFileSync/00_zen_string-traits_wxstring-support.patch
-Source2: https://raw.githubusercontent.com/thangckt/stuff/refs/heads/copr_spec/patch/FreeFileSync/01_zen_type-traits_cstdint.patch
-
 %global debug_package %{nil}
 %global _enable_debug_package 0
 %global debugsource_package %{nil}
 %global debugsource_build 0
 
-BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip
+BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip patch
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
 BuildRequires:  gtk3-devel gtk+-devel wxGTK-devel glib2-devel openssl-devel expat-devel
 BuildRequires:  desktop-file-utils libmspack-devel libsecret-devel gspell-devel libnotify-devel webkit2gtk4.1-devel gstreamer1-devel
@@ -36,8 +33,16 @@ FreeFileSync is an open-source software that helps synchronize files and folders
 %prep
 %setup -n FreeFileSync-%{version}
 
-# Apply all patches
-%autosetup -p1 -v
+## Download and apply patches
+patch_paths=(
+    "https://raw.githubusercontent.com/thangckt/stuff/refs/heads/copr_spec/patch/FreeFileSync/00_zen_string-traits_wxstring-support.patch"
+    "https://raw.githubusercontent.com/thangckt/stuff/refs/heads/copr_spec/patch/FreeFileSync/01_zen_type-traits_cstdint.patch"
+)
+for patch in "${patch_paths[@]}"; do
+    curl -L -o "$(basename "$patch")" "$patch"
+    patch -p1 < "$(basename "$patch")"
+done
+
 
 # Remove wxWidgets exception guard
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
