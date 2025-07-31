@@ -31,7 +31,7 @@ cd ..
 
 # Create a custom install profile
 cat <<EOF > texlive.profile
-selected_scheme scheme-basic
+selected_scheme scheme-minimal
 TEXDIR ${RPM_BUILD_ROOT}/opt/texlive/%{version}
 TEXMFLOCAL ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-local
 TEXMFSYSVAR ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-var
