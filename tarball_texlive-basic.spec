@@ -74,13 +74,30 @@ rm -f %{buildroot}/opt/texlive/%{version}/tlpkg/texlive.profile
 find %{buildroot}/opt/texlive/%{version}/texmf-var -type f \( -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' \) -delete
 
 ## export environment variables (PATH, MANPATH, etc.).
-mkdir -p %{buildroot}/etc/profile.d
-cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
-export PATH=/opt/texlive/%{version}/bin/x86_64-linux:\$PATH
-export MANPATH=/opt/texlive/%{version}/texmf-dist/doc/man:\$MANPATH
-export INFOPATH=/opt/texlive/%{version}/texmf-dist/doc/info:\$INFOPATH
-EOF
+#mkdir -p %{buildroot}/etc/profile.d
+#cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
+#export PATH=/opt/texlive/%{version}/bin/x86_64-linux:\$PATH
+#export MANPATH=/opt/texlive/%{version}/texmf-dist/doc/man:\$MANPATH
+#export INFOPATH=/opt/texlive/%{version}/texmf-dist/doc/info:\$INFOPATH
+#EOF
 
+%post
+## registers each binary file in opt/ folder of TeX Live 2025
+for f in /opt/texlive/2025/bin/x86_64-linux/*; do
+    name=$(basename "$f")
+    if [ -f "/usr/bin/$name" ] || command -v "$name" >/dev/null 2>&1; then
+        alternatives --install "/usr/bin/$name" "$name" "$f" 100
+    fi
+done
+
+%preun
+## Uninstall alternatives
+if [ "$1" = "0" ]; then  # Uninstall only
+  for f in /opt/texlive/2025/bin/x86_64-linux/*; do
+      name=$(basename "$f")
+      alternatives --remove "$name" "$f"
+  done
+fi
 
 %files
 /opt/texlive
