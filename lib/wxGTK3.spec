@@ -13,9 +13,8 @@ Source0:    %{url}/releases/download/v%{version}/wxWidgets-%{version}.tar.bz2
 %global debug_package %{nil}
 %global debugsource_package %{nil}
 
-BuildRequires: make gcc-c++ gtk3-devel autoconf
-BuildRequires: webkit2gtk4.1-devel zlib-devel libpng-devel libjpeg-devel
-BuildRequires: libtiff-devel expat-devel SDL2-devel
+BuildRequires: gcc-c++ cmake gtk3-devel webkit2gtk4.1-devel
+BuildRequires: libtiff-devel expat-devel SDL2-devel zlib-devel libpng-devel libjpeg-devel
 BuildRequires: gstreamer1-plugins-bad-free-devel libmspack-devel
 BuildRequires: libsecret-devel libcurl-devel glibc-langpack-en mesa-libEGL
 
