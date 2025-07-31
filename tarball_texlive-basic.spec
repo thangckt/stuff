@@ -57,7 +57,7 @@ EOF
 mkdir -p %{buildroot}/opt
 ./texlive_dir/install-tl -profile texlive.profile -no-interaction -gui text
 
-# Fix ambiguous and legacy python2 shebangs
+## Fix ambiguous and legacy python2 shebangs
 find %{buildroot}/opt/texlive/%{version} -type f -exec sed -i \
   -e '1s|^#! */usr/bin/python2$|#!/usr/bin/python3|' \
   -e '1s|^#! */usr/bin/env python2$|#!/usr/bin/python3|' \
@@ -66,7 +66,10 @@ find %{buildroot}/opt/texlive/%{version} -type f -exec sed -i \
   -e '1s|^#! */usr/bin/env python$|#!/usr/bin/python3|' \
   {} +
 
-## Drop executable bit from non-script files that are wrongly marked executable
+## Fix permissions: Ensure all real binaries are executable
+find %{buildroot}/opt/texlive/%{version}/bin -type f -exec chmod +x {} \;
+
+## Drop +x on files without a shebang (avoid breaking brp-mangle-shebangs)
 find %{buildroot}/opt/texlive/%{version} -type f -executable \
   ! -exec grep -q '^#!' {} \; -exec chmod -x {} \;
 
@@ -86,20 +89,23 @@ find %{buildroot}/opt/texlive/%{version}/texmf-var -type f \( -name '*.log' -o -
 %post
 ## registers each binary file in opt/ folder of TeX Live 2025
 for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
+    [ -f "$bin_path" ] || continue
     bin_name=$(basename "$bin_path")
     if [ -f "/usr/bin/$bin_name" ] && [ ! -L "/usr/bin/$bin_name" ]; then
         mv "/usr/bin/$bin_name" "/usr/bin/${bin_name}.backup-by-texlive-full"
     fi
-    alternatives --install /usr/bin/$bin_name $bin_name /opt/texlive/%{version}/bin/x86_64-linux/$bin_name 100
+    alternatives --install /usr/bin/$bin_name $bin_name "$bin_path" 100 || :
 done
 
 %preun
-## Uninstall alternatives
+## Only if uninstalling
 if [ "$1" -eq 0 ]; then
     for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
+        [ -f "$bin_path" ] || continue
         bin_name=$(basename "$bin_path")
+        # Only remove if this path is currently registered
         if alternatives --display "$bin_name" | grep -q "$bin_path"; then
-            alternatives --remove "$bin_name" "$bin_path"
+            alternatives --remove "$bin_name" "$bin_path" || :
         fi
     done
 fi
