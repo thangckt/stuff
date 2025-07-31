@@ -49,7 +49,7 @@ grep -q '^StartupWMClass=' zed.desktop || sed -i '/^\[Desktop Action /i StartupW
 
 %build
 export CARGO_HOME=.cargo
-cargo build -j%{_smp_build_ncpus} --release --package zed --package cli
+cargo build -j$(nproc) --release --package zed --package cli
 script/generate-licenses
 
 %install
