@@ -1,6 +1,7 @@
+### REF: https://src.fedoraproject.org/rpms/wxGTK/blob/rawhide/f/wxGTK.spec
 # Note: wxWidgets>3.3 is required for FreeFileSync. It is better to build it in another spec file.
 
-Name:       wxWidgets
+Name:       wxGTK3
 Version:    3.3.1
 Release:    1%{?dist}
 Summary:    A library for creating graphical user interfaces
@@ -12,9 +13,13 @@ Source0:    %{url}/releases/download/v%{version}/wxWidgets-%{version}.tar.bz2
 %global debug_package %{nil}
 %global debugsource_package %{nil}
 
-BuildRequires: gcc-c++ cmake cmake-rpm-macros gtk3-devel webkit2gtk4.1-devel
-BuildRequires: nanosvg-devel libmspack-devel xz-devel SDL3-devel
-BuildRequires: pkgconfig(glib-2.0) pkgconfig(zlib) pkgconfig(expat)
+BuildRequires: make gcc-c++ gtk3-devel autoconf
+BuildRequires: webkit2gtk4.1-devel zlib-devel libpng-devel libjpeg-devel
+BuildRequires: libtiff-devel expat-devel SDL2-devel libGLU-devel libSM-devel
+BuildRequires: gstreamer1-plugins-bad-free-devel gettext cppunit-devel libmspack-devel
+BuildRequires: doxygen graphviz libsecret-devel libcurl-devel
+BuildRequires: glibc-langpack-en mesa-libEGL xclock xorg-x11-server-Xvfb
+BuildRequires: python3-httpbin vulkan-loader
 
 %description
 wxWidgets is a free and open-source C++ library for creating cross-platform graphical user interfaces (GUIs).
@@ -27,11 +32,11 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
 %cmake  -DwxBUILD_SHARED=ON \
         -DwxBUILD_MONOLITHIC=OFF \
         -DwxBUILD_TOOLKIT=gtk3 \
+        wxUSE_NANOSVG=sys \
         -DwxUSE_WEBVIEW=ON \
         -DwxUSE_LIBLZMA=ON \
         -DwxUSE_LIBSDL=ON \
-        -DwxUSE_LIBMSPACK=ON \
-        -DCMAKE_INSTALL_LIBDIR=%{_libdir}
+        -DwxUSE_LIBMSPACK=ON
 %cmake_build
 
 %install
@@ -55,7 +60,7 @@ includedir=\${prefix}/include/wx-3.3
 
 Name: wxGTK3
 Description: wxWidgets GUI library (GTK3 port)
-Version: %version
+Version: %{version}
 Libs: $(cat wx.libs)
 Cflags: $(cat wx.cflags)
 EOF
@@ -68,10 +73,10 @@ rm -f wx.libs wx.cflags
 %{_bindir}/wxrc*
 
 # Libraries
-%{_libdir}/libwx_*.so.*
-%{_libdir}/libwx_*.so
+/usr/lib/libwx_*.so.*
+/usr/lib/libwx_*.so
+/usr/lib/wx/
 %{_includedir}/wx-3.3/
-%{_libdir}/wx/
 %{_libdir}/pkgconfig/wxgtk3.pc
 %{_datadir}/locale/*
 
