@@ -29,7 +29,7 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
 %cmake  -DwxBUILD_SHARED=ON \
         -DwxBUILD_MONOLITHIC=OFF \
         -DwxBUILD_TOOLKIT=gtk3 \
-        wxUSE_NANOSVG=sys \
+        -DwxUSE_NANOSVG=sys \
         -DwxUSE_WEBVIEW=ON \
         -DwxUSE_LIBLZMA=ON \
         -DwxUSE_LIBSDL=ON \
@@ -39,6 +39,18 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
 %install
 rm -rf %{buildroot}
 %cmake_install
+
+## Fix absolute symlinks pointing into BUILDROOT
+for f in %{buildroot}%{_bindir}/wx-config %{buildroot}%{_bindir}/wxrc; do
+    if [ -L "$f" ]; then
+        target=$(readlink "$f")
+        # Convert absolute symlink to relative if it points into BUILDROOT
+        if [[ "$target" == %{buildroot}* ]]; then
+            rel_target=$(realpath --relative-to=$(dirname "$f") "$target")
+            ln -sf "$rel_target" "$f"
+        fi
+    fi
+done
 
 ## Create pkgconfig directory
 mkdir -p %{buildroot}%{_libdir}/pkgconfig
