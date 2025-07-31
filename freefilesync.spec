@@ -13,6 +13,9 @@ URL:        http://www.freefilesync.org/
 #Source0:    http://www.freefilesync.org/download/%FreeFileSync_%%{version}_Source.zip
 Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{version}/FreeFileSync-%{version}.tar.gz
 
+Source1: https://raw.githubusercontent.com/thangckt/stuff/refs/heads/copr_spec/patch/FreeFileSync/00_zen_string-traits_wxstring-support.patch
+Source2: https://raw.githubusercontent.com/thangckt/stuff/refs/heads/copr_spec/patch/FreeFileSync/01_zen_type-traits_cstdint.patch
+
 %global debug_package %{nil}
 %global _enable_debug_package 0
 %global debugsource_package %{nil}
@@ -30,15 +33,11 @@ Requires:       wxGTK3 >= 3.3.0
 %description
 FreeFileSync is an open-source software that helps synchronize files and folders on Windows, Linux, and macOS. It is optimized for backup speed and visual usability.
 
-Patch0: https://raw.githubusercontent.com/thangckt/stuff/refs/heads/copr_spec/patch/FreeFileSync/00_zen_string-traits_wxstring-support.patch
-Patch1: https://raw.githubusercontent.com/thangckt/stuff/refs/heads/copr_spec/patch/FreeFileSync/01_zen_type-traits_cstdint.patch
-
 %prep
 %setup -n FreeFileSync-%{version}
 
-# Apply all patches (one by one)
-%patch 0 -p1
-%patch 1 -p1
+# Apply all patches
+%autosetup -p1 -v
 
 # Remove wxWidgets exception guard
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
