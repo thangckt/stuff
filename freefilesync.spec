@@ -24,6 +24,7 @@ BuildRequires:  gtk3-devel gtk+-devel wxGTK-devel glib2-devel openssl-devel expa
 BuildRequires:  desktop-file-utils libmspack-devel libsecret-devel gspell-devel libnotify-devel webkit2gtk4.1-devel gstreamer1-devel
 BuildRequires:  pkgconfig(liblzma) pkgconfig(libmspack) pkgconfig(libcurl) pkgconfig(libssh2) pkgconfig(glib-2.0) pkgconfig(zlib) pkgconfig(expat)
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(webkit2gtk-4.1) pkgconfig(libselinux) pkgconfig(libidn2)
+BindRequires:   pkgconfig(wx_gtk3u-3.3)
 BuildRequires:  wxWidgets >= 3.3.0
 Requires:       wxWidgets >= 3.3.0
 
@@ -54,8 +55,8 @@ sed -i '/refGlobalColorHook()/ s/^/\/\/ /' wx+/darkmode.cpp
 export PATH=%{_bindir}:$PATH
 
 ## Ensure CXXFLAGS are passed directly to make, not just exported. The makefiles might not automatically pick up exported CXXFLAGS
-export CXXFLAGS_FFS="$(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux wxgtk3u-3.3) -I%{_builddir}/FreeFileSync-%{version}"
-export LDFLAGS_FFS="$(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libselinux wxgtk3u-3.3)"
+export CXXFLAGS_FFS="$(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux wxwidgets wx_gtk3u-3.3) -I%{_builddir}/FreeFileSync-%{version}"
+export LDFLAGS_FFS="$(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libselinux wxwidgets wx_gtk3u-3.3)"
 
 ## Build FreeFileSync and RealTimeSync. Pass CXXFLAGS and LDFLAGS directly to make
 %make_build -C FreeFileSync/Source CXXFLAGS="$CXXFLAGS_FFS" LDFLAGS="$LDFLAGS_FFS"
