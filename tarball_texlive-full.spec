@@ -102,7 +102,7 @@ fi
 %files
 /opt/texlive
 %license /opt/texlive/%{version}/LICENSE.CTAN
-%config(noreplace) /etc/profile.d/texlive.sh
+#%config(noreplace) /etc/profile.d/texlive.sh
 
 %changelog
 %autochangelog
