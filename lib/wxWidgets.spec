@@ -41,6 +41,7 @@ find %{buildroot} -name "*.la" -delete
 %{_bindir}/wxrc
 %{_bindir}/wxrc-3.3
 %{_libdir}/libwx_*.so.*
+%{_libdir}/libwx_*.so
 
 # Pkgconfig and headers
 %{_includedir}/wx-3.3/
