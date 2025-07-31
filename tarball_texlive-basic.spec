@@ -53,8 +53,9 @@ EOF
 mkdir -p %{buildroot}/opt
 ./texlive_dir/install-tl -profile texlive.profile -no-interaction -gui text
 
-## Fix python shebangs
+## Fix invalid /usr/bin/python shebangs BEFORE brp-mangle-shebangs runs
 grep -rl '^#! */usr/bin/python$' %{buildroot}/opt/texlive/%{version} \
+  | grep '\.py$' \
   | xargs sed -i '1s|^#! */usr/bin/python$|#!/usr/bin/python3|'
 
 ## Drop executable bit from files without a valid shebang
