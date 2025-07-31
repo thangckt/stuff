@@ -1,6 +1,7 @@
 ### REF: https://tug.org/texlive/
+# Note: use "texlive-Basic" to avoid the package "texlive-basic" from Fedora repo.
 
-Name:           texlive-basic
+Name:           texlive-Basic
 Version:        2025
 Release:        1%{?dist}
 Summary:        TeX Live distribution
