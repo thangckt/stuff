@@ -93,11 +93,14 @@ done
 
 %preun
 ## Uninstall alternatives
-if [ "$1" -eq 0 ]; then  # final removal
-  for bin in $(ls /opt/texlive/%{version}/bin/x86_64-linux); do
+if [ "$1" -eq 0 ]; then  # final uninstall
+  for bin in $(ls /opt/texlive/%{version}//bin/x86_64-linux); do
     altname="${bin%%-*}"
-    alternatives --remove $altname /opt/texlive/%{version}/bin/x86_64-linux/$bin
-    [ -f "/usr/bin/${altname}.backup-by-texlive-full" ] && mv "/usr/bin/${altname}.backup-by-texlive-full" "/usr/bin/$altname"
+    path="/opt/texlive/%{version}//bin/x86_64-linux/$bin"
+    # Only remove if this path is currently registered
+    if alternatives --display "$altname" | grep -q "$path"; then
+      alternatives --remove "$altname" "$path"
+    fi
   done
 fi
 
