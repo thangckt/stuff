@@ -53,7 +53,15 @@ EOF
 mkdir -p %{buildroot}/opt
 ./texlive_dir/install-tl -profile texlive.profile -no-interaction -gui text
 
-# Clean up files containing buildroot paths
+## Fix python shebangs
+grep -rl '^#! */usr/bin/python$' %{buildroot}/opt/texlive/%{version} \
+  | xargs sed -i '1s|^#! */usr/bin/python$|#!/usr/bin/python3|'
+
+## Drop executable bit from files without a valid shebang
+find %{buildroot}/opt/texlive/%{version} -type f -executable \
+  ! -exec grep -Iq '^#!' {} \; -exec chmod -x {} \;
+
+## Clean up files containing buildroot paths
 rm -f %{buildroot}/opt/texlive/%{version}/install-tl.log
 rm -f %{buildroot}/opt/texlive/%{version}/tlpkg/texlive.profile
 find %{buildroot}/opt/texlive/%{version}/texmf-var -type f \( -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' \) -delete
@@ -62,6 +70,8 @@ find %{buildroot}/opt/texlive/%{version}/texmf-var -type f \( -name '*.log' -o -
 mkdir -p %{buildroot}/etc/profile.d
 cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
 export PATH=/opt/texlive/%{version}/bin/x86_64-linux:\$PATH
+export MANPATH=/opt/texlive/%{version}/texmf-dist/doc/man:\$MANPATH
+export INFOPATH=/opt/texlive/%{version}/texmf-dist/doc/info:\$INFOPATH
 EOF
 
 %post
