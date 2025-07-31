@@ -66,13 +66,6 @@ find %{buildroot}/opt/texlive/%{version} -type f -exec sed -i \
   -e '1s|^#! */usr/bin/env python$|#!/usr/bin/python3|' \
   {} +
 
-## Fix permissions: Ensure all real binaries are executable
-find %{buildroot}/opt/texlive/%{version}/bin -type f -exec chmod +x {} \;
-
-## Drop +x on files without a shebang (avoid breaking brp-mangle-shebangs)
-find %{buildroot}/opt/texlive/%{version} -type f -executable \
-  ! -exec grep -q '^#!' {} \; -exec chmod -x {} \;
-
 ## Clean up files containing buildroot paths
 rm -f %{buildroot}/opt/texlive/%{version}/install-tl.log
 rm -f %{buildroot}/opt/texlive/%{version}/tlpkg/texlive.profile
