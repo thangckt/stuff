@@ -58,14 +58,6 @@ cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
 export PATH=/opt/texlive/%{version}/bin/x86_64-linux:\$PATH
 EOF
 
-## remove any residual leakage (e.g. logs, .map, .log) that install-tl writes during post-install scriptlets
-find %{buildroot} -type f -exec sed -i 's|/builddir/build/BUILDROOT||g' {} +
-
-## Validate build output before packaging:
-%check
-%{buildroot}/opt/texlive/%{version}/bin/x86_64-linux/latex -version
-%{buildroot}/opt/texlive/%{version}/bin/x86_64-linux/tlmgr --version
-
 %post
 %{buildroot}/opt/texlive/%{version}/bin/x86_64-linux/tlmgr update --self --all || :
 
