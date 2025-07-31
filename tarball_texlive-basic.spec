@@ -30,8 +30,9 @@ mv "$texlive_dir" ../texlive_dir
 cd ..
 
 # Create a custom install profile
+# Use ${RPM_BUILD_ROOT} to ensure buildroot path is expanded correctly at shell execution time
 cat <<EOF > texlive.profile
-selected_scheme scheme-minimal
+selected_scheme scheme-basic
 TEXDIR ${RPM_BUILD_ROOT}/opt/texlive/%{version}
 TEXMFLOCAL ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-local
 TEXMFSYSVAR ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-var
@@ -52,6 +53,17 @@ EOF
 mkdir -p %{buildroot}/opt
 ./texlive_dir/install-tl -profile texlive.profile -no-interaction -gui text
 
+# Crucial step: Sanitize files for buildroot references. Filter for text files only to avoid corrupting binaries.
+find %{buildroot} -type f -print0 | xargs -0 grep -l "$RPM_BUILD_ROOT" | while read -r f; do
+    # Check if the file is likely a text file before attempting sed
+    if file -b --mime-encoding "$f" | grep -q 'charset=us-ascii\|charset=utf-8\|charset=iso-8859-1'; then
+        sed -i "s|$RPM_BUILD_ROOT||g" "$f"
+    fi
+done
+
+# Clean up common log/profile/map files that might contain buildroot paths and are not essential for the installed package
+find %{buildroot} -type f \( -name "*.log" -o -name "*.profile" -o -name "*.map" \) -delete
+
 ## export some environment variables (PATH, MANPATH, etc.).
 mkdir -p %{buildroot}/etc/profile.d
 cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
@@ -59,12 +71,12 @@ export PATH=/opt/texlive/%{version}/bin/x86_64-linux:\$PATH
 EOF
 
 %post
-%{buildroot}/opt/texlive/%{version}/bin/x86_64-linux/tlmgr update --self --all || :
-
+# Use the installed tlmgr, not the buildroot one. The `|| :` allows the post-scriptlet to not fail if update encounters issues
+/opt/texlive/%{version}/bin/x86_64-linux/tlmgr update --self --all || :
 
 %files
 /opt/texlive
-%{_bindir}/*
+%ghost %{_bindir}/*
 %license /opt/texlive/%{version}/LICENSE.CTAN
 %config(noreplace) /etc/profile.d/texlive.sh
 
