@@ -56,7 +56,7 @@ mkdir -p %{buildroot}/opt
 # Clean up files containing buildroot paths
 rm -f %{buildroot}/opt/texlive/%{version}/install-tl.log
 rm -f %{buildroot}/opt/texlive/%{version}/tlpkg/texlive.profile
-find %{buildroot}/opt/texlive/%{version}/texmf-var -type f \( -name '*.log' -o -name '*.map' -o -name '*.fmt' \) -delete
+find %{buildroot}/opt/texlive/%{version}/texmf-var -type f \( -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' \) -delete
 
 ## export environment variables (PATH, MANPATH, etc.).
 mkdir -p %{buildroot}/etc/profile.d
