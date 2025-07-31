@@ -89,6 +89,7 @@ rm -f wx.libs wx.cflags
 %{_includedir}/wx-3.3/
 %{_libdir}/pkgconfig/wxgtk3.pc
 %{_datadir}/locale/*
+%{_libdir}/cmake/wxWidgets/
 
 %changelog
 %autochangelog
