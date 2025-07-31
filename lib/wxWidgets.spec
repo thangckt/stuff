@@ -15,11 +15,9 @@ Source0:    %{url}/releases/download/v%{version}/wxWidgets-%{version}.tar.bz2
 
 BuildRequires: make gcc-c++ gtk3-devel autoconf
 BuildRequires: webkit2gtk4.1-devel zlib-devel libpng-devel libjpeg-devel
-BuildRequires: libtiff-devel expat-devel SDL2-devel libGLU-devel libSM-devel
-BuildRequires: gstreamer1-plugins-bad-free-devel gettext cppunit-devel libmspack-devel
-BuildRequires: doxygen graphviz libsecret-devel libcurl-devel
-BuildRequires: glibc-langpack-en mesa-libEGL xclock xorg-x11-server-Xvfb
-BuildRequires: python3-httpbin vulkan-loader
+BuildRequires: libtiff-devel expat-devel SDL2-devel
+BuildRequires: gstreamer1-plugins-bad-free-devel libmspack-devel
+BuildRequires: libsecret-devel libcurl-devel glibc-langpack-en mesa-libEGL
 
 %description
 wxWidgets is a free and open-source C++ library for creating cross-platform graphical user interfaces (GUIs).
