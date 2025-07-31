@@ -17,7 +17,7 @@ Obsoletes: texlive-core
 Provides: texlive
 
 BuildRequires:  perl wget tar xz
-Requires:       perl
+Requires:       perl latexmk
 
 %description
 TeX Live provides a comprehensive TeX system for GNU/Linux. This RPM installs a basic TeX Live tree in /opt/texlive.
