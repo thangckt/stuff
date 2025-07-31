@@ -22,6 +22,9 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
 %prep
 %setup -q -n wxWidgets-%{version}
 
+# Work around broken bakefile install (Remove or comment out the bakefile-related install section)
+sed -i '/^install-data-local:/,/^$/d' build/Makefile.in
+
 %build
 rm -rf build
 mkdir build
@@ -37,9 +40,6 @@ make -C build DESTDIR=%{buildroot} install
 # Remove unused libtool files
 find %{buildroot} -name "*.la" -delete
 
-# Remove bakefile and aclocal stuff (if still created)
-rm -rf %{buildroot}%{_datadir}/bakefile
-rm -f %{buildroot}%{_datadir}/aclocal/wxwin.m4
 
 %files
 %license docs/licence.txt
