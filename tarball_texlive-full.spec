@@ -58,9 +58,12 @@ mkdir -p %{buildroot}/opt
 ./texlive_dir/install-tl -profile texlive.profile -no-interaction -gui text
 
 ## Fix ambiguous python shebangs to /usr/bin/python3 before brp-mangle-shebangs runs
-find %{buildroot}/opt/texlive/%{version} -type f -name '*.py' -exec sed -i \
-  -e '1s|^#! */usr/bin/python$|#!/usr/bin/python3|' \
-  -e '1s|^#! */usr/bin/env python$|#!/usr/bin/python3|' {} +
+find %{buildroot}/opt/texlive/%{version} -type f -exec sed -i \
+  -e '1s|^#! */usr/bin/python *$|#!/usr/bin/python3|' \
+  -e '1s|^#! */usr/bin/python[ ]\+-O$|#!/usr/bin/python3|' \
+  -e '1s|^#! */usr/bin/env[ ]\+python$|#!/usr/bin/python3|' \
+  -e '1s|^#! */usr/bin/env[ ]\+python[ ]\+-O$|#!/usr/bin/python3|' \
+  {} +
 
 ## Drop executable bit from non-script files that are wrongly marked executable
 find %{buildroot}/opt/texlive/%{version} -type f -executable \
