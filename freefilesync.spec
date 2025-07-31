@@ -36,9 +36,9 @@ Patch1: https://raw.githubusercontent.com/thangckt/stuff/refs/heads/copr_spec/pa
 %prep
 %setup -n FreeFileSync-%{version}
 
-# Apply all patches
-%autopatch -p1 -a
-
+# Apply all patches (one by one)
+%autopatch -p1 -n 0
+%autopatch -p1 -n 1
 
 # Remove wxWidgets exception guard
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
