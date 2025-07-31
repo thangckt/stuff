@@ -32,24 +32,13 @@ make -j$(nproc)
 rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
 
-## Ensure the target pkgconfig directory exists in case it's not created by make install
-mkdir -p %{buildroot}%{_libdir}/pkgconfig
-
-# Check if pkgconfig files were installed to the default /usr/lib/pkgconfig instead of /usr/lib64/pkgconfig and move them to the correct location.
-if [ -d %{buildroot}%{_prefix}/lib/pkgconfig ]; then
-    mv %{buildroot}%{_prefix}/lib/pkgconfig/wx*.pc %{buildroot}%{_libdir}/pkgconfig/ || :
-    rmdir %{buildroot}%{_prefix}/lib/pkgconfig 2>/dev/null || :
-fi
-
 ## Remove unused libtool files
 find %{buildroot} -name "*.la" -delete
-
 
 %files
 %license docs/licence.txt
 %{_bindir}/wx-config
 %{_libdir}/libwx_*.so.*
-%{_libdir}/pkgconfig/wx*.pc
 %{_includedir}/wx-3.3/
 %{_libdir}/wx/
 
