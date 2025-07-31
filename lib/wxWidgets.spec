@@ -23,35 +23,40 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
 %setup -q -n wxWidgets-%{version}
 
 %build
-# Perform an in-source build to simplify path handling. This avoids issues with relative paths in out-of-source builds for some make targets.
-# The configure script and make will be run directly from the extracted source directory.
-./configure --prefix=%{_prefix} --libdir=%{_libdir} --with-gtk=3 --enable-webview --disable-rpath
-make -j$(nproc)
+%cmake -DwxBUILD_SHARED=ON \
+       -DwxBUILD_MONOLITHIC=OFF \
+       -DwxBUILD_TOOLKIT=gtk3 \
+       -DwxUSE_WEBVIEW=ON \
+       -DwxUSE_WEBVIEW_WEBKIT=ON \
+       -DwxUSE_WEBVIEW_EDGE=OFF \
+       -DwxUSE_WEBVIEW_IE=OFF \
+       -DwxUSE_RPATH=OFF \
+       -DCMAKE_INSTALL_LIBDIR=%{_libdir}
+%cmake_build
 
 %install
 rm -rf %{buildroot}
-make DESTDIR=%{buildroot} install
+%cmake_install
 
-## Remove unused libtool files
-find %{buildroot} -name "*.la" -delete
 
 %files
 %license docs/licence.txt
+
+# Binaries and config tools
 %{_bindir}/wx-config
-%{_bindir}/wxrc
-%{_bindir}/wxrc-3.3
+%{_bindir}/wxrc*
+
+# Libraries
 %{_libdir}/libwx_*.so.*
 %{_libdir}/libwx_*.so
-
-# Pkgconfig and headers
 %{_includedir}/wx-3.3/
 %{_libdir}/wx/
+%{_libdir}/pkgconfig/wx*.pc
 
-# Other libraries and resources
+# Other files
 %{_datadir}/locale/*/LC_MESSAGES/wxstd-3.3.mo
 %{_datadir}/aclocal/wxwin.m4
-%{_datadir}/bakefile/presets/*.bkl
-%{_datadir}/bakefile/presets/wx_presets.py
+%{_datadir}/bakefile/
 
 %changelog
 %autochangelog
