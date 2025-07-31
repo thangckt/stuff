@@ -25,7 +25,7 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
 %build
 # Perform an in-source build to simplify path handling. This avoids issues with relative paths in out-of-source builds for some make targets.
 # The configure script and make will be run directly from the extracted source directory.
-./configure --prefix=%{_prefix} --with-gtk=3 --enable-webview --disable-rpath
+./configure --prefix=%{_prefix} --libdir=%{_libdir} --with-gtk=3 --enable-webview --disable-rpath
 make -j$(nproc)
 
 %install
