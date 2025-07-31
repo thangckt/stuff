@@ -30,6 +30,8 @@ Requires:       wxGTK3 >= 3.3.0
 %description
 FreeFileSync is an open-source software that helps synchronize files and folders on Windows, Linux, and macOS. It is optimized for backup speed and visual usability.
 
+Patch0: https://example.com/patches/freefilesync-wxstring-support.patch
+
 %prep
 %setup -n FreeFileSync-%{version}
 

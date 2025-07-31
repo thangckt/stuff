@@ -1,0 +1,15 @@
+--- a/zen/string_traits.h
++++ b/zen/string_traits.h
+@@ -3,6 +3,13 @@
+ #include <string_view>
+ #include <type_traits>
++#include <wx/string.h>
+
+ namespace impl {
++
++template <>
++class StringTraits<wxString> {
++public:
++    using CharType = wchar_t;
++    enum { isStringLike = true };
++};
