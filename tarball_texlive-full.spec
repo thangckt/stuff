@@ -13,8 +13,10 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 ExclusiveArch:  x86_64
 
 ## Force replace the Fedora TeX Live
-Obsoletes: texlive-core
-Provides: texlive
+Obsoletes:      texlive-core
+Obsoletes:      texlive-dist
+Obsoletes:      texlive-latex
+Provides:       texlive
 
 BuildRequires:  perl wget tar xz
 Requires:       perl latexmk
@@ -73,7 +75,7 @@ rm -f %{buildroot}/opt/texlive/%{version}/install-tl.log
 rm -f %{buildroot}/opt/texlive/%{version}/tlpkg/texlive.profile
 find %{buildroot}/opt/texlive/%{version}/texmf-var -type f \( -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' \) -delete
 
-## export environment variables (PATH, MANPATH, etc.).
+## export environment variables (PATH, MANPATH, etc.) (not use).
 #mkdir -p %{buildroot}/etc/profile.d
 #cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
 #export PATH=/opt/texlive/%{version}/bin/x86_64-linux:\$PATH
@@ -83,26 +85,25 @@ find %{buildroot}/opt/texlive/%{version}/texmf-var -type f \( -name '*.log' -o -
 
 %post
 ## registers each binary file in opt/ folder of TeX Live 2025
-for bin in $(ls /opt/texlive/%{version}/bin/x86_64-linux); do
-    altname="${bin%%-*}"  # crude base name
-    if [ -f "/usr/bin/$altname" ] && [ ! -L "/usr/bin/$altname" ]; then
-        mv "/usr/bin/$altname" "/usr/bin/${altname}.backup-by-texlive-full"
+for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
+    bin_name=$(basename "$bin_path")
+    if [ -f "/usr/bin/$bin_name" ] && [ ! -L "/usr/bin/$bin_name" ]; then
+        mv "/usr/bin/$bin_name" "/usr/bin/${bin_name}.backup-by-texlive-full"
     fi
-    alternatives --install /usr/bin/$altname $altname /opt/texlive/%{version}/bin/x86_64-linux/$bin 100
+    alternatives --install /usr/bin/$bin_name $bin_name /opt/texlive/%{version}/bin/x86_64-linux/$bin_name 100
 done
 
 %preun
 ## Uninstall alternatives
-if [ "$1" -eq 0 ]; then  # final uninstall
-  for bin in $(ls /opt/texlive/%{version}//bin/x86_64-linux); do
-    altname="${bin%%-*}"
-    path="/opt/texlive/%{version}//bin/x86_64-linux/$bin"
-    # Only remove if this path is currently registered
-    if alternatives --display "$altname" | grep -q "$path"; then
-      alternatives --remove "$altname" "$path"
-    fi
-  done
+if [ "$1" -eq 0 ]; then
+    for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
+        bin_name=$(basename "$bin_path")
+        if alternatives --display "$bin_name" | grep -q "$bin_path"; then
+            alternatives --remove "$bin_name" "$bin_path"
+        fi
+    done
 fi
+
 
 %files
 /opt/texlive
