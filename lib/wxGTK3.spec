@@ -41,13 +41,14 @@ rm -rf %{buildroot}
 %cmake_install
 
 ## Fix absolute symlinks pointing into BUILDROOT
-for f in %{buildroot}%{_bindir}/wx-config %{buildroot}%{_bindir}/wxrc; do
-    if [ -L "$f" ]; then
-        target=$(readlink "$f")
-        # Convert absolute symlink to relative if it points into BUILDROOT
-        if [[ "$target" == %{buildroot}* ]]; then
-            rel_target=$(realpath --relative-to=$(dirname "$f") "$target")
-            ln -sf "$rel_target" "$f"
+for bin in wx-config wxrc wxrc-3.3; do
+    path="%{buildroot}%{_bindir}/$bin"
+    if [ -L "$path" ]; then
+        target=$(readlink "$path")
+        # If the target is absolute and points inside the buildroot
+        if [[ "$target" = %{buildroot}* ]]; then
+            rel_target=$(realpath --relative-to=$(dirname "$path") "$target")
+            ln -sf "$rel_target" "$path"
         fi
     fi
 done
