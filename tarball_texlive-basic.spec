@@ -12,8 +12,9 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 
 ExclusiveArch:  x86_64
 
+## Force replace the Fedora TeX Live
+Obsoletes: texlive-core
 Provides: texlive
-Conflicts: texlive-*
 
 BuildRequires:  perl wget tar xz
 Requires:       perl
