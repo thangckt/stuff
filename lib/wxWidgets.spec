@@ -12,7 +12,7 @@ Source0:    %{url}/releases/download/v%{version}/wxWidgets-%{version}.tar.bz2
 %global debug_package %{nil}
 %global debugsource_package %{nil}
 
-BuildRequires: gcc-c++ gtk3-devel webkit2gtk4.1-devel
+BuildRequires: gcc-c++ cmake gtk3-devel webkit2gtk4.1-devel
 BuildRequires: pkgconfig(glib-2.0) pkgconfig(zlib) pkgconfig(expat)
 
 %description
