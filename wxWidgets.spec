@@ -12,7 +12,7 @@ Source0:    %{url}/releases/download/v%{version}/wxWidgets-%{version}.tar.bz2
 %global debug_package %{nil}
 %global debugsource_package %{nil}
 
-BuildRequires: gcc-c++ gtk3-devel webkit2gtk4.1-devel SDL3-devel libmspack-devel
+BuildRequires: gcc-c++ gtk3-devel webkit2gtk4.1-devel
 BuildRequires: pkgconfig(glib-2.0) pkgconfig(zlib) pkgconfig(expat)
 
 %description
@@ -32,7 +32,16 @@ make -j$(nproc)
 rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
 
-# Remove unused libtool files
+## Ensure the target pkgconfig directory exists in case it's not created by make install
+mkdir -p %{buildroot}%{_libdir}/pkgconfig
+
+# Check if pkgconfig files were installed to the default /usr/lib/pkgconfig instead of /usr/lib64/pkgconfig and move them to the correct location.
+if [ -d %{buildroot}%{_prefix}/lib/pkgconfig ]; then
+    mv %{buildroot}%{_prefix}/lib/pkgconfig/wx*.pc %{buildroot}%{_libdir}/pkgconfig/ || :
+    rmdir %{buildroot}%{_prefix}/lib/pkgconfig 2>/dev/null || :
+fi
+
+## Remove unused libtool files
 find %{buildroot} -name "*.la" -delete
 
 
