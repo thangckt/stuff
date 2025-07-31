@@ -57,19 +57,14 @@ EOF
 mkdir -p %{buildroot}/opt
 ./texlive_dir/install-tl -profile texlive.profile -no-interaction -gui text
 
-## Fix ambiguous python shebangs BEFORE brp-mangle-shebangs runs
-# Target scripts using #!/usr/bin/python
-grep -rl '^#! */usr/bin/python$' %{buildroot}/opt/texlive/%{version} \
-  | grep '\.py$' \
-  | xargs sed -i '1s|^#! */usr/bin/python$|#!/usr/bin/python3|'
+## Fix ambiguous python shebangs to /usr/bin/python3 before brp-mangle-shebangs runs
+find %{buildroot}/opt/texlive/%{version} -type f -name '*.py' -exec sed -i \
+  -e '1s|^#! */usr/bin/python$|#!/usr/bin/python3|' \
+  -e '1s|^#! */usr/bin/env python$|#!/usr/bin/python3|' {} +
 
-# Target scripts using #!/usr/bin/env python
-grep -rl '^#! */usr/bin/env python$' %{buildroot}/opt/texlive/%{version} \
-  | grep '\.py$' \
-  | xargs sed -i '1s|^#! */usr/bin/env python$|#!/usr/bin/python3|'
-## Drop executable bit from files without a valid shebang
+## Drop executable bit from non-script files that are wrongly marked executable
 find %{buildroot}/opt/texlive/%{version} -type f -executable \
-  ! -exec grep -Iq '^#!' {} \; -exec chmod -x {} \;
+  ! -exec grep -q '^#!' {} \; -exec chmod -x {} \;
 
 ## Clean up files containing buildroot paths
 rm -f %{buildroot}/opt/texlive/%{version}/install-tl.log
