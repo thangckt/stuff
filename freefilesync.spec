@@ -34,22 +34,27 @@ FreeFileSync is an open-source software that helps synchronize files and folders
 %prep
 %setup -n FreeFileSync-%{version}
 
-# Remove wxWidgets exception guard
+## Remove wxWidgets exception guard
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/RealTimeSync/application.cpp
 
-# Remove hardcoded GTK2 usage from FreeFileSync makefile
+## Remove hardcoded GTK2 usage from FreeFileSync makefile
 sed -i 's/pkg-config --cflags gtk+-2.0//g' FreeFileSync/Source/Makefile
 sed -i 's|-isystem/usr/include/gtk-2.0||g' FreeFileSync/Source/Makefile
 sed -i 's/pkg-config --cflags gtk+-2.0//g' FreeFileSync/Source/RealTimeSync/Makefile
 sed -i 's|-isystem/usr/include/gtk-2.0||g' FreeFileSync/Source/RealTimeSync/Makefile
 
-# Fix undefined MAX_SFTP_* constants in afs/sftp.cpp
+## Fix undefined MAX_SFTP_* constants in afs/sftp.cpp
 sed -i '1i#define MAX_SFTP_READ_SIZE 30000\n#define MAX_SFTP_OUTGOING_SIZE 30000' FreeFileSync/Source/afs/sftp.cpp
 
-# Patch out use of wxColorHook for wxWidgets 3.3+
+## Patch out use of wxColorHook for wxWidgets 3.3+
 sed -i '/class SysColorsHook/,/^}/ s/^/\/\/ /' wx+/darkmode.cpp
 sed -i '/refGlobalColorHook()/ s/^/\/\/ /' wx+/darkmode.cpp
+
+## Patch to use C++17 `std::uncaught_exceptions` or C++11 `std::uncaught_exception` fallback
+sed -i 's|std::uncaught_exceptions()|uncaught_exceptions()|g' zen/scope_guard.h
+sed -i 's|uncaught_exceptions()|(__cpp_lib_uncaught_exceptions ? std::uncaught_exceptions() : std::uncaught_exception() ? 1 : 0)|g' zen/scope_guard.h
+
 
 %build
 export PATH=%{_bindir}:$PATH
