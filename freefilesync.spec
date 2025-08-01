@@ -51,9 +51,8 @@ sed -i '1i#define MAX_SFTP_READ_SIZE 30000\n#define MAX_SFTP_OUTGOING_SIZE 30000
 sed -i '/class SysColorsHook/,/^}/ s/^/\/\/ /' wx+/darkmode.cpp
 sed -i '/refGlobalColorHook()/ s/^/\/\/ /' wx+/darkmode.cpp
 
-## Patch to use C++17 `std::uncaught_exceptions` or C++11 `std::uncaught_exception` fallback
-sed -i 's|std::uncaught_exceptions()|uncaught_exceptions()|g' zen/scope_guard.h
-sed -i 's|uncaught_exceptions()|(__cpp_lib_uncaught_exceptions ? std::uncaught_exceptions() : std::uncaught_exception() ? 1 : 0)|g' zen/scope_guard.h
+## Patch to use C++11 std::uncaught_exception() as a fallback, as some C++23-enabled environments may have issues with std::uncaught_exceptions().
+sed -i 's|std::uncaught_exceptions()|std::uncaught_exception() ? 1 : 0|g' zen/scope_guard.h
 
 
 %build
