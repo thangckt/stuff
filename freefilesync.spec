@@ -60,15 +60,13 @@ sed -i 's|std::uncaught_exceptions() > exeptionCount_|std::uncaught_exceptions()
 ## Patch `zen/type_traits.h` to include the <cstdint> header.
 sed -i '1i#include <cstdint>' zen/type_traits.h
 
-## Patch `base/db_file.h` to fix undeclared `inserted` variables.
-## Use a more robust regex to handle whitespace variations.
-sed -i -E 's|^(.*)_files.insert\(\{fileKey, \{descFile, descPeer, compVar, size\}\}\);|\1const auto \[it, inserted\] = _files.insert(\{fileKey, \{descFile, descPeer, compVar, size\}\});|' FreeFileSync/Source/base/db_file.h
-sed -i -E 's|^(.*)_symlinks.insert\(\{fileKey, \{descLink, descPeer, compVar\}\}\);|\1const auto \[it, inserted\] = _symlinks.insert(\{fileKey, \{descLink, descPeer, compVar\}\});|' FreeFileSync/Source/base/db_file.h
+## Patch base/db_file.h to fix undeclared `inserted` variables.
+## Use a robust regex to capture the entire line and replace it with the C++17 structured binding.
+sed -i -E 's|(.+)_files\.insert\(\{fileKey, \{descFile, descPeer, compVar, size\}\}\);|\1const auto [it, inserted] = _files.insert(\{fileKey, \{descFile, descPeer, compVar, size\}\});|' FreeFileSync/Source/base/db_file.h
+sed -i -E 's|(.+)_symlinks\.insert\(\{fileKey, \{descLink, descPeer, compVar\}\}\);|\1const auto [it, inserted] = _symlinks.insert(\{fileKey, \{descLink, descPeer, compVar\}\});|' FreeFileSync/Source/base/db_file.h
 
-## Patch `base/algorithm.cpp` to fix the `warn_static` template error.
-## The function `warn_static` is defined later in the file and needs to be
-## forward-declared to be visible to the lambda function.
-sed -i '/#include "warn_static.h"/a template<typename T> void warn_static(const T&...);' FreeFileSync/Source/base/algorithm.cpp
+## Patch base/algorithm.cpp to fix the `warn_static` template error.
+sed -i '1i#include <exception>\n template<typename... T> void warn_static(const T&...);' FreeFileSync/Source/base/algorithm.cpp
 
 
 %build
