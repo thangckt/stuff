@@ -162,9 +162,9 @@ EOF
 
 ## Icons
 unzip -j FreeFileSync/Build/Resources/Icons.zip -d .
-for res in 48 64 128; do
+for res in 16 22 24 32 48 64 96 128 256 ; do
     dir=%{buildroot}%{_datadir}/icons/hicolor/${res}x${res}
-    mkdir -p ${dir}/apps ${dir}/mimetypes
+    mkdir -p ${dir}/apps
     magick convert FreeFileSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/FreeFileSync.png
     magick convert RealTimeSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/RealTimeSync.png
 done
