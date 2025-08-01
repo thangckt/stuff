@@ -135,11 +135,11 @@ pushd %{buildroot}%{_datadir}/%{name}/Resources/icons_fixed
 unzip ../Icons.zip || exit 1
 # Sanitize each PNG file using ImageMagick to ensure they're valid
 for img in *.png; do
-    convert "$img" "fixed_$img" || echo "Failed to fix $img"
+    convert "$img" "$img" || echo "Warning: failed to fix $img"
 done
 # Rebuild Icons.zip from the sanitized images
 rm -f ../Icons.zip
-zip ../Icons.zip fixed_*.png
+zip ../Icons.zip *.png
 # Clean up temporary files
 popd
 rm -rf %{buildroot}%{_datadir}/%{name}/Resources/icons_fixed
