@@ -87,7 +87,7 @@ sed -i '1i#include <cstring>' zen/argon2.cpp
 sed -i '/#include "file_path.h"/a #include "globals.h"' zen/file_path.cpp
 
 ## Fix runningOnMainThread error (remove assert)
-sed -i ' assert(runningOnMainThread());/d' zen/file_path.cpp
+sed -i '/assert(runningOnMainThread());/d' zen/file_path.cpp
 
 
 %build
