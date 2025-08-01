@@ -67,7 +67,7 @@ find %{buildroot}/opt/texlive/%{version} -type f -exec sed -i \
 ## Sanitize files to remove %{buildroot} in their paths
 buildroot_path="%{buildroot}"
 find %{buildroot}/opt/texlive/%{version} -type f \
-  \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.font' \) \
+  \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.conf' \) \
   -exec sed -i "s|$buildroot_path||g" {} +
 
 ## export environment variables (PATH, MANPATH, etc.) (not use).
