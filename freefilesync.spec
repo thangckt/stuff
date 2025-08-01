@@ -121,15 +121,22 @@ ls -l FreeFileSync/Build/
 
 
 %install
-# Manually install compiled binaries
+## Manually install compiled binaries
 install -Dm755 FreeFileSync/Build/Bin/FreeFileSync_x86_64 %{buildroot}%{_bindir}/FreeFileSync
 install -Dm755 FreeFileSync/Build/Bin/RealTimeSync_x86_64 %{buildroot}%{_bindir}/RealTimeSync
 
-# Install resource files used at runtime (icons, translations, config templates, etc.)
+##ANCHOR: Convert SVG icons to PNG to prevent runtime "assert 'IsOk()'" errors
+for svg_file in $(find FreeFileSync/Build/Resources -type f -name "*.svg"); do
+    png_file="${svg_file%.svg}.png"
+    magick -background none "${svg_file}" "${png_file}"
+    rm -f "${svg_file}"
+done
+
+## Install resource files used at runtime (icons, translations, config templates, etc.)
 mkdir -p %{buildroot}%{_datadir}/%{name}
 cp -a FreeFileSync/Build/Resources %{buildroot}%{_datadir}/%{name}/
 
-# Ensure no scripts marked executable
+## Ensure no scripts marked executable
 find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
 
 ## Desktop files
