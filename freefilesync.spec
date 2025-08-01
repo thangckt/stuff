@@ -83,6 +83,8 @@ sed -i '1i#include <zen/warn_static.h>' FreeFileSync/Source/ui/progress_indicato
 ## Fix memset error
 sed -i '1i#include <cstring>' zen/argon2.cpp
 
+## Fix Global<> in zen/file_path.cpp
+sed -i '/#include "file_path.h"/a #include "global.h"' zen/file_path.cpp
 
 
 %build
