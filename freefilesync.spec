@@ -58,11 +58,17 @@ sed -i 's|std::uncaught_exceptions()|std::uncaught_exceptions()|g' zen/scope_gua
 sed -i 's|std::uncaught_exceptions() > exeptionCount_|std::uncaught_exceptions() > exeptionCount_|g' zen/scope_guard.h
 
 ## Patch `zen/type_traits.h` to include the <cstdint> header.
-## The `uint32_t` type is not a built-in type and requires this header to be defined.
 sed -i '1i#include <cstdint>' zen/type_traits.h
 
-## Patch `base/db_file.h` to fix an undeclared `inserted` variable.
-sed -i 's|_files.insert({fileKey, {descFile, descPeer, compVar, size}});|const auto [it, inserted] = _files.insert({fileKey, {descFile, descPeer, compVar, size}});|g' FreeFileSync/Source/base/db_file.h
+## Patch `base/db_file.h` to fix undeclared `inserted` variables.
+## We need to replace the entire line with a correct C++17 structured binding.
+sed -i 's|_files.insert({fileKey, {descFile, descPeer, compVar, size}});|const auto [it, inserted] = _files.insert({fileKey, {descFile, descPeer, compVar, size}});|g' base/db_file.h
+sed -i 's|_symlinks.insert({fileKey, {descLink, descPeer, compVar}});|const auto [it, inserted] = _symlinks.insert({fileKey, {descLink, descPeer, compVar}});|g' base/db_file.h
+
+## Patch `base/algorithm.cpp` to fix the `warn_static` template error.
+## The function `warn_static` is defined later in the file and needs to be
+## forward-declared to be visible to the lambda function at line 1675.
+sed -i '/#include "warn_static.h"/a template<typename ...T> void warn_static(const T&...);' FreeFileSync/Source/base/algorithm.cpp
 
 
 %build
