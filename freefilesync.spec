@@ -58,7 +58,8 @@ sed -i 's|std::uncaught_exceptions()|std::uncaught_exceptions()|g' zen/scope_gua
 sed -i 's|std::uncaught_exceptions() > exeptionCount_|std::uncaught_exceptions() > exeptionCount_|g' zen/scope_guard.h
 
 ## Patch `zen/type_traits.h` to include the <cstdint> header.
-sed -i '/#include "platform.h"/a #include <cstdint>' zen/type_traits.h
+## The `uint32_t` type is not a built-in type and requires this header to be defined.
+sed -i '1i#include <cstdint>' zen/type_traits.h
 
 ## Patch `base/db_file.h` to fix an undeclared `inserted` variable.
 sed -i 's|_files.insert({fileKey, {descFile, descPeer, compVar, size}});|const auto [it, inserted] = _files.insert({fileKey, {descFile, descPeer, compVar, size}});|g' FreeFileSync/Source/base/db_file.h
