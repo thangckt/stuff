@@ -60,18 +60,15 @@ sed -i 's|std::uncaught_exceptions() > exeptionCount_|std::uncaught_exceptions()
 ## Patch `zen/type_traits.h` to include the <cstdint> header.
 sed -i '1i#include <cstdint>' zen/type_traits.h
 
-## Patch base/db_file.h correctly for structured bindings and `inserted`
-sed -i -E '
-s|_files\.insert\(\{fileKey, \{descFile, descPeer, compVar, size\}\}\);\s*assert\(inserted\);|const auto [it, inserted] = _files.insert({fileKey, {descFile, descPeer, compVar, size}});\n        assert(inserted);|
-s|_symlinks\.insert\(\{fileKey, \{descLink, descPeer, compVar\}\}\);\s*assert\(inserted\);|const auto [it, inserted] = _symlinks.insert({fileKey, {descLink, descPeer, compVar}});\n        assert(inserted);|
-' FreeFileSync/Source/base/db_file.h
-
-## Provide dummy warn_static function
+## Patch base/algorithm.cpp to ensure warn_static is defined
 sed -i '1i#include <exception>\n\
 template<typename... T> void warn_static(const T&...) {}\n' FreeFileSync/Source/base/algorithm.cpp
-
-## Fix missing semicolon after warn_static usage
 sed -i "s|warn_static(\"TODO: some users want to manually fix renamed folders/files: combine them here, don't require a re-compare!\")|warn_static(\"TODO: some users want to manually fix renamed folders/files: combine them here, don't require a re-compare!\");|" FreeFileSync/Source/base/algorithm.cpp
+
+## Patch base/db_file.h correctly for structured bindings and `inserted`
+sed -i -z 's|_files.insert({fileKey, {descFile, descPeer, compVar, size}});\n[ \t]*assert(inserted);|const auto [it, inserted] = _files.insert({fileKey, {descFile, descPeer, compVar, size}});\n        assert(inserted);|' FreeFileSync/Source/base/db_file.h
+sed -i -z 's|_symlinks.insert({fileKey, {descLink, descPeer, compVar}});\n[ \t]*assert(inserted);|const auto [it, inserted] = _symlinks.insert({fileKey, {descLink, descPeer, compVar}});\n        assert(inserted);|' FreeFileSync/Source/base/db_file.h
+
 
 
 %build
