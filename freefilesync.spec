@@ -51,19 +51,17 @@ sed -i '1i#define MAX_SFTP_READ_SIZE 30000\n#define MAX_SFTP_OUTGOING_SIZE 30000
 sed -i '/class SysColorsHook/,/^}/ s/^/\/\/ /' wx+/darkmode.cpp
 sed -i '/refGlobalColorHook()/ s/^/\/\/ /' wx+/darkmode.cpp
 
-## Patch `zen/scope_guard.h` to use a portable C++11 fallback for uncaught exceptions.
+## Patch `zen/scope_guard.h` to ensure <exception> is included and correct function is used.
 sed -i '/#include "legacy_compiler.h"/a #include <exception>' zen/scope_guard.h
 sed -i 's|std::uncaught_exception() ? 1 : 0|std::uncaught_exceptions()|g' zen/scope_guard.h
 sed -i 's|std::uncaught_exceptions()|std::uncaught_exceptions()|g' zen/scope_guard.h
 sed -i 's|std::uncaught_exceptions() > exeptionCount_|std::uncaught_exceptions() > exeptionCount_|g' zen/scope_guard.h
 
-## Patch `zen/type_traits.h` to include the <cstdint> header for fixed-width integer types.
-## The `uint32_t` type is not a built-in type and requires this header to be defined.
+## Patch `zen/type_traits.h` to include the <cstdint> header.
 sed -i '/#include "platform.h"/a #include <cstdint>' zen/type_traits.h
 
 ## Patch `base/db_file.h` to fix an undeclared `inserted` variable.
-sed -i '/_files.insert({fileKey, {descFile, descPeer, compVar, size}})/a \
-    const bool inserted = true;' FreeFileSync/Source/base/db_file.h
+sed -i 's|_files.insert({fileKey, {descFile, descPeer, compVar, size}});|const auto [it, inserted] = _files.insert({fileKey, {descFile, descPeer, compVar, size}});|g' FreeFileSync/Source/base/db_file.h
 
 
 %build
