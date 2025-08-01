@@ -76,6 +76,8 @@ sed -i '/assert(isLocked(lockStream_));/d' zen/stream_buffer.h
 sed -i '1i#include <zen/warn_static.h>' FreeFileSync/Source/afs/abstract.cpp
 sed -i 's|auto attrSourceNew = attr ? \*attr : attrSource;|attrSourceNew = attr ? *attr : attrSource;|' FreeFileSync/Source/afs/abstract.cpp
 
+## Patch ui/progress_indicator.cpp
+sed -i '1i#include <zen/warn_static.h>' FreeFileSync/Source/ui/progress_indicator.cpp
 
 
 %build
