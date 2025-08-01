@@ -19,10 +19,9 @@ Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{vers
 %global debugsource_build 0
 
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip patch
-BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
-BuildRequires:  gtk3-devel gtk+-devel wxGTK-devel glib2-devel openssl-devel expat-devel
+BuildRequires:  libcurl-devel libssh2-devel libselinux-devel gtk+-devel
+BuildRequires:  gtk3-devel glib2-devel openssl-devel expat-devel gettext-devel
 BuildRequires:  desktop-file-utils libmspack-devel libsecret-devel gspell-devel libnotify-devel webkit2gtk4.1-devel gstreamer1-devel
-BuildRequires:  gettext-devel
 BuildRequires:  pkgconfig(liblzma) pkgconfig(libmspack) pkgconfig(libcurl) pkgconfig(libssh2) pkgconfig(glib-2.0) pkgconfig(zlib) pkgconfig(expat)
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(webkit2gtk-4.1) pkgconfig(libselinux) pkgconfig(libidn2)
 BuildRequires:  wxGTK3 >= 3.3.0
@@ -69,8 +68,9 @@ sed -i "s|warn_static(\"TODO: some users want to manually fix renamed folders/fi
 sed -i 's|files.emplace(fileName, InSyncFile {descrL, descrR, cmpVar, fileSize});|const auto [it, inserted] = files.emplace(fileName, InSyncFile {descrL, descrR, cmpVar, fileSize});|' FreeFileSync/Source/base/db_file.h
 sed -i 's|symlinks.emplace(linkName, InSyncSymlink {descrL, descrR, cmpVar});|const auto [it, inserted] = symlinks.emplace(linkName, InSyncSymlink {descrL, descrR, cmpVar});|' FreeFileSync/Source/base/db_file.h
 
-## Patch to fix incorrect isLocked()
+## Patch to fix incorrect isLocked() in base/synchronization.cpp and zen/stream_buffer.h
 sed -i '/assert(isLocked(singleThread_));/d' FreeFileSync/Source/base/synchronization.cpp
+sed -i '/assert(isLocked(lockStream_));/d' zen/stream_buffer.h
 
 ## Patch afs/abstract.cpp
 sed -i '1i#include <zen/warn_static.h>' FreeFileSync/Source/afs/abstract.cpp
