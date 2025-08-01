@@ -22,6 +22,7 @@ BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip patch
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel
 BuildRequires:  gtk3-devel gtk+-devel wxGTK-devel glib2-devel openssl-devel expat-devel
 BuildRequires:  desktop-file-utils libmspack-devel libsecret-devel gspell-devel libnotify-devel webkit2gtk4.1-devel gstreamer1-devel
+BuildRequires:  gettext-devel
 BuildRequires:  pkgconfig(liblzma) pkgconfig(libmspack) pkgconfig(libcurl) pkgconfig(libssh2) pkgconfig(glib-2.0) pkgconfig(zlib) pkgconfig(expat)
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(webkit2gtk-4.1) pkgconfig(libselinux) pkgconfig(libidn2)
 BuildRequires:  wxGTK3 >= 3.3.0
