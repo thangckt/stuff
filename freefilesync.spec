@@ -57,6 +57,11 @@ sed -i 's|std::uncaught_exception() ? 1 : 0|std::uncaught_exceptions()|g' zen/sc
 sed -i 's|std::uncaught_exceptions()|std::uncaught_exceptions()|g' zen/scope_guard.h
 sed -i 's|std::uncaught_exceptions() > exeptionCount_|std::uncaught_exceptions() > exeptionCount_|g' zen/scope_guard.h
 
+## Patch `zen/type_traits.h` to include the <cstdint> header for fixed-width integer types.
+## The `uint32_t` type is not a built-in type and requires this header to be defined.
+sed -i '/#include "platform.h"/a #include <cstdint>' zen/type_traits.h
+
+
 %build
 export PATH=%{_bindir}:$PATH
 
