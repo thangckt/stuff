@@ -59,7 +59,7 @@ mkdir -p %{buildroot}%{_libdir}/pkgconfig
 # Use wx-config output to create a .pc file
 WX_CONFIG=%{buildroot}%{_bindir}/wx-config
 
-$WX_CONFIG --libs > wx.libs
+$WX_CONFIG --libs all > wx.libs
 $WX_CONFIG --cxxflags > wx.cflags
 
 cat > %{buildroot}%{_libdir}/pkgconfig/wxgtk3.pc <<EOF
