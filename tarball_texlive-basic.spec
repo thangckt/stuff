@@ -1,25 +1,25 @@
 ### REF: https://tug.org/texlive/
 
-Name: texlive-basic
-Version: 2025
-Release: 1%{?dist}
-Summary: TeX Live distribution
+Name:           texlive-basic
+Version:        2025
+Release:        1%{?dist}
+Summary:        TeX Live distribution
 
-License: GPLv2+
-URL: https://tug.org/texlive/
+License:        GPLv2+
+URL:            https://tug.org/texlive/
 #Source0:        http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
-Source0: https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{version}/install-tl-unx.tar.gz
+Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{version}/install-tl-unx.tar.gz
 
-ExclusiveArch: x86_64
+ExclusiveArch:  x86_64
 
 ## Force replace the Fedora TeX Live
-Obsoletes: texlive-core <2025
-Obsoletes: texlive-dist <2025
-Obsoletes: texlive-latex <2025
-Provides: texlive
+Obsoletes: texlive-core < 2025
+Obsoletes: texlive-dist < 2025
+Obsoletes: texlive-latex < 2025
+Provides:  texlive
 
-BuildRequires: perl wget tar xz
-Requires: perl
+BuildRequires:  perl wget tar xz
+Requires:       perl
 
 %description
 TeX Live provides a comprehensive TeX system for GNU/Linux. This RPM installs a basic TeX Live tree in /opt/texlive.
@@ -34,7 +34,7 @@ cd ..
 
 # Create a custom install profile
 # Use ${RPM_BUILD_ROOT} to ensure buildroot path is expanded correctly at shell execution time
-cat <<EOF >texlive.profile
+cat <<EOF > texlive.profile
 selected_scheme scheme-basic
 TEXDIR ${RPM_BUILD_ROOT}/opt/texlive/%{version}
 TEXMFLOCAL ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-local
@@ -57,18 +57,18 @@ mkdir -p %{buildroot}/opt
 
 ## Fix ambiguous and legacy python2 shebangs
 find %{buildroot}/opt/texlive/%{version} -type f -exec sed -i \
-    -e '1s|^#! */usr/bin/python2$|#!/usr/bin/python3|' \
-    -e '1s|^#! */usr/bin/env python2$|#!/usr/bin/python3|' \
-    -e '1s|^#! */usr/bin/python -O$|#!/usr/bin/python3|' \
-    -e '1s|^#! */usr/bin/python$|#!/usr/bin/python3|' \
-    -e '1s|^#! */usr/bin/env python$|#!/usr/bin/python3|' \
-    {} +
+  -e '1s|^#! */usr/bin/python2$|#!/usr/bin/python3|' \
+  -e '1s|^#! */usr/bin/env python2$|#!/usr/bin/python3|' \
+  -e '1s|^#! */usr/bin/python -O$|#!/usr/bin/python3|' \
+  -e '1s|^#! */usr/bin/python$|#!/usr/bin/python3|' \
+  -e '1s|^#! */usr/bin/env python$|#!/usr/bin/python3|' \
+  {} +
 
 ## Sanitize files to remove %{buildroot} in their paths
 buildroot_path="%{buildroot}"
 find %{buildroot}/opt/texlive/%{version} -type f \
-    \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.font' \) \
-    -exec sed -i "s|$buildroot_path||g" {} +
+  \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' \) \
+  -exec sed -i "s|$buildroot_path||g" {} +
 
 ## export environment variables (PATH, MANPATH, etc.) (not use).
 #mkdir -p %{buildroot}/etc/profile.d
@@ -101,6 +101,7 @@ if [ "$1" -eq 0 ]; then
         fi
     done
 fi
+
 
 %files
 /opt/texlive
