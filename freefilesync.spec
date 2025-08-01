@@ -61,9 +61,13 @@ sed -i 's|std::uncaught_exceptions() > exeptionCount_|std::uncaught_exceptions()
 sed -i '1i#include <cstdint>' zen/type_traits.h
 
 ## Patch base/db_file.h correctly for structured bindings and `inserted`
-sed -i -E '
-s|(_files\.insert\(\{fileKey, \{descFile, descPeer, compVar, size\}\}\);[[:space:]]*assert\(inserted\);)|const auto [it, inserted] = \1\n|
-s|(_symlinks\.insert\(\{fileKey, \{descLink, descPeer, compVar\}\}\);[[:space:]]*assert\(inserted\);)|const auto [it, inserted] = \1\n|
+sed -i '
+70,71c\
+        const auto [it, inserted] = _files.insert({fileKey, {descFile, descPeer, compVar, size}});\
+        assert(inserted);
+76,77c\
+        const auto [it, inserted] = _symlinks.insert({fileKey, {descLink, descPeer, compVar}});\
+        assert(inserted);
 ' FreeFileSync/Source/base/db_file.h
 
 ## Provide dummy warn_static function
