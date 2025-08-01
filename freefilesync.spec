@@ -63,7 +63,8 @@ sed -i '/#include "platform.h"/a #include <cstdint>' zen/type_traits.h
 
 ## Patch `base/db_file.h` to fix an undeclared `inserted` variable.
 sed -i '/_files.insert({fileKey, {descFile, descPeer, compVar, size}})/a \
-    const bool inserted = true;' base/db_file.h
+    const bool inserted = true;' FreeFileSync/Source/base/db_file.h
+
 
 %build
 export PATH=%{_bindir}:$PATH
