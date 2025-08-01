@@ -33,6 +33,18 @@ FreeFileSync is an open-source software that helps synchronize files and folders
 %prep
 %setup -n FreeFileSync-%{version}
 
+## Download and apply patches
+custom_url="https://raw.githubusercontent.com/thangckt/stuff/refs/heads/copr_spec/patch/FreeFileSync"
+patch_files=(
+    "00_zen_string-traits_wxstring-support.patch"
+    "01_zen_type-traits_cstdint.patch"
+)
+for file in "${patch_files[@]}"; do
+    curl -L -o "$file" "$custom_url/$file"
+    patch -p1 < "$file"
+done
+
+
 # Remove wxWidgets exception guard
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/RealTimeSync/application.cpp
