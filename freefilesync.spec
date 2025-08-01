@@ -115,6 +115,10 @@ export LDFLAGS_FFS="$(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libseli
 %make_build -C FreeFileSync/Source CXXFLAGS="$CXXFLAGS_FFS" LDFLAGS="$LDFLAGS_FFS"
 %make_build -C FreeFileSync/Source/RealTimeSync CXXFLAGS="$CXXFLAGS_FFS" LDFLAGS="$LDFLAGS_FFS"
 
+echo "#ANCHOR: list binaries"
+ls -l FreeFileSync/Build/Bin/
+ls -l FreeFileSync/Build/
+
 
 %install
 # Manually install compiled binaries
@@ -127,23 +131,6 @@ cp -a FreeFileSync/Build/Resources %{buildroot}%{_datadir}/%{name}/
 
 # Ensure no scripts marked executable
 find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
-
-echo "#ANCHOR: Unzip and sanitize PNG icons"
-## Unzip and sanitize PNG icons to avoid crash from invalid images
-mkdir -p %{buildroot}%{_datadir}/%{name}/Resources/icons_fixed
-pushd %{buildroot}%{_datadir}/%{name}/Resources/icons_fixed
-unzip ../Icons.zip || exit 1
-# Sanitize each PNG file using ImageMagick to ensure they're valid
-for img in *.png; do
-    convert "$img" "$img" || echo "Warning: failed to fix $img"
-done
-# Rebuild Icons.zip from the sanitized images
-rm -f ../Icons.zip
-zip ../Icons.zip *.png
-# Clean up temporary files
-popd
-rm -rf %{buildroot}%{_datadir}/%{name}/Resources/icons_fixed
-
 
 ## Desktop files
 mkdir -p %{buildroot}%{_datadir}/applications
@@ -174,13 +161,15 @@ MimeType=application/x-freefilesync-real;
 EOF
 
 ## Icons
-unzip -j FreeFileSync/Build/Resources/Icons.zip -d .
+unzip -j FreeFileSync/Build/Resources/Icons.zip -d tmp_icons
 for res in 16 22 24 32 48 64 96 128 256 ; do
     dir=%{buildroot}%{_datadir}/icons/hicolor/${res}x${res}
     mkdir -p ${dir}/apps
-    magick convert FreeFileSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/FreeFileSync.png
-    magick convert RealTimeSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/RealTimeSync.png
+    magick tmp_icons/FreeFileSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/FreeFileSync.png
+    magick tmp_icons/RealTimeSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/RealTimeSync.png
 done
+# Cleanup temporary icons directory
+rm -rf tmp_icons
 
 
 %files
