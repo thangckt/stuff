@@ -70,7 +70,7 @@ sed -i 's|files.emplace(fileName, InSyncFile {descrL, descrR, cmpVar, fileSize})
 sed -i 's|symlinks.emplace(linkName, InSyncSymlink {descrL, descrR, cmpVar});|const auto [it, inserted] = symlinks.emplace(linkName, InSyncSymlink {descrL, descrR, cmpVar});|' FreeFileSync/Source/base/db_file.h
 
 ## Patch to fix incorrect isLocked()
-sed -i 's/assert(isLocked(singleThread_));/assert(singleThread_.isLocked());/'  FreeFileSync/Source/base/synchronization.cpp
+sed -i '/assert(isLocked(singleThread_));/d' FreeFileSync/Source/base/synchronization.cpp
 
 
 
