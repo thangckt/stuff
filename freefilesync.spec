@@ -92,6 +92,14 @@ sed -i '/#include "file_path.h"/a #include "globals.h"' zen/file_path.cpp
 ## Fix runningOnMainThread error (remove assert)
 sed -i '/assert(runningOnMainThread());/d' zen/file_path.cpp
 
+## Patch to change the Resources dir
+sed -i '/Zstring fff::getResourceDirPath()/, /}/c\
+Zstring fff::getResourceDirPath()\
+{\
+    if (const char* env = std::getenv("FREEFILESYNC_RESOURCES"))\
+        return Zstr(env);\
+    return Zstr("/usr/share/freefilesync/Resources");\
+}' FreeFileSync/Source/ffs_paths.cpp
 
 
 %build
