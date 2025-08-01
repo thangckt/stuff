@@ -66,8 +66,8 @@ template<typename... T> void warn_static(const T&...) {}\n' FreeFileSync/Source/
 sed -i "s|warn_static(\"TODO: some users want to manually fix renamed folders/files: combine them here, don't require a re-compare!\")|warn_static(\"TODO: some users want to manually fix renamed folders/files: combine them here, don't require a re-compare!\");|" FreeFileSync/Source/base/algorithm.cpp
 
 ## Patch base/db_file.h correctly for structured bindings and `inserted`
-sed -i -z 's|_files.insert({fileKey, {descFile, descPeer, compVar, size}});\n[ \t]*assert(inserted);|const auto [it, inserted] = _files.insert({fileKey, {descFile, descPeer, compVar, size}});\n        assert(inserted);|' FreeFileSync/Source/base/db_file.h
-sed -i -z 's|_symlinks.insert({fileKey, {descLink, descPeer, compVar}});\n[ \t]*assert(inserted);|const auto [it, inserted] = _symlinks.insert({fileKey, {descLink, descPeer, compVar}});\n        assert(inserted);|' FreeFileSync/Source/base/db_file.h
+sed -i 's|files.emplace(fileName, InSyncFile {descrL, descrR, cmpVar, fileSize});|const auto [it, inserted] = files.emplace(fileName, InSyncFile {descrL, descrR, cmpVar, fileSize});|' FreeFileSync/Source/base/db_file.h
+sed -i 's|symlinks.emplace(linkName, InSyncSymlink {descrL, descrR, cmpVar});|const auto [it, inserted] = symlinks.emplace(linkName, InSyncSymlink {descrL, descrR, cmpVar});|' FreeFileSync/Source/base/db_file.h
 
 
 
