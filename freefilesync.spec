@@ -34,11 +34,11 @@ FreeFileSync is an open-source software that helps synchronize files and folders
 %prep
 %setup -n FreeFileSync-%{version}
 
-## Remove wxWidgets exception guard
+## Patch to remove wxWidgets exception guard
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/application.cpp
 sed -i '/#if wxUSE_EXCEPTIONS/,/#endif/d' FreeFileSync/Source/RealTimeSync/application.cpp
 
-## Remove hardcoded GTK2 usage from FreeFileSync makefile
+## Patch to remove hardcoded GTK2 usage from FreeFileSync makefile
 sed -i 's/pkg-config --cflags gtk+-2.0//g' FreeFileSync/Source/Makefile
 sed -i 's|-isystem/usr/include/gtk-2.0||g' FreeFileSync/Source/Makefile
 sed -i 's/pkg-config --cflags gtk+-2.0//g' FreeFileSync/Source/RealTimeSync/Makefile
@@ -61,6 +61,9 @@ sed -i 's|std::uncaught_exceptions() > exeptionCount_|std::uncaught_exceptions()
 ## The `uint32_t` type is not a built-in type and requires this header to be defined.
 sed -i '/#include "platform.h"/a #include <cstdint>' zen/type_traits.h
 
+## Patch `base/db_file.h` to fix an undeclared `inserted` variable.
+sed -i '/_files.insert({fileKey, {descFile, descPeer, compVar, size}})/a \
+    const bool inserted = true;' base/db_file.h
 
 %build
 export PATH=%{_bindir}:$PATH
