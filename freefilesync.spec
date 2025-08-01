@@ -21,7 +21,6 @@ Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{vers
 BuildRequires:  gcc-c++, unzip, patch, brotli-devel, ImageMagick
 BuildRequires:  gettext-devel, desktop-file-utils
 BuildRequires:  wxGTK3 >= 3.3.0
-Requires:       wxGTK3 >= 3.3.0
 
 # Use pkgconfig() where available to avoid duplicate raw -devel references
 BuildRequires:  pkgconfig(libcurl) pkgconfig(libssh2) pkgconfig(libidn2) pkgconfig(libselinux)
@@ -118,7 +117,7 @@ install -Dm755 FreeFileSync/Build/Bin/RealTimeSync_x86_64 %{buildroot}%{_bindir}
 
 # Install resource files used at runtime (icons, translations, config templates, etc.)
 mkdir -p %{buildroot}%{_datadir}/%{name}
-cp -a FreeFileSync/Build/Resources/* %{buildroot}%{_datadir}/%{name}/
+cp -a FreeFileSync/Build/Resources %{buildroot}%{_datadir}/%{name}/
 
 # Ensure no scripts marked executable
 find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
