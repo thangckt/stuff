@@ -80,6 +80,9 @@ sed -i 's|auto attrSourceNew = attr ? \*attr : attrSource;|attrSourceNew = attr 
 ## Patch ui/progress_indicator.cpp
 sed -i '1i#include <zen/warn_static.h>' FreeFileSync/Source/ui/progress_indicator.cpp
 
+## Fix memset error
+sed -i '1i#include <cstring>' zen/argon2.cpp
+
 
 
 %build
