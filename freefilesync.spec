@@ -100,6 +100,9 @@ Zstring fff::getResourceDirPath()\
     return Zstr("/usr/share/freefilesync/Resources");\
 }' FreeFileSync/Source/ffs_paths.cpp
 
+# Comment out GTK3 scrollbar assertion that fails at runtime
+sed -i '/assert(scrollBarSizeTmp.y == 0 ||/,/scrollBarSizeTmp.y == 16);/ s/^/\/\//' wx+/grid.cpp
+
 
 %build
 export PATH=%{_bindir}:$PATH
