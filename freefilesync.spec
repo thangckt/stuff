@@ -115,10 +115,6 @@ export LDFLAGS_FFS="$(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libseli
 %make_build -C FreeFileSync/Source CXXFLAGS="$CXXFLAGS_FFS" LDFLAGS="$LDFLAGS_FFS"
 %make_build -C FreeFileSync/Source/RealTimeSync CXXFLAGS="$CXXFLAGS_FFS" LDFLAGS="$LDFLAGS_FFS"
 
-echo "#ANCHOR: list binaries"
-ls -l FreeFileSync/Build/Bin/
-ls -l FreeFileSync/Build/
-
 
 %install
 # Manually install compiled binaries
@@ -129,11 +125,25 @@ install -Dm755 FreeFileSync/Build/Bin/RealTimeSync_x86_64 %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datadir}/%{name}
 cp -a FreeFileSync/Build/Resources %{buildroot}%{_datadir}/%{name}/
 
-# Remove internal icons to avoid crash from invalid images
-rm -f %{buildroot}%{_datadir}/%{name}/Icons.zip
-
 # Ensure no scripts marked executable
 find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
+
+echo "#ANCHOR: Unzip and sanitize PNG icons"
+## Unzip and sanitize PNG icons to avoid crash from invalid images
+mkdir -p %{buildroot}%{_datadir}/%{name}/Resources/icons_fixed
+pushd %{buildroot}%{_datadir}/%{name}/Resources/icons_fixed
+unzip ../Icons.zip || exit 1
+# Sanitize each PNG file using ImageMagick to ensure they're valid
+for img in *.png; do
+    convert "$img" "fixed_$img" || echo "Failed to fix $img"
+done
+# Rebuild Icons.zip from the sanitized images
+rm -f ../Icons.zip
+zip ../Icons.zip fixed_*.png
+# Clean up temporary files
+popd
+rm -rf %{buildroot}%{_datadir}/%{name}/Resources/icons_fixed
+
 
 ## Desktop files
 mkdir -p %{buildroot}%{_datadir}/applications
