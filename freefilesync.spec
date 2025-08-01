@@ -69,6 +69,9 @@ sed -i "s|warn_static(\"TODO: some users want to manually fix renamed folders/fi
 sed -i 's|files.emplace(fileName, InSyncFile {descrL, descrR, cmpVar, fileSize});|const auto [it, inserted] = files.emplace(fileName, InSyncFile {descrL, descrR, cmpVar, fileSize});|' FreeFileSync/Source/base/db_file.h
 sed -i 's|symlinks.emplace(linkName, InSyncSymlink {descrL, descrR, cmpVar});|const auto [it, inserted] = symlinks.emplace(linkName, InSyncSymlink {descrL, descrR, cmpVar});|' FreeFileSync/Source/base/db_file.h
 
+## Patch to fix incorrect isLocked()
+sed -i 's/assert(isLocked(singleThread_));/assert(singleThread_.isLocked());/'  FreeFileSync/Source/base/synchronization.cpp
+
 
 
 %build
