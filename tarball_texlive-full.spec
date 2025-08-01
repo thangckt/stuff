@@ -66,10 +66,11 @@ find %{buildroot}/opt/texlive/%{version} -type f -exec sed -i \
   -e '1s|^#! */usr/bin/env python$|#!/usr/bin/python3|' \
   {} +
 
-## Clean up files containing buildroot paths
-rm -f %{buildroot}/opt/texlive/%{version}/install-tl.log
-rm -f %{buildroot}/opt/texlive/%{version}/tlpkg/texlive.profile
-find %{buildroot}/opt/texlive/%{version}/texmf-var -type f \( -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' \) -delete
+## Sanitize files to remove %{buildroot} in their paths
+buildroot_path="%{buildroot}"
+find %{buildroot}/opt/texlive/%{version} -type f \
+  \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' \) \
+  -exec sed -i "s|$buildroot_path||g" {} +
 
 ## export environment variables (PATH, MANPATH, etc.) (not use).
 #mkdir -p %{buildroot}/etc/profile.d
