@@ -20,7 +20,7 @@ Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{vers
 
 BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip patch
 BuildRequires:  libcurl-devel libssh2-devel libselinux-devel gtk+-devel
-BuildRequires:  gtk3-devel glib2-devel openssl-devel expat-devel gettext-devel
+BuildRequires:  gtk3-devel glib2-devel openssl-devel expat-devel gettext-devel libidn2-devel
 BuildRequires:  desktop-file-utils libmspack-devel libsecret-devel gspell-devel libnotify-devel webkit2gtk4.1-devel gstreamer1-devel
 BuildRequires:  pkgconfig(liblzma) pkgconfig(libmspack) pkgconfig(libcurl) pkgconfig(libssh2) pkgconfig(glib-2.0) pkgconfig(zlib) pkgconfig(expat)
 BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(webkit2gtk-4.1) pkgconfig(libselinux) pkgconfig(libidn2)
@@ -101,7 +101,7 @@ export LDFLAGS_FFS="$(pkg-config --libs gtk+-3.0 openssl libcurl libssh2 libseli
 %make_build -C FreeFileSync/Source CXXFLAGS="$CXXFLAGS_FFS" LDFLAGS="$LDFLAGS_FFS"
 %make_build -C FreeFileSync/Source/RealTimeSync CXXFLAGS="$CXXFLAGS_FFS" LDFLAGS="$LDFLAGS_FFS"
 
-echo "THA:-Debug: list binaries"
+echo "#ANCHOR: list binaries"
 ls -l FreeFileSync/Build/Bin/
 ls -l FreeFileSync/Build/
 
