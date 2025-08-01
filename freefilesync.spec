@@ -56,8 +56,9 @@ sed -i 's|std::uncaught_exception() ? 1 : 0|std::uncaught_exceptions()|g' zen/sc
 sed -i 's|std::uncaught_exceptions()|std::uncaught_exceptions()|g' zen/scope_guard.h
 sed -i 's|std::uncaught_exceptions() > exeptionCount_|std::uncaught_exceptions() > exeptionCount_|g' zen/scope_guard.h
 
-## Patch `zen/type_traits.h` to include the <cstdint> header.
+## Patch to fix uint32_t error in `zen/type_traits.h` and zen/argon2.h (include the <cstdint> header)
 sed -i '1i#include <cstdint>' zen/type_traits.h
+sed -i '1i#include <cstdint>' zen/argon2.h
 
 ## Patch base/algorithm.cpp to ensure warn_static is defined
 sed -i '1i#include <exception>\n\
@@ -78,6 +79,7 @@ sed -i 's|auto attrSourceNew = attr ? \*attr : attrSource;|attrSourceNew = attr 
 
 ## Patch ui/progress_indicator.cpp
 sed -i '1i#include <zen/warn_static.h>' FreeFileSync/Source/ui/progress_indicator.cpp
+
 
 
 %build
