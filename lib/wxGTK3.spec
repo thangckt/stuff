@@ -33,7 +33,8 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
         -DwxUSE_WEBVIEW=ON \
         -DwxUSE_LIBLZMA=ON \
         -DwxUSE_LIBSDL=ON \
-        -DwxUSE_LIBMSPACK=ON
+        -DwxUSE_LIBMSPACK=ON \
+        -DwxBUILD_AUI=ON
 %cmake_build
 
 %install
