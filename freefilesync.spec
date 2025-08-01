@@ -74,7 +74,7 @@ sed -i '/assert(isLocked(singleThread_));/d' FreeFileSync/Source/base/synchroniz
 
 ## Patch afs/abstract.cpp
 sed -i '/#include <string>/a #include <iostream>\n#ifndef warn_static\n#define warn_static(msg) do { std::cerr << "warn_static: " << msg << std::endl; } while(0)\n#endif' FreeFileSync/Source/afs/abstract.cpp
-sed -i '/attrSourceNew =/i \    auto attrSourceNew = attr ? *attr : attrSource;' FreeFileSync/Source/afs/abstract.cpp
+sed -i 's|auto attrSourceNew = attr ? \*attr : attrSource;|attrSourceNew = attr ? *attr : attrSource;|' FreeFileSync/Source/afs/abstract.cpp
 
 
 
