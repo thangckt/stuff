@@ -12,6 +12,9 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 
 ExclusiveArch:  x86_64
 
+## Disable kpathsea trigger automatically
+%define _no_triggerin_files texlive-kpathsea
+
 ## Force replace the Fedora TeX Live
 Obsoletes: texlive-core < 2025
 Obsoletes: texlive-dist < 2025
@@ -88,6 +91,11 @@ for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
     fi
     alternatives --install /usr/bin/$bin_name $bin_name "$bin_path" 100 || :
 done
+
+## Only run mktexlsr once, manually, instead of in kpathsea trigger
+if [ -x /opt/texlive/%{version}/bin/x86_64-linux/mktexlsr ]; then
+    /opt/texlive/%{version}/bin/x86_64-linux/mktexlsr /opt/texlive/%{version}
+fi
 
 %preun
 ## Only if uninstalling
