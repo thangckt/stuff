@@ -18,14 +18,16 @@ Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{vers
 %global debugsource_package %{nil}
 %global debugsource_build 0
 
-BuildRequires:  gcc-c++ brotli-devel ImageMagick unzip patch
-BuildRequires:  libcurl-devel libssh2-devel libselinux-devel gtk+-devel
-BuildRequires:  gtk3-devel glib2-devel openssl-devel expat-devel gettext-devel libidn2-devel
-BuildRequires:  desktop-file-utils libmspack-devel libsecret-devel gspell-devel libnotify-devel webkit2gtk4.1-devel gstreamer1-devel
-BuildRequires:  pkgconfig(liblzma) pkgconfig(libmspack) pkgconfig(libcurl) pkgconfig(libssh2) pkgconfig(glib-2.0) pkgconfig(zlib) pkgconfig(expat)
-BuildRequires:  pkgconfig(giomm-2.4) pkgconfig(gtk+-3.0) pkgconfig(webkit2gtk-4.1) pkgconfig(libselinux) pkgconfig(libidn2)
+BuildRequires:  gcc-c++, unzip, patch, brotli-devel, ImageMagick
+BuildRequires:  gettext-devel, desktop-file-utils
 BuildRequires:  wxGTK3 >= 3.3.0
 Requires:       wxGTK3 >= 3.3.0
+
+# Use pkgconfig() where available to avoid duplicate raw -devel references
+BuildRequires:  pkgconfig(libcurl) pkgconfig(libssh2) pkgconfig(libidn2) pkgconfig(libselinux)
+BuildRequires:  pkgconfig(glib-2.0) pkgconfig(gtk+-3.0) pkgconfig(giomm-2.4) pkgconfig(webkit2gtk-4.1)
+BuildRequires:  pkgconfig(gspell-1) pkgconfig(libsecret-1) pkgconfig(libmspack) pkgconfig(libnotify)
+BuildRequires:  pkgconfig(liblzma) pkgconfig(expat) pkgconfig(zlib) pkgconfig(openssl) pkgconfig(gstreamer-1.0)
 
 %description
 FreeFileSync is an open-source software that helps synchronize files and folders on Windows, Linux, and macOS. It is optimized for backup speed and visual usability.
@@ -88,6 +90,9 @@ sed -i '/#include "file_path.h"/a #include "globals.h"' zen/file_path.cpp
 
 ## Fix runningOnMainThread error (remove assert)
 sed -i '/assert(runningOnMainThread());/d' zen/file_path.cpp
+
+## Patch ld error:
+sed -i 's| -lssh| -lssh -lidn2|' FreeFileSync/Makefile
 
 
 %build
