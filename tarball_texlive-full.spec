@@ -44,8 +44,6 @@ TEXMFVAR ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-var
 TEXMFCONFIG ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-config
 TEXMFHOME ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-home
 binary_x86_64-linux 1
-collection-latexextra 1
-collection-binextra 1
 option_doc 0
 option_src 0
 EOF
