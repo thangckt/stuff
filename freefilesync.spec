@@ -69,7 +69,7 @@ sed -i "s|warn_static(\"TODO: some users want to manually fix renamed folders/fi
 sed -i 's|files.emplace(fileName, InSyncFile {descrL, descrR, cmpVar, fileSize});|const auto [it, inserted] = files.emplace(fileName, InSyncFile {descrL, descrR, cmpVar, fileSize});|' FreeFileSync/Source/base/db_file.h
 sed -i 's|symlinks.emplace(linkName, InSyncSymlink {descrL, descrR, cmpVar});|const auto [it, inserted] = symlinks.emplace(linkName, InSyncSymlink {descrL, descrR, cmpVar});|' FreeFileSync/Source/base/db_file.h
 
-## Patch to fix incorrect isLocked() in base/synchronization.cpp and zen/stream_buffer.h
+## Patch to fix incorrect isLocked() in base/synchronization.cpp and zen/stream_buffer.h (remove assert)
 sed -i '/assert(isLocked(singleThread_));/d' FreeFileSync/Source/base/synchronization.cpp
 sed -i '/assert(isLocked(lockStream_));/d' zen/stream_buffer.h
 
@@ -85,6 +85,9 @@ sed -i '1i#include <cstring>' zen/argon2.cpp
 
 ## Fix Global<> in zen/file_path.cpp
 sed -i '/#include "file_path.h"/a #include "globals.h"' zen/file_path.cpp
+
+## Fix runningOnMainThread error (remove assert)
+sed -i ' assert(runningOnMainThread());/d' zen/file_path.cpp
 
 
 %build
