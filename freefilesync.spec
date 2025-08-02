@@ -1,6 +1,6 @@
 ### REF: https://gitlab.com/bgstack15/stackrpms/-/blob/master/freefilesync/freefilesync.spec?ref_type=heads
 # - https://github.com/PhantomX/chinforpms/blob/main/_pasture/freefilesync/freefilesync.spec
-# Note: wxWidgets>3.3 is required. It is better to build it in another spec file.
+# Note: FreeFileSync 14.4 depends on wxWidgets>=3.3.0. But wxWidgets=3.3.1 may cause runtime issues with FreeFileSync.
 
 Name:       freefilesync
 Version:    14.4
@@ -20,7 +20,7 @@ Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{vers
 
 BuildRequires:  gcc-c++, unzip, patch, brotli-devel, ImageMagick
 BuildRequires:  gettext-devel, desktop-file-utils
-BuildRequires:  wxGTK3 >= 3.3.0
+BuildRequires:  wxGTK3 = 3.3.0
 # Use pkgconfig() where available to avoid duplicate raw -devel references
 BuildRequires:  pkgconfig(libcurl) pkgconfig(libssh2) pkgconfig(libidn2) pkgconfig(libselinux)
 BuildRequires:  pkgconfig(glib-2.0) pkgconfig(gtk+-3.0) pkgconfig(giomm-2.4) pkgconfig(webkit2gtk-4.1)
