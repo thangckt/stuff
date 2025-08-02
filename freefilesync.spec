@@ -18,8 +18,7 @@ Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{vers
 %global debugsource_package %{nil}
 %global debugsource_build 0
 
-BuildRequires:  gcc-c++ unzip patch brotli-devel ImageMagick
-BuildRequires:  gettext-devel desktop-file-utils xdg-utils
+BuildRequires:  gcc-c++ unzip patch brotli-devel gettext-devel ImageMagick
 BuildRequires:  wxGTK3 >= 3.3.0
 # Use pkgconfig() where available to avoid duplicate raw -devel references
 BuildRequires:  pkgconfig(libcurl) pkgconfig(libssh2) pkgconfig(libidn2) pkgconfig(libselinux)
@@ -169,10 +168,6 @@ for res in 16 22 24 32 48 64 96 128 256 ;do
     magick tmp_icons/RealTimeSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/RealTimeSync.png
 done
 rm -rf tmp_icons
-
-%posttrans
-update-desktop-database 1>/dev/null 2>&1 & :
-gtk-update-icon-cache %{_datadir}/icons/hicolor 1>/dev/null 2>&1 & :
 
 
 %files
