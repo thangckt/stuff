@@ -1,6 +1,6 @@
 ### REF: https://gitlab.com/bgstack15/stackrpms/-/blob/master/freefilesync/freefilesync.spec?ref_type=heads
 # - https://github.com/PhantomX/chinforpms/blob/main/_pasture/freefilesync/freefilesync.spec
-# Note: FreeFileSync 14.4 depends on wxWidgets>=3.3.0. But wxWidgets=3.3.1 may cause runtime issues with FreeFileSync.
+# Note: FreeFileSync 14.4 depends on wxWidgets>=3.3.0.
 
 Name:       freefilesync
 Version:    14.4
@@ -20,7 +20,7 @@ Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{vers
 
 BuildRequires:  gcc-c++, unzip, patch, brotli-devel, ImageMagick
 BuildRequires:  gettext-devel, desktop-file-utils
-BuildRequires:  wxGTK3 = 3.3.0
+BuildRequires:  wxGTK3 >= 3.3.0
 # Use pkgconfig() where available to avoid duplicate raw -devel references
 BuildRequires:  pkgconfig(libcurl) pkgconfig(libssh2) pkgconfig(libidn2) pkgconfig(libselinux)
 BuildRequires:  pkgconfig(glib-2.0) pkgconfig(gtk+-3.0) pkgconfig(giomm-2.4) pkgconfig(webkit2gtk-4.1)
@@ -161,14 +161,14 @@ MimeType=application/x-freefilesync-real;
 EOF
 
 ## Icons
-unzip -j FreeFileSync/Build/Resources/Icons.zip -d tmp_icons
-for res in 32 48 64 128; do
-    dir=%{buildroot}%{_datadir}/icons/hicolor/${res}x${res}
-    mkdir -p ${dir}/apps
-    magick tmp_icons/FreeFileSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/FreeFileSync.png
-    magick tmp_icons/RealTimeSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/RealTimeSync.png
-done
-rm -rf tmp_icons
+# unzip -j FreeFileSync/Build/Resources/Icons.zip -d tmp_icons
+# for res in 32 48 64 128; do
+#     dir=%{buildroot}%{_datadir}/icons/hicolor/${res}x${res}
+#     mkdir -p ${dir}/apps
+#     magick tmp_icons/FreeFileSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/FreeFileSync.png
+#     magick tmp_icons/RealTimeSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/RealTimeSync.png
+# done
+# rm -rf tmp_icons
 
 
 %files
