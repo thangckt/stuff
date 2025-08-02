@@ -177,7 +177,8 @@ rm -rf tmp_icons
 %{_datadir}/applications/FreeFileSync.desktop
 %{_datadir}/applications/RealTimeSync.desktop
 %{_datadir}/icons/hicolor/*x*/*/*.png
-%{_datadir}/%{name}
+# %{_datadir}/%{name}
+/usr/Resources/
 
 %changelog
 %autochangelog
