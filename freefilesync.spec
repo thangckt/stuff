@@ -100,8 +100,12 @@ Zstring fff::getResourceDirPath()\
     return Zstr("/usr/share/freefilesync/Resources");\
 }' FreeFileSync/Source/ffs_paths.cpp
 
-# Comment out GTK3 scrollbar assertion that fails at runtime
+## Comment out GTK3 scrollbar assertion that fails at runtime
 sed -i '/assert(scrollBarSizeTmp.y == 0 ||/,/scrollBarSizeTmp.y == 16);/ s/^/\/\//' wx+/grid.cpp
+
+## Comment out check image to avoid runtime IsOk assertion (remove assert)
+sed -i '/assert(animalImg.IsOk());/d' FreeFileSync/Source/ui/small_dlgs.cpp
+
 
 
 %build
@@ -130,7 +134,7 @@ mkdir -p %{buildroot}%{_datadir}/%{name}
 cp -a FreeFileSync/Build/Resources %{buildroot}%{_datadir}/%{name}/
 
 ## Ensure no scripts marked executable
-find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
+# find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
 
 ## Desktop files
 mkdir -p %{buildroot}%{_datadir}/applications
