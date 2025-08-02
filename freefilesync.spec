@@ -10,8 +10,8 @@ License:    GPLv3
 URL:        http://www.freefilesync.org/
 
 # upstream does not provide easy automatic downloads of the source, so use the mirror
-Source0:    http://www.freefilesync.org/download/%FreeFileSync_%%{version}_Source.zip
-# Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{version}/FreeFileSync-%{version}.tar.gz
+# Source0:    http://www.freefilesync.org/download/%FreeFileSync_%%{version}_Source.zip
+Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{version}/FreeFileSync-%{version}.tar.gz
 
 %global debug_package %{nil}
 %global _enable_debug_package 0
