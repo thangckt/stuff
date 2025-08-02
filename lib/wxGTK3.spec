@@ -2,7 +2,7 @@
 # Note: FreeFileSync 14.4 depends on wxWidgets=3.3.0. It is better to build it in another spec file.
 
 Name:       wxGTK3
-Version:    3.3.1
+Version:    3.3.0
 Release:    1%{?dist}
 Summary:    A library for creating graphical user interfaces
 License:    wxWidgets Library License
@@ -33,8 +33,7 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
         -DwxUSE_WEBVIEW=ON \
         -DwxUSE_LIBLZMA=ON \
         -DwxUSE_LIBSDL=ON \
-        -DwxUSE_LIBMSPACK=ON \
-        -DwxUSE_AUI=ON
+        -DwxUSE_LIBMSPACK=ON
 %cmake_build
 
 %install
