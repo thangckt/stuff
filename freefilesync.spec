@@ -128,8 +128,8 @@ install -Dm755 FreeFileSync/Build/Bin/RealTimeSync_x86_64 %{buildroot}%{_bindir}
 ##ANCHOR: Sanitize and Rebuild Icons.zip
 # The application requires Icons.zip, but some PNGs inside may be non-standard or corrupt.
 # We will unpack the archive, use ImageMagick to re-save every PNG to standardize it, and then repack the archive.
-mkdir -p tmp_sanitized_icons
-unzip -o FreeFileSync/Build/Resources/Icons.zip -d tmp_sanitized_icons/
+unzip -o FreeFileSync/Build/Resources/Icons.zip -d tmp_sanitized_icons
+rm -rf FreeFileSync/Build/Resources/Icons.zip
 magick mogrify -format png tmp_sanitized_icons/*.png
 # delete any non-image files from the temp directory.
 find tmp_sanitized_icons -type f ! -name "*.png" -delete
