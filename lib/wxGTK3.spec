@@ -46,8 +46,8 @@ for bin in wx-config wxrc wxrc-3.3; do
     if [ -L "$path" ]; then
         target=$(readlink "$path")
         # If the target is absolute and points inside the buildroot
-        if [[ "$target" = %{buildroot}* ]]; then
-            rel_target=$(realpath --relative-to=$(dirname "$path") "$target")
+        if [[ "$target" = %{_prefix}* ]]; then
+            rel_target=$(realpath --relative-to=$(dirname "$path") "%{buildroot}$target")
             ln -sf "$rel_target" "$path"
         fi
     fi
