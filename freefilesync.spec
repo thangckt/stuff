@@ -91,13 +91,9 @@ sed -i '/#include "file_path.h"/a #include "globals.h"' zen/file_path.cpp
 sed -i '/assert(runningOnMainThread());/d' zen/file_path.cpp
 
 ## Patch to change the Resources dir
-sed -i '/Zstring fff::getResourceDirPath()/, /}/c\
-Zstring fff::getResourceDirPath()\
-{\
-    if (const char* env = std::getenv("FREEFILESYNC_RESOURCES"))\
-        return Zstr(env);\
-    return Zstr("/usr/share/freefilesync/Resources");\
-}' FreeFileSync/Source/ffs_paths.cpp
+# sed -i '/Zstring fff::getResourceDirPath()/, /}/c\
+# Zstring fff::getResourceDirPath()\
+# {\return Zstr("/usr/share/freefilesync/Resources");\}' FreeFileSync/Source/ffs_paths.cpp
 
 ## Comment out GTK3 scrollbar assertion that fails at runtime
 sed -i '/assert(scrollBarSizeTmp.y == 0 ||/,/scrollBarSizeTmp.y == 16);/ s/^/\/\//' wx+/grid.cpp
@@ -126,7 +122,8 @@ install -Dm755 FreeFileSync/Build/Bin/RealTimeSync_x86_64 %{buildroot}%{_bindir}
 
 ##ANCHOR: Install resource files used at runtime (icons, translations, config templates, etc.)
 mkdir -p %{buildroot}%{_datadir}/%{name}
-cp -a FreeFileSync/Build/Resources %{buildroot}%{_datadir}/%{name}/Resources
+# cp -a FreeFileSync/Build/Resources/* %{buildroot}%{_datadir}/%{name}/Resources/
+cp -a FreeFileSync/Build/Resources/* %{buildroot}/usr/Resources/
 
 ## Ensure no scripts marked executable
 find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x '{}' \; || :
