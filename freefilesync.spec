@@ -182,7 +182,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor 1>/dev/null 2>&1 & :
 %{_bindir}/RealTimeSync
 %{_datadir}/applications/FreeFileSync.desktop
 %{_datadir}/applications/RealTimeSync.desktop
-# %{_datadir}/icons/hicolor/*x*/*/*.png
+%{_datadir}/icons/hicolor/*x*/*/*.png
 %{_datadir}/%{name}
 
 %changelog
