@@ -18,8 +18,8 @@ Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{vers
 %global debugsource_package %{nil}
 %global debugsource_build 0
 
-BuildRequires:  gcc-c++, unzip, patch, brotli-devel, ImageMagick
-BuildRequires:  gettext-devel, desktop-file-utils
+BuildRequires:  gcc-c++ unzip patch brotli-devel ImageMagick
+BuildRequires:  gettext-devel desktop-file-utils xdg-utils
 BuildRequires:  wxGTK3 >= 3.3.0
 # Use pkgconfig() where available to avoid duplicate raw -devel references
 BuildRequires:  pkgconfig(libcurl) pkgconfig(libssh2) pkgconfig(libidn2) pkgconfig(libselinux)
@@ -130,7 +130,7 @@ mkdir -p %{buildroot}%{_datadir}/%{name}
 cp -a FreeFileSync/Build/Resources %{buildroot}%{_datadir}/%{name}/
 
 ## Ensure no scripts marked executable
-# find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x {} \;
+find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x '{}' \; || :
 
 ## Desktop files
 mkdir -p %{buildroot}%{_datadir}/applications
@@ -161,14 +161,18 @@ MimeType=application/x-freefilesync-real;
 EOF
 
 ## Icons
-# unzip -j FreeFileSync/Build/Resources/Icons.zip -d tmp_icons
-# for res in 32 48 64 128; do
-#     dir=%{buildroot}%{_datadir}/icons/hicolor/${res}x${res}
-#     mkdir -p ${dir}/apps
-#     magick tmp_icons/FreeFileSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/FreeFileSync.png
-#     magick tmp_icons/RealTimeSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/RealTimeSync.png
-# done
-# rm -rf tmp_icons
+unzip -j FreeFileSync/Build/Resources/Icons.zip -d tmp_icons
+for res in 16 22 24 32 48 64 96 128 256 ;do
+    dir=%{buildroot}%{_datadir}/icons/hicolor/${res}x${res}
+    mkdir -p ${dir}/apps
+    magick tmp_icons/FreeFileSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/FreeFileSync.png
+    magick tmp_icons/RealTimeSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/RealTimeSync.png
+done
+rm -rf tmp_icons
+
+%posttrans
+update-desktop-database 1>/dev/null 2>&1 & :
+gtk-update-icon-cache %{_datadir}/icons/hicolor 1>/dev/null 2>&1 & :
 
 
 %files
