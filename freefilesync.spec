@@ -10,8 +10,8 @@ License:    GPLv3
 URL:        http://www.freefilesync.org/
 
 # upstream does not provide easy automatic downloads of the source, so use the mirror
-#Source0:    http://www.freefilesync.org/download/%FreeFileSync_%%{version}_Source.zip
-Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{version}/FreeFileSync-%{version}.tar.gz
+Source0:    http://www.freefilesync.org/download/%FreeFileSync_%%{version}_Source.zip
+# Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{version}/FreeFileSync-%{version}.tar.gz
 
 %global debug_package %{nil}
 %global _enable_debug_package 0
@@ -102,10 +102,6 @@ Zstring fff::getResourceDirPath()\
 
 ## Comment out GTK3 scrollbar assertion that fails at runtime
 sed -i '/assert(scrollBarSizeTmp.y == 0 ||/,/scrollBarSizeTmp.y == 16);/ s/^/\/\//' wx+/grid.cpp
-
-## Comment out check image to avoid runtime IsOk assertion (remove assert)
-sed -i '/assert(animalImg.IsOk());/d' FreeFileSync/Source/ui/small_dlgs.cpp
-
 
 
 %build
