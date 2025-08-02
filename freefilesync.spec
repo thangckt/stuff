@@ -121,11 +121,11 @@ install -Dm755 FreeFileSync/Build/Bin/FreeFileSync_x86_64 %{buildroot}%{_bindir}
 install -Dm755 FreeFileSync/Build/Bin/RealTimeSync_x86_64 %{buildroot}%{_bindir}/RealTimeSync
 
 ##ANCHOR: Install resource files used at runtime (icons, translations, config templates, etc.)
-# mkdir -p %{buildroot}%{_datadir}/%{name}
-# cp -a FreeFileSync/Build/Resources/* %{buildroot}%{_datadir}/%{name}/Resources/
+mkdir -p %{buildroot}%{_datadir}/%{name}
+cp -a FreeFileSync/Build/Resources/* %{buildroot}%{_datadir}/%{name}/Resources/
 
-mkdir - %{buildroot}/usr/Resources/
-cp -a FreeFileSync/Build/Resources/* %{buildroot}/usr/Resources/
+# mkdir - %{buildroot}/usr/Resources/
+# cp -a FreeFileSync/Build/Resources/* %{buildroot}/usr/Resources/
 
 ## Ensure no scripts marked executable
 find %{buildroot}%{_datadir}/%{name} -type f -exec chmod -x '{}' \; || :
@@ -160,7 +160,7 @@ EOF
 
 ## Icons
 unzip -j FreeFileSync/Build/Resources/Icons.zip -d tmp_icons
-for res in 16 22 24 32 48 64 96 128 256 ;do
+for res in 16 22 24 32 48 64 96 128 ;do
     dir=%{buildroot}%{_datadir}/icons/hicolor/${res}x${res}
     mkdir -p ${dir}/apps
     magick tmp_icons/FreeFileSync.png -filter Lanczos -resize ${res}x${res} ${dir}/apps/FreeFileSync.png
@@ -177,8 +177,8 @@ rm -rf tmp_icons
 %{_datadir}/applications/FreeFileSync.desktop
 %{_datadir}/applications/RealTimeSync.desktop
 %{_datadir}/icons/hicolor/*x*/*/*.png
-# %{_datadir}/%{name}
-/usr/Resources/*
+%{_datadir}/%{name}
+# /usr/Resources/*
 
 %changelog
 %autochangelog
