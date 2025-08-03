@@ -83,10 +83,16 @@ find %{buildroot}/opt/texlive/%{version} -type f \
 for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
     [ -f "$bin_path" ] || continue
     bin_name=$(basename "$bin_path")
+    # Prefer non-dev version by priority
+    if [[ "$bin_name" == *-dev ]]; then
+        priority=90
+    else
+        priority=100
+    fi
     if [ -f "/usr/bin/$bin_name" ] && [ ! -L "/usr/bin/$bin_name" ]; then
         mv "/usr/bin/$bin_name" "/usr/bin/${bin_name}.backup-by-texlive-full"
     fi
-    alternatives --install /usr/bin/$bin_name $bin_name "$bin_path" 100 || :
+    alternatives --install /usr/bin/$bin_name $bin_name "$bin_path" $priority || :
 done
 
 %preun
