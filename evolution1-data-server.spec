@@ -2,7 +2,7 @@
 # - evolution-data-server (EDS): https://src.fedoraproject.org/rpms/evolution-data-server/blob/rawhide/f/evolution-data-server.spec
 
 Name:           evolution-data-server
-Version:        3.57.1
+Version:        3.57.2
 Release:        1%{?dist}
 Summary:        GNOME Evolution Data Server
 License:        GPL-2.0-or-later

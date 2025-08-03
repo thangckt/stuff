@@ -2,7 +2,7 @@
 # - evolution: https://src.fedoraproject.org/rpms/evolution/blob/rawhide/f/evolution.spec
 
 Name:           evolution
-Version:        3.57.1
+Version:        3.57.2
 Release:        1%{?dist}
 Summary:        GNOME Evolution Suite
 License:        GPL-2.0-or-later
