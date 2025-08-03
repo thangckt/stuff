@@ -126,6 +126,7 @@ install -Dm755 FreeFileSync/Build/Bin/RealTimeSync_x86_64 %{buildroot}%{_bindir}
 ##ANCHOR: Install resource files used at runtime (icons, translations, config templates, etc.)
 mkdir -p %{buildroot}%{_datadir}/%{name}/Resources/
 cp -a FreeFileSync/Build/Resources/* %{buildroot}%{_datadir}/%{name}/Resources/
+unzip -j %{buildroot}%{_datadir}/%{name}/Resources/Icons.zip -d %{buildroot}%{_datadir}/%{name}/Resources/
 
 # mkdir - %{buildroot}/usr/Resources/
 # cp -a FreeFileSync/Build/Resources/* %{buildroot}/usr/Resources/
