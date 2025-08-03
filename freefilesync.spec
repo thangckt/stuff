@@ -3,7 +3,7 @@
 # Note: FreeFileSync 14.4 depends on wxWidgets>=3.3.0.
 
 Name:       freefilesync
-Version:    14.4
+Version:    14.3
 Release:    1%{?dist}
 Summary:    A file synchronization utility
 License:    GPLv3
