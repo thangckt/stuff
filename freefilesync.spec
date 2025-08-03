@@ -92,9 +92,11 @@ sed -i '/#include "file_path.h"/a #include "globals.h"' zen/file_path.cpp
 sed -i '/assert(runningOnMainThread());/d' zen/file_path.cpp
 
 ## Patch to change the Resources dir
-sed -i '/Zstring fff::getResourceDirPath()/, /}/c\
+sed -i '/Zstring fff::getResourceDirPath()/,/^}/c\
 Zstring fff::getResourceDirPath()\
-{\return Zstr("/usr/share/freefilesync/Resources");\}' FreeFileSync/Source/ffs_paths.cpp
+{\
+    return Zstr("/usr/share/freefilesync/Resources");\
+}' FreeFileSync/Source/ffs_paths.cpp
 
 ## Comment out GTK3 scrollbar assertion that fails at runtime
 sed -i '/assert(scrollBarSizeTmp.y == 0 ||/,/scrollBarSizeTmp.y == 16);/ s/^/\/\//' wx+/grid.cpp
