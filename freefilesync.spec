@@ -3,7 +3,7 @@
 # Note: FreeFileSync 14.4 depends on wxWidgets>=3.3.0.
 
 Name:       freefilesync
-Version:    14.3
+Version:    14.4
 Release:    1%{?dist}
 Summary:    A file synchronization utility
 License:    GPLv3
@@ -106,7 +106,7 @@ sed -i '/assert(scrollBarSizeTmp.y == 0 ||/,/scrollBarSizeTmp.y == 16);/ s/^/\/\
 export PATH=%{_bindir}:$PATH
 
 ## Ensure CXXFLAGS are passed directly to make, not just exported. The makefiles might not automatically pick up exported CXXFLAGS
-export CXXFLAGS_FFS="$(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux wxgtk3) -I%{_builddir}/FreeFileSync-%{version} -I%{_builddir}/FreeFileSync-%{version}/zenXml -std=c++23 -DWXINTL_NO_GETTEXT_MACRO"
+export CXXFLAGS_FFS="%{optflags} $(pkg-config --cflags gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux wxgtk3) -I%{_builddir}/FreeFileSync-%{version} -I%{_builddir}/FreeFileSync-%{version}/zenXml -std=c++23 -DWXINTL_NO_GETTEXT_MACRO"
 export LDFLAGS_FFS="$(pkg-config --libs gtk+-3.0 glib-2.0 openssl libcurl libssh2 libselinux wxgtk3) -lidn2"
 
 ## Build FreeFileSync and RealTimeSync. Pass CXXFLAGS and LDFLAGS directly to make
