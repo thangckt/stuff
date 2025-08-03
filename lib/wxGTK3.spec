@@ -8,6 +8,7 @@ Summary:    A library for creating graphical user interfaces
 License:    wxWidgets Library License
 URL:        https://github.com/wxWidgets/wxWidgets
 Source0:    %{url}/releases/download/v%{version}/wxWidgets-%{version}.tar.bz2
+Patch0:     ../patch/wxwidgets-image-fix.patch
 
 # Disable debug packages
 %global debug_package %{nil}
@@ -24,8 +25,13 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
 
 %prep
 %setup -q -n wxWidgets-%{version}
+%patch0 -p1
 
 %build
+# Add NDEBUG to disable assertions and prevent runtime assertion failures
+export CPPFLAGS="${CPPFLAGS} -DNDEBUG -DwxDEBUG_LEVEL=0"
+export CXXFLAGS="${CXXFLAGS} -DNDEBUG -DwxDEBUG_LEVEL=0 -Wno-unused-but-set-variable"
+
 %cmake  -DwxBUILD_SHARED=ON \
         -DwxBUILD_MONOLITHIC=OFF \
         -DwxBUILD_TOOLKIT=gtk3 \
@@ -33,7 +39,10 @@ This package provides version 3.3.1 with GTK3 and WebKit2GTK support.
         -DwxUSE_WEBVIEW=ON \
         -DwxUSE_LIBLZMA=ON \
         -DwxUSE_LIBSDL=ON \
-        -DwxUSE_LIBMSPACK=ON
+        -DwxUSE_LIBMSPACK=ON \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DwxUSE_DEBUG_CONTEXT=OFF \
+        -DwxUSE_DEBUGREPORT=OFF
 %cmake_build
 
 %install

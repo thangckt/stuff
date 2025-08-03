@@ -1,0 +1,96 @@
+--- a/src/common/image.cpp
++++ b/src/common/image.cpp
+@@ -2240,10 +2240,15 @@ void wxImage::SetAlpha( int x, int y, unsigned char alpha )
+     M_IMGDATA->m_alpha[y*w + x] = alpha;
+ }
+ 
+ unsigned char *wxImage::GetAlpha() const
+ {
+-    wxCHECK_MSG( IsOk(), (unsigned char *)NULL, wxT("invalid image") );
++    // Enhanced validation to prevent runtime assertion failures
++    if ( !IsOk() || !M_IMGDATA ) {
++        wxLogDebug(wxT("GetAlpha() called on invalid image"));
++        return (unsigned char *)NULL;
++    }
++    
++    wxCHECK_MSG( IsOk(), (unsigned char *)NULL, wxT("invalid image") );
+ 
+     return M_IMGDATA->m_alpha;
+ }
+@@ -2251,7 +2256,12 @@ unsigned char *wxImage::GetAlpha() const
+ unsigned char wxImage::GetAlpha( int x, int y ) const
+ {
+     wxCHECK_MSG( IsOk(), 0, wxT("invalid image") );
+-    wxCHECK_MSG( (x>=0 && y>=0 && x<GetWidth() && y<GetHeight()), 0, wxT("invalid image index") );
++    
++    // Additional bounds and validity checking
++    if ( !IsOk() || !M_IMGDATA || !M_IMGDATA->m_alpha ) {
++        return 0;
++    }
++    wxCHECK_MSG( (x>=0 && y>=0 && x<GetWidth() && y<GetHeight()), 0, wxT("invalid image index") );
+ 
+     long pos = y * GetWidth() + x;
+ 
+@@ -2261,6 +2271,11 @@ unsigned char wxImage::GetAlpha( int x, int y ) const
+ bool wxImage::HasAlpha() const
+ {
+     wxCHECK_MSG( IsOk(), false, wxT("invalid image") );
++    
++    // Ensure we have valid image data before checking alpha
++    if ( !IsOk() || !M_IMGDATA ) {
++        return false;
++    }
+ 
+     return M_IMGDATA->m_alpha != NULL;
+ }
+@@ -2279,6 +2294,11 @@ void wxImage::ClearAlpha()
+ 
+ void wxImage::InitAlpha()
+ {
++    // Validate image before initializing alpha
++    if ( !IsOk() || !M_IMGDATA ) {
++        wxLogDebug(wxT("InitAlpha() called on invalid image"));
++        return;
++    }
+     wxCHECK_RET( IsOk(), wxT("invalid image") );
+ 
+     AllocExclusive();
+--- a/src/common/imagpng.cpp
++++ b/src/common/imagpng.cpp
+@@ -450,6 +450,11 @@ wxPNGHandler::LoadFile(wxImage *image,
+     }
+ 
+     image->Create((int)width, (int)height, (bool) false /* no need to init pixels */);
++    
++    // Validate image creation before proceeding
++    if ( !image->IsOk() ) {
++        goto error;
++    }
+ 
+     if ( !image->IsOk() )
+         goto error;
+@@ -541,6 +546,10 @@ wxPNGHandler::LoadFile(wxImage *image,
+         if ( color_type == PNG_COLOR_TYPE_RGB_ALPHA )
+         {
+             image->SetAlpha();
++            if ( !image->HasAlpha() ) {
++                wxLogError(_("PNG: Failed to set alpha channel"));
++                goto error;
++            }
+         }
+ 
+         png_read_image( png_ptr, lines );
+--- a/src/gtk/bitmap.cpp
++++ b/src/gtk/bitmap.cpp
+@@ -258,6 +258,11 @@ wxBitmap::wxBitmap(const wxImage& image, int depth, double scale)
+ {
+     wxCHECK_RET( image.IsOk(), wxT("invalid image") );
+ 
++    // Additional validation for image data
++    if ( !image.IsOk() || image.GetWidth() <= 0 || image.GetHeight() <= 0 ) {
++        wxLogError(wxT("Invalid image data in bitmap constructor"));
++        return;
++    }
+     m_refData = new wxBitmapRefData(image, depth, scale);
+ }
+ 

@@ -47,26 +47,7 @@ printf "\n%s\n" "#ANCHOR: Build Evolution Data Server"
 find %{buildroot} -type f | sed "s|^%{buildroot}||" > filelist.txt
 
 %files -f filelist.txt
-%{_libdir}/libcamel-1.2.so
-%{_libdir}/libebackend-1.2.so
-%{_libdir}/libebook-1.2.so
-%{_libdir}/libebook-contacts-1.2.so
-%{_libdir}/libecal-2.0.so
-%{_libdir}/libedata-book-1.2.so
-%{_libdir}/libedata-cal-2.0.so
-%{_libdir}/libedataserver-1.2.so
-%{_libdir}/libedataserverui-1.2.so
-%{_libdir}/libedataserverui4-1.0.so
-%{_libdir}/libcamel-1.2.so.65
-%{_libdir}/libebackend-1.2.so.11
-%{_libdir}/libebook-1.2.so.21
-%{_libdir}/libebook-contacts-1.2.so.4
-%{_libdir}/libecal-2.0.so.3
-%{_libdir}/libedata-book-1.2.so.27
-%{_libdir}/libedata-cal-2.0.so.2
-%{_libdir}/libedataserver-1.2.so.27
-%{_libdir}/libedataserverui-1.2.so.4
-%{_libdir}/libedataserverui4-1.0.so.0
+%{_libdir}/lib*
 
 %changelog
 %autochangelog
