@@ -11,7 +11,8 @@ URL:        http://www.freefilesync.org/
 
 # upstream does not provide easy automatic downloads of the source, so use the mirror
 # Source0:    http://www.freefilesync.org/download/%FreeFileSync_%%{version}_Source.zip
-Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{version}/FreeFileSync-%{version}.tar.gz
+# Source0:    https://gitlab.com/opensource-tracking/FreeFileSync/-/archive/%{version}/FreeFileSync-%{version}.tar.gz
+Source0:    https://github.com/hkneptune/FreeFileSync/archive/refs/tags/v%{version}tar.gz
 
 %global debug_package %{nil}
 %global _enable_debug_package 0
@@ -91,9 +92,9 @@ sed -i '/#include "file_path.h"/a #include "globals.h"' zen/file_path.cpp
 sed -i '/assert(runningOnMainThread());/d' zen/file_path.cpp
 
 ## Patch to change the Resources dir
-# sed -i '/Zstring fff::getResourceDirPath()/, /}/c\
-# Zstring fff::getResourceDirPath()\
-# {\return Zstr("/usr/share/freefilesync/Resources");\}' FreeFileSync/Source/ffs_paths.cpp
+sed -i '/Zstring fff::getResourceDirPath()/, /}/c\
+Zstring fff::getResourceDirPath()\
+{\return Zstr("/usr/share/freefilesync/Resources");\}' FreeFileSync/Source/ffs_paths.cpp
 
 ## Comment out GTK3 scrollbar assertion that fails at runtime
 sed -i '/assert(scrollBarSizeTmp.y == 0 ||/,/scrollBarSizeTmp.y == 16);/ s/^/\/\//' wx+/grid.cpp
