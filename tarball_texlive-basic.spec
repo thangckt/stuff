@@ -22,7 +22,7 @@ BuildRequires:  perl wget tar xz
 Requires:       perl
 
 %description
-TeX Live provides a comprehensive TeX system for GNU/Linux. This RPM installs a basic TeX Live tree in /opt/texlive.
+TeX Live provides a comprehensive TeX system for GNU/Linux. This RPM installs a TeX Live tree in /opt/texlive.
 
 %prep
 mkdir extracted
