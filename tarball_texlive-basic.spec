@@ -65,53 +65,27 @@ find %{buildroot}/opt/texlive/%{version} -type f -exec sed -i \
   {} +
 
 ## Sanitize files to remove %{buildroot} in their paths
-buildroot_path="%{buildroot}"
 find %{buildroot}/opt/texlive/%{version} -type f \
   \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.conf' \) \
-  -exec sed -i "s|$buildroot_path||g" {} +
+  -exec sed -i "s|%{buildroot}||g" {} +
 
 ## export environment variables (PATH, MANPATH, etc.) (not use).
-#mkdir -p %{buildroot}/etc/profile.d
-#cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
-#export PATH=/opt/texlive/%{version}/bin/x86_64-linux:\$PATH
-#export MANPATH=/opt/texlive/%{version}/texmf-dist/doc/man:\$MANPATH
-#export INFOPATH=/opt/texlive/%{version}/texmf-dist/doc/info:\$INFOPATH
-#EOF
+mkdir -p %{buildroot}/etc/profile.d
+cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
+export PATH=/opt/texlive/%{version}/bin/x86_64-linux:\$PATH
+export MANPATH=/opt/texlive/%{version}/texmf-dist/doc/man:\$MANPATH
+export INFOPATH=/opt/texlive/%{version}/texmf-dist/doc/info:\$INFOPATH
+EOF
 
 %post
-## registers each binary file in opt/ folder of TeX Live 2025
-for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
-    [ -f "$bin_path" ] || continue
-    bin_name=$(basename "$bin_path")
-    # Prefer non-dev version by priority
-    if [[ "$bin_name" == *-dev ]]; then
-        priority=90
-    else
-        priority=100
-    fi
-    if [ -f "/usr/bin/$bin_name" ] && [ ! -L "/usr/bin/$bin_name" ]; then
-        mv "/usr/bin/$bin_name" "/usr/bin/${bin_name}.backup-by-texlive-full"
-    fi
-    alternatives --install /usr/bin/$bin_name $bin_name "$bin_path" $priority || :
-done
-
-%preun
-## Only if uninstalling
-if [ "$1" -eq 0 ]; then
-    for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
-        [ -f "$bin_path" ] || continue
-        bin_name=$(basename "$bin_path")
-        # Only remove if this path is currently registered
-        if alternatives --display "$bin_name" | grep -q "$bin_path"; then
-            alternatives --remove "$bin_name" "$bin_path" || :
-        fi
-    done
-fi
-
+echo "==================================================================="
+echo "TeX Live has been installed to /opt/texlive/%{version}. To use it, restart your terminal session, or run:"
+echo "  source /etc/profile.d/texlive.sh"
+echo "==================================================================="
 
 %files
 /opt/texlive
-#%config(noreplace) /etc/profile.d/texlive.sh
+%config(noreplace) /etc/profile.d/texlive.sh
 
 %changelog
 %autochangelog
