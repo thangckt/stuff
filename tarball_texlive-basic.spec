@@ -74,6 +74,9 @@ find ${tmp_install_dir} -type f -exec sed -i \
   -e '1s|^#! */usr/bin/env python$|#!/usr/bin/python3|' \
   {} +
 
+## Remove unnecessary build files
+find ${tmp_install_dir} -type f \( -name 'install-tl.log' -o -name 'texlive.profile' \) -delete || :
+
 ## Copy staged install into %{buildroot}
 mkdir -p %{buildroot}%{install_dir}
 cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
