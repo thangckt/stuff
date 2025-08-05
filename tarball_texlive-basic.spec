@@ -43,13 +43,13 @@ cd ..
 # Use ${RPM_BUILD_ROOT} to ensure buildroot path is expanded correctly at shell execution time
 cat > texlive.profile <<EOF
 selected_scheme scheme-basic
-TEXDIR ${RPM_BUILD_ROOT}/opt/texlive/%{version}
-# TEXMFLOCAL ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-local
-# TEXMFSYSVAR ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-var
-# TEXMFSYSCONFIG ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-config
-# TEXMFVAR ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-var
-# TEXMFCONFIG ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-config
-# TEXMFHOME ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-home
+TEXDIR          ${RPM_BUILD_ROOT}/opt/texlive/%{version}
+TEXMFLOCAL      ${TEXDIR}/texmf-local
+TEXMFSYSVAR     ${TEXDIR}/texmf-var
+TEXMFSYSCONFIG  ${TEXDIR}/texmf-config
+TEXMFVAR        ${TEXDIR}/texmf-var
+TEXMFCONFIG     ${TEXDIR}/texmf-config
+TEXMFHOME       ${TEXDIR}/texmf-home
 binary_x86_64-linux 1
 option_doc 0
 option_src 0
