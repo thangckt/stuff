@@ -38,7 +38,8 @@ Deal with this problem:
 find %{buildroot}/opt/texlive/%{version} -type f \
   \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.conf' \) -delete
 
-%post
+%posttrans
+## This part runs after all packages are installed
 ## Rebuild formats at install time
 /opt/texlive/%{version}/bin/x86_64-linux/mktexlsr > /dev/null 2>&1 || :
 /opt/texlive/%{version}/bin/x86_64-linux/updmap-sys > /dev/null 2>&1 || :

@@ -13,10 +13,14 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 ExclusiveArch:  x86_64
 
 ## Force replace the Fedora TeX Live
-Obsoletes: texlive-core < 2025
-Obsoletes: texlive-dist < 2025
-Obsoletes: texlive-latex < 2025
-Provides:  texlive
+# Use an Epoch to ensure our version is always "newer"
+Epoch:          1
+Obsoletes:      texlive-core < 2025
+Obsoletes:      texlive-dist < 2025
+Obsoletes:      texlive-latex < 2025
+Provides:       texlive
+# Obsoleting these directly helps prevent their triggers from running
+Obsoletes:      texlive-kpathsea < 2025
 
 BuildRequires:  perl wget tar xz
 Requires:       perl
@@ -79,20 +83,20 @@ for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
     alternatives --install /usr/bin/$bin_name $bin_name "$bin_path" 100 || :
 done
 
-## Inform
-echo "======================================================="
-echo "TeX Live has been installed to /opt/texlive/%{version}."
-echo "======================================================="
-
 
 %posttrans
-## This is run after all packages are installed
+## This part runs after all packages are installed
 ## Rebuild formats at install time
 export PATH=/opt/texlive/%{version}/bin/x86_64-linux:$PATH
 export TEXMFCNF=/opt/texlive/%{version}/texmf-dist/web2c
 mktexlsr > /dev/null 2>&1 || :
 updmap-sys > /dev/null 2>&1 || :
 fmtutil-sys --all > /dev/null 2>&1 || :
+
+## Inform
+echo "======================================================="
+echo "TeX Live has been installed to /opt/texlive/%{version}."
+echo "======================================================="
 
 
 %preun
