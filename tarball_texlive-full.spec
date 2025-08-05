@@ -34,7 +34,7 @@ cd ..
 
 # Create a custom install profile
 # Use ${RPM_BUILD_ROOT} to ensure buildroot path is expanded correctly at shell execution time
-cat <<EOF > texlive.profile
+cat > texlive.profile <<EOF
 selected_scheme scheme-full
 TEXDIR ${RPM_BUILD_ROOT}/opt/texlive/%{version}
 TEXMFLOCAL ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-local
@@ -64,42 +64,40 @@ find %{buildroot}/opt/texlive/%{version} -type f -exec sed -i \
   -e '1s|^#! */usr/bin/env python$|#!/usr/bin/python3|' \
   {} +
 
-## Sanitize files to remove %{buildroot} in their paths
+## Remove prebuilt format files to avoid embedded %{buildroot}
 find %{buildroot}/opt/texlive/%{version} -type f \
-  \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.conf' \) \
-  -exec sed -i "s|%{buildroot}||g" {} +
-
-## export environment variables (PATH, MANPATH, etc.) (not use).
-mkdir -p %{buildroot}/etc/profile.d
-cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
-export PATH=/opt/texlive/%{version}/bin/x86_64-linux:\$PATH
-export MANPATH=/opt/texlive/%{version}/texmf-dist/doc/man:\$MANPATH
-export INFOPATH=/opt/texlive/%{version}/texmf-dist/doc/info:\$INFOPATH
-EOF
-
-## New section to ensure non-login shells also get the PATH
-mkdir -p %{buildroot}/etc/bashrc.d
-cat > %{buildroot}/etc/bashrc.d/texlive.sh <<EOF
-# Source the profile.d script for interactive non-login shells
-if [ -f /etc/profile.d/texlive.sh ]; then
-  . /etc/profile.d/texlive.sh
-fi
-EOF
-
+  \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.conf' \) -delete
 
 %post
-# Inform the user how to activate immediately
-echo "==================================================================="
-echo "TeX Live has been installed to /opt/texlive/%{version}."
-echo "Please open a new terminal session to use it."
-echo "If it does not work, try to source the script manually:"
-echo "  source /etc/profile.d/texlive.sh"
-echo "==================================================================="
+## Rebuild formats at install time
+/opt/texlive/%{version}/bin/x86_64-linux/mktexlsr
+/opt/texlive/%{version}/bin/x86_64-linux/fmtutil-sys --all || :
+
+## registers each binary file in opt/ folder of TeX Live 2025
+for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
+    [ -f "$bin_path" ] || continue
+    bin_name=$(basename "$bin_path")
+    if [ -f "/usr/bin/$bin_name" ] && [ ! -L "/usr/bin/$bin_name" ]; then
+        mv "/usr/bin/$bin_name" "/usr/bin/${bin_name}.backup-by-texlive-full"
+    fi
+    alternatives --install /usr/bin/$bin_name $bin_name "$bin_path" 100 || :
+done
+
+%preun
+## Only if uninstalling
+if [ "$1" -eq 0 ]; then
+    for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
+        [ -f "$bin_path" ] || continue
+        bin_name=$(basename "$bin_path")
+        # Only remove if this path is currently registered
+        if alternatives --display "$bin_name" | grep -q "$bin_path"; then
+            alternatives --remove "$bin_name" "$bin_path" || :
+        fi
+    done
+fi
 
 %files
 /opt/texlive
-%config(noreplace) /etc/profile.d/texlive.sh
-%config(noreplace) /etc/bashrc.d/texlive.sh
 
 %changelog
 %autochangelog
