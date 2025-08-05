@@ -54,7 +54,7 @@ tmp_install_dir=$(realpath tmp_texlive)
 
 # Create a custom install profile with absolute paths
 cat > texlive.profile <<EOF
-selected_scheme scheme-basic
+selected_scheme scheme-full
 TEXDIR          ${tmp_install_dir}
 TEXMFLOCAL      ${tmp_install_dir}/texmf-local
 TEXMFSYSVAR     ${tmp_install_dir}/texmf-var
