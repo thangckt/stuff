@@ -34,7 +34,7 @@ cd ..
 
 # Create a custom install profile
 # Use ${RPM_BUILD_ROOT} to ensure buildroot path is expanded correctly at shell execution time
-cat <<EOF > texlive.profile
+cat > texlive.profile <<EOF
 selected_scheme scheme-basic
 TEXDIR ${RPM_BUILD_ROOT}/opt/texlive/%{version}
 TEXMFLOCAL ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-local
