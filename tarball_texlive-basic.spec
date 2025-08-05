@@ -24,6 +24,9 @@ Obsoletes:      texlive-kpathsea < 1:%{version}
 Obsoletes:      texlive-latex < 1:%{version}
 Obsoletes:      texlive-scheme-basic < 1:%{version}
 
+Obsoletes:      luatex
+Obsoletes:      gsftopk
+
 BuildRequires:  perl wget tar xz
 Requires:       perl
 
@@ -82,6 +85,10 @@ find %{buildroot}/opt/texlive/%{version} -type f \
 for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
     [ -f "$bin_path" ] || continue
     bin_name=$(basename "$bin_path")
+    # If /usr/bin/$bin_name exists and is not a symlink, back it up
+    if [ -e "/usr/bin/$bin_name" ] && [ ! -L "/usr/bin/$bin_name" ]; then
+        mv "/usr/bin/$bin_name" "/usr/bin/$bin_name.bak_by_texlive_thang" || :
+    fi
     alternatives --install /usr/bin/$bin_name $bin_name "$bin_path" 100 || :
 done
 
