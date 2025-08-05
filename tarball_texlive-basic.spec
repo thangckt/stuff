@@ -15,10 +15,25 @@ ExclusiveArch:  x86_64
 ## Force replace the Fedora TeX Live (Epoch to ensure our version is always "newer")
 Epoch:          1
 Provides:       texlive
-Obsoletes:      texlive-core < 2025
-Obsoletes:      texlive-dist < 2025
-Obsoletes:      texlive-latex < 2025
-Obsoletes:      texlive-kpathsea < 2025
+Provides:       texlive-core
+Provides:       texlive-full
+Provides:       texlive-latex
+Provides:       texlive-kpathsea
+Provides:       texlive-collection-full
+Provides:       texlive-collection-latex
+Provides:       texlive-collection-latexrecommended
+Provides:       texlive-collection-fontsrecommended
+Provides:       texlive-collection-binextra
+
+Obsoletes:      texlive-core < %{version}
+Obsoletes:      texlive-full < %{version}
+Obsoletes:      texlive-latex < %{version}
+Obsoletes:      texlive-kpathsea < %{version}
+Obsoletes:      texlive-collection-full < %{version}
+Obsoletes:      texlive-collection-latex < %{version}
+Obsoletes:      texlive-collection-latexrecommended < %{version}
+Obsoletes:      texlive-collection-fontsrecommended < %{version}
+Obsoletes:      texlive-collection-binextra < %{version}
 
 BuildRequires:  perl wget tar xz
 Requires:       perl

@@ -19,7 +19,16 @@ How to get the spec file for a package:
 - https://github.com/PhantomX/chinforpms
 
 
-# Spec files
+# Sections in spec files
+
+## Auto replacement
+- Add `Obsoletes: <package_name> <version>` to automatically remove conflicting or older versions
+- Add `Provides: <package_name> = <version>` to declare that this package will fulfill the requirements of the specified package name and version.
+- Add `Conflicts: <package_name> <version>` to prevent conflicts with other packages.
+
+
+
+# Setting the Spec files
 
 ## `Texlive`
 - Install `texlive` using `install-tl` script.
