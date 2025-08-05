@@ -82,9 +82,14 @@ done
 ## Rebuild formats at install time
 export PATH=/opt/texlive/%{version}/bin/x86_64-linux:$PATH
 export TEXMFCNF=/opt/texlive/%{version}/texmf-dist/web2c
-mktexlsr > /dev/null 2>&1 || :
-updmap-sys > /dev/null 2>&1 || :
-fmtutil-sys --all > /dev/null 2>&1 || :
+if [ -f /opt/texlive/%{version}/texmf-dist/web2c/texmf.cnf ]; then
+    mktexlsr > /dev/null 2>&1 || :
+    if [ -d /opt/texlive/%{version}/texmf-dist/fonts/map ]; then
+        updmap-sys > /dev/null 2>&1 || :
+    fi
+    fmtutil-sys --all > /dev/null 2>&1 || :
+fi
+
 
 ## Inform
 echo "======================================================="
