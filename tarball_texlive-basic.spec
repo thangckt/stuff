@@ -24,9 +24,6 @@ Obsoletes:      texlive-kpathsea < 1:%{version}
 Obsoletes:      texlive-latex < 1:%{version}
 Obsoletes:      texlive-scheme-basic < 1:%{version}
 
-Obsoletes:      luatex
-Obsoletes:      gsftopk
-
 BuildRequires:  perl wget tar xz
 Requires:       perl
 

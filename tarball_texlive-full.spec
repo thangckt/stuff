@@ -28,9 +28,6 @@ Obsoletes:      texlive-collection-fontsrecommended < 1:%{version}
 Obsoletes:      texlive-scheme-full < 1:%{version}
 Obsoletes:      texlive-basic < 1:%{version}
 
-Obsoletes:      luatex
-Obsoletes:      gsftopk
-
 BuildRequires:  perl wget tar xz
 Requires:       perl
 
