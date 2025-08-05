@@ -43,7 +43,7 @@ cd ..
 # Use ${RPM_BUILD_ROOT} to ensure buildroot path is expanded correctly at shell execution time
 cat > texlive.profile <<EOF
 selected_scheme scheme-basic
-# TEXDIR ${RPM_BUILD_ROOT}/opt/texlive/%{version}
+TEXDIR ${RPM_BUILD_ROOT}/opt/texlive/%{version}
 # TEXMFLOCAL ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-local
 # TEXMFSYSVAR ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-var
 # TEXMFSYSCONFIG ${RPM_BUILD_ROOT}/opt/texlive/%{version}/texmf-config
@@ -61,7 +61,6 @@ EOF
 
 
 %install
-mkdir -p %{buildroot}/opt
 ./texlive_dir/install-tl -profile texlive.profile -no-interaction -gui text
 
 ## Fix ambiguous and legacy python2 shebangs

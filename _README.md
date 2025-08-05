@@ -37,6 +37,14 @@ The concepts between *compile-time paths* and *runtime paths*. If compile errors
 1. The TeX Live installer itself is generating incorrect, hardcoded paths. This is a less common scenario for a robust installer like `install-tl`, which is designed to handle `DESTDIR` environments.
 2. The build process or a subsequent check is finding {%buildroot} in a file that it shouldn't, and this is being flagged as an error. This is the more likely scenario.
 
+TeX Live's installer defaults to `/usr/local/texlive/<year>`, but the `%install` section of an RPM must install into `%{buildroot}` only.
+This is the critical line from the log:
+```
+mkdir(/usr/local/texlive/) failed: Permission denied
+```
+RPM doesn’t allow writes to `/usr/local/` during `%install`.
+
+
 Deal with this problem:
 - Remove prebuilt format files to avoid embedded %{buildroot}. Then rebuild formats at install time.
 ```sh
