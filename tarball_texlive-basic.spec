@@ -64,19 +64,26 @@ find %{buildroot}/opt/texlive/%{version} -type f -exec sed -i \
   -e '1s|^#! */usr/bin/env python$|#!/usr/bin/python3|' \
   {} +
 
-## Remove prebuilt format files to avoid embedded %{buildroot}
-# find %{buildroot}/opt/texlive/%{version} -type f \
-#   \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.conf' \) -delete
-
-## Optionally remove only build-time logs
+## Remove prebuilt format files to avoid embedded %{buildroot} paths
 find %{buildroot}/opt/texlive/%{version} -type f \
-  \( -name 'install-tl.log' -o -name 'texlive.profile' \) -delete
+  \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' \) -delete
+
+## Sanitize conf files more carefully
+find %{buildroot}/opt/texlive/%{version} -name 'texmf.cnf' -exec sed -i "s|%{buildroot}||g" {} +
+
 
 %post
-## Rebuild formats at install time
-/opt/texlive/%{version}/bin/x86_64-linux/mktexlsr > /dev/null 2>&1 || :
-/opt/texlive/%{version}/bin/x86_64-linux/updmap-sys > /dev/null 2>&1 || :
-/opt/texlive/%{version}/bin/x86_64-linux/fmtutil-sys --all > /dev/null 2>&1 || :
+## Use a specific environment for TeX Live to run its post-install scripts
+export TEXLIVE_HOME=/opt/texlive/%{version}
+export PATH="${TEXLIVE_HOME}/bin/x86_64-linux:${PATH}"
+export MANPATH="${TEXLIVE_HOME}/texmf-dist/doc/man:${MANPATH}"
+export INFOPATH="${TEXLIVE_HOME}/texmf-dist/doc/info:${INFOPATH}"
+export TEXMFCNF="${TEXLIVE_HOME}/texmf-dist/web2c"
+
+## Rebuild formats and configurations at install time
+mktexlsr > /dev/null 2>&1 || :
+updmap-sys --cnffile "${TEXLIVE_HOME}/texmf-config/web2c/updmap.cfg" > /dev/null 2>&1 || :
+fmtutil-sys --all > /dev/null 2>&1 || :
 
 ## registers each binary file in opt/ folder of TeX Live 2025
 for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
