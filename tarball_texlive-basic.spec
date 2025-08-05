@@ -79,22 +79,21 @@ for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
     alternatives --install /usr/bin/$bin_name $bin_name "$bin_path" 100 || :
 done
 
-## Rebuild formats at install time
-export PATH=/opt/texlive/%{version}/bin/x86_64-linux:$PATH
-export TEXMFCNF=/opt/texlive/%{version}/texmf-dist/web2c
-if [ -f /opt/texlive/%{version}/texmf-dist/web2c/texmf.cnf ]; then
-    mktexlsr > /dev/null 2>&1 || :
-    if [ -d /opt/texlive/%{version}/texmf-dist/fonts/map ]; then
-        updmap-sys > /dev/null 2>&1 || :
-    fi
-    fmtutil-sys --all > /dev/null 2>&1 || :
-fi
-
-
 ## Inform
 echo "======================================================="
 echo "TeX Live has been installed to /opt/texlive/%{version}."
 echo "======================================================="
+
+
+%posttrans
+## This is run after all packages are installed
+## Rebuild formats at install time
+export PATH=/opt/texlive/%{version}/bin/x86_64-linux:$PATH
+export TEXMFCNF=/opt/texlive/%{version}/texmf-dist/web2c
+mktexlsr > /dev/null 2>&1 || :
+updmap-sys > /dev/null 2>&1 || :
+fmtutil-sys --all > /dev/null 2>&1 || :
+
 
 %preun
 ## Only if uninstalling
