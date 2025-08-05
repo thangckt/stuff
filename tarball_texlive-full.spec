@@ -12,11 +12,13 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 
 ExclusiveArch:  x86_64
 
-## Force replace the Fedora TeX Live
-Obsoletes: texlive-core < 2025
-Obsoletes: texlive-dist < 2025
-Obsoletes: texlive-latex < 2025
-Provides:  texlive
+## Force replace the Fedora TeX Live (Epoch to ensure our version is always "newer")
+Epoch:          1
+Provides:       texlive
+Obsoletes:      texlive-core < 2025
+Obsoletes:      texlive-dist < 2025
+Obsoletes:      texlive-latex < 2025
+Obsoletes:      texlive-kpathsea < 2025
 
 BuildRequires:  perl wget tar xz
 Requires:       perl
@@ -73,12 +75,11 @@ find %{buildroot}/opt/texlive/%{version} -type f \
 for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
     [ -f "$bin_path" ] || continue
     bin_name=$(basename "$bin_path")
-    if [ -f "/usr/bin/$bin_name" ] && [ ! -L "/usr/bin/$bin_name" ]; then
-        mv "/usr/bin/$bin_name" "/usr/bin/${bin_name}.backup-by-texlive-full"
-    fi
     alternatives --install /usr/bin/$bin_name $bin_name "$bin_path" 100 || :
 done
 
+
+%posttrans
 ## Rebuild formats at install time
 export PATH=/opt/texlive/%{version}/bin/x86_64-linux:$PATH
 export TEXMFCNF=/opt/texlive/%{version}/texmf-dist/web2c
@@ -90,6 +91,7 @@ fmtutil-sys --all > /dev/null 2>&1 || :
 echo "======================================================="
 echo "TeX Live has been installed to /opt/texlive/%{version}."
 echo "======================================================="
+
 
 %preun
 ## Only if uninstalling

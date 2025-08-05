@@ -62,9 +62,6 @@ for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
     else
         priority=100
     fi
-    if [ -f "/usr/bin/$bin_name" ] && [ ! -L "/usr/bin/$bin_name" ]; then
-        mv "/usr/bin/$bin_name" "/usr/bin/${bin_name}.backup-by-texlive-full"
-    fi
     alternatives --install /usr/bin/$bin_name $bin_name "$bin_path" $priority || :
 done
 
