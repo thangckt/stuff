@@ -40,32 +40,33 @@ texlive_dir=$(ls -d install-tl-* | head -n1)
 mv "$texlive_dir" ../texlive_dir
 cd ..
 
-# Create a custom install profile
-# Use ${RPM_BUILD_ROOT} to ensure buildroot path is expanded correctly at shell execution time
+%build
+# Nothing to build
+
+%install
+## Install texlive to a temporary directory to avoid embedding %{buildroot} in the file-paths
+mkdir -p tmp_texlive
+tmp_install_dir=$(realpath tmp_texlive)
+
+# Create a custom install profile with absolute paths
 cat > texlive.profile <<EOF
 selected_scheme scheme-basic
-TEXDIR          ${RPM_BUILD_ROOT}%{install_dir}
-TEXMFLOCAL      ${RPM_BUILD_ROOT}%{install_dir}/texmf-local
-TEXMFSYSVAR     ${RPM_BUILD_ROOT}%{install_dir}/texmf-var
-TEXMFSYSCONFIG  ${RPM_BUILD_ROOT}%{install_dir}/texmf-config
-TEXMFVAR        ${RPM_BUILD_ROOT}%{install_dir}/texmf-var
-TEXMFCONFIG     ${RPM_BUILD_ROOT}%{install_dir}/texmf-config
-TEXMFHOME       ${RPM_BUILD_ROOT}%{install_dir}/texmf-home
+TEXDIR          ${tmp_install_dir}
+TEXMFLOCAL      ${tmp_install_dir}/texmf-local
+TEXMFSYSVAR     ${tmp_install_dir}/texmf-var
+TEXMFSYSCONFIG  ${tmp_install_dir}/texmf-config
+TEXMFVAR        ${tmp_install_dir}/texmf-var
+TEXMFCONFIG     ${tmp_install_dir}/texmf-config
+TEXMFHOME       ${tmp_install_dir}/texmf-home
 binary_x86_64-linux 1
 option_doc 0
 option_src 0
 EOF
 
-
-%build
-# Nothing to build
-
-
-%install
 ./texlive_dir/install-tl -profile texlive.profile -no-interaction -gui text
 
 ## Fix ambiguous and legacy python2 shebangs
-find %{buildroot}%{install_dir} -type f -exec sed -i \
+find ${tmp_install_dir} -type f -exec sed -i \
   -e '1s|^#! */usr/bin/python2$|#!/usr/bin/python3|' \
   -e '1s|^#! */usr/bin/env python2$|#!/usr/bin/python3|' \
   -e '1s|^#! */usr/bin/python -O$|#!/usr/bin/python3|' \
@@ -73,9 +74,10 @@ find %{buildroot}%{install_dir} -type f -exec sed -i \
   -e '1s|^#! */usr/bin/env python$|#!/usr/bin/python3|' \
   {} +
 
-## Remove prebuilt format files to avoid embedded %{buildroot}
-# find %{buildroot}%{install_dir} -type f \
-#   \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.conf' \) -delete
+## Copy staged install into %{buildroot}
+mkdir -p %{buildroot}%{install_dir}
+cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
+
 
 %post
 ## registers each binary file in opt/ folder of TeX Live 2025
@@ -88,15 +90,6 @@ for bin_path in %{install_dir}/bin/x86_64-linux/*; do
     fi
     alternatives --install /usr/bin/$bin_name $bin_name "$bin_path" 100 || :
 done
-
-
-# %posttrans
-# ## Rebuild formats at install time
-# export PATH=/opt/texlive/%{version}/bin/x86_64-linux:$PATH
-# export TEXMFCNF=/opt/texlive/%{version}/texmf-dist/web2c
-# mktexlsr > /dev/null 2>&1 || :
-# updmap-sys > /dev/null 2>&1 || :
-# fmtutil-sys --all > /dev/null 2>&1 || :
 
 ## Inform
 echo "======================================================="
