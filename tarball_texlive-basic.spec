@@ -16,24 +16,22 @@ ExclusiveArch:  x86_64
 Epoch:          1
 Provides:       texlive
 Provides:       texlive-core
-Provides:       texlive-full
-Provides:       texlive-latex
 Provides:       texlive-kpathsea
-Provides:       texlive-collection-full
+Provides:       texlive-latex
 Provides:       texlive-collection-latex
 Provides:       texlive-collection-latexrecommended
 Provides:       texlive-collection-fontsrecommended
-Provides:       texlive-collection-binextra
+Provides:       texlive-scheme-full
+Provides:       texlive-full
 
 Obsoletes:      texlive-core < %{version}
-Obsoletes:      texlive-full < %{version}
-Obsoletes:      texlive-latex < %{version}
 Obsoletes:      texlive-kpathsea < %{version}
-Obsoletes:      texlive-collection-full < %{version}
+Obsoletes:      texlive-latex < %{version}
 Obsoletes:      texlive-collection-latex < %{version}
 Obsoletes:      texlive-collection-latexrecommended < %{version}
 Obsoletes:      texlive-collection-fontsrecommended < %{version}
-Obsoletes:      texlive-collection-binextra < %{version}
+Obsoletes:      texlive-scheme-full < %{version}
+Obsoletes:      texlive-full < %{version}
 
 BuildRequires:  perl wget tar xz
 Requires:       perl
