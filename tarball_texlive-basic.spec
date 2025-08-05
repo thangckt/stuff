@@ -65,8 +65,12 @@ find %{buildroot}/opt/texlive/%{version} -type f -exec sed -i \
   {} +
 
 ## Remove prebuilt format files to avoid embedded %{buildroot}
+# find %{buildroot}/opt/texlive/%{version} -type f \
+#   \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.conf' \) -delete
+
+## Optionally remove only build-time logs
 find %{buildroot}/opt/texlive/%{version} -type f \
-  \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.conf' \) -delete
+  \( -name 'install-tl.log' -o -name 'texlive.profile' \) -delete
 
 %post
 ## Rebuild formats at install time
