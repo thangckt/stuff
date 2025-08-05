@@ -84,6 +84,11 @@ for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
     alternatives --install /usr/bin/$bin_name $bin_name "$bin_path" 100 || :
 done
 
+## Inform
+echo "======================================================="
+echo "TeX Live has been installed to /opt/texlive/%{version}."
+echo "======================================================="
+
 %preun
 ## Only if uninstalling
 if [ "$1" -eq 0 ]; then
@@ -96,6 +101,7 @@ if [ "$1" -eq 0 ]; then
         fi
     done
 fi
+
 
 %files
 /opt/texlive
