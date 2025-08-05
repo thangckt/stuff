@@ -70,8 +70,9 @@ find %{buildroot}/opt/texlive/%{version} -type f \
 
 %post
 ## Rebuild formats at install time
-/opt/texlive/%{version}/bin/x86_64-linux/mktexlsr
-/opt/texlive/%{version}/bin/x86_64-linux/fmtutil-sys --all || :
+/opt/texlive/%{version}/bin/x86_64-linux/mktexlsr > /dev/null 2>&1 || :
+/opt/texlive/%{version}/bin/x86_64-linux/updmap-sys > /dev/null 2>&1 || :
+/opt/texlive/%{version}/bin/x86_64-linux/fmtutil-sys --all > /dev/null 2>&1 || :
 
 ## registers each binary file in opt/ folder of TeX Live 2025
 for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
