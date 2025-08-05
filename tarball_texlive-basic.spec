@@ -74,8 +74,8 @@ find %{buildroot}/opt/texlive/%{version} -type f -exec sed -i \
   {} +
 
 ## Remove prebuilt format files to avoid embedded %{buildroot}
-find %{buildroot}/opt/texlive/%{version} -type f \
-  \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.conf' \) -delete
+# find %{buildroot}/opt/texlive/%{version} -type f \
+#   \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.conf' \) -delete
 
 %post
 ## registers each binary file in opt/ folder of TeX Live 2025
@@ -90,13 +90,13 @@ for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
 done
 
 
-%posttrans
-## Rebuild formats at install time
-export PATH=/opt/texlive/%{version}/bin/x86_64-linux:$PATH
-export TEXMFCNF=/opt/texlive/%{version}/texmf-dist/web2c
-mktexlsr > /dev/null 2>&1 || :
-updmap-sys > /dev/null 2>&1 || :
-fmtutil-sys --all > /dev/null 2>&1 || :
+# %posttrans
+# ## Rebuild formats at install time
+# export PATH=/opt/texlive/%{version}/bin/x86_64-linux:$PATH
+# export TEXMFCNF=/opt/texlive/%{version}/texmf-dist/web2c
+# mktexlsr > /dev/null 2>&1 || :
+# updmap-sys > /dev/null 2>&1 || :
+# fmtutil-sys --all > /dev/null 2>&1 || :
 
 ## Inform
 echo "======================================================="
