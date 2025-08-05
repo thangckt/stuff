@@ -21,11 +21,32 @@ How to get the spec file for a package:
 
 # Spec files
 
-## Texlive
-- Install texlive using `install-tl` script.
+## `Texlive`
+- Install `texlive` using `install-tl` script.
 
-There are tow ways to set paths for texlive packages:
-1. Use `alternaives` to set the default path.
+The concepts between *compile-time paths* and *runtime paths*. If compile errors related to {%buildroot} being in paths, it means one of two things:
+1. The TeX Live installer itself is generating incorrect, hardcoded paths. This is a less common scenario for a robust installer like `install-tl`, which is designed to handle `DESTDIR` environments.
+2. The build process or a subsequent check is finding {%buildroot} in a file that it shouldn't, and this is being flagged as an error. This is the more likely scenario.
+
+Deal with this problem:
+- Remove prebuilt format files to avoid embedded %{buildroot}. Then rebuild formats at install time.
+```sh
+%install
+## other install here
+
+## Remove prebuilt format files to avoid embedded %{buildroot}
+find %{buildroot}/opt/texlive/%{version} -type f \
+  \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.conf' \) -delete
+
+%post
+## Rebuild formats at install time
+/opt/texlive/%{version}/bin/x86_64-linux/mktexlsr
+/opt/texlive/%{version}/bin/x86_64-linux/fmtutil-sys --all || :
+```
+
+
+There are 2 ways to set ENV paths for `texlive` packages:
+1. Use `alternaives` to set the default path. (this way may better)
 - Some packages may not work properly with this method.
 ```sh
 %post
@@ -58,7 +79,7 @@ if [ "$1" -eq 0 ]; then
     done
 fi
 ```
-2. Use `PATH` environment variable to set the default path (recommended).
+2. Use `PATH` environment variable to set the default path
 - Must ensure both `login` and `non-login` shells are configured.
 ```sh
 %install
@@ -96,4 +117,13 @@ echo "==================================================================="
 /opt/texlive
 %config(noreplace) /etc/profile.d/texlive.sh
 %config(noreplace) /etc/bashrc.d/texlive.sh
+```
+- Also need to see `env` in `latex-workshop` to work properly.
+```js
+"latex-workshop.latex.tools": [
+    "env": {
+        "PATH": "/opt/texlive/%{version}/bin/x86_64-linux:${env:PATH}"
+    }
+  ]
+"
 ```
