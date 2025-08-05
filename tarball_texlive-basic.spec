@@ -77,15 +77,29 @@ export MANPATH=/opt/texlive/%{version}/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=/opt/texlive/%{version}/texmf-dist/doc/info:\$INFOPATH
 EOF
 
+## New section to ensure non-login shells also get the PATH
+mkdir -p %{buildroot}/etc/bashrc.d
+cat > %{buildroot}/etc/bashrc.d/texlive.sh <<EOF
+# Source the profile.d script for interactive non-login shells
+if [ -f /etc/profile.d/texlive.sh ]; then
+  . /etc/profile.d/texlive.sh
+fi
+EOF
+
+
 %post
+# Inform the user how to activate immediately
 echo "==================================================================="
-echo "TeX Live has been installed to /opt/texlive/%{version}. To use it, restart your terminal session, or run:"
+echo "TeX Live has been installed to /opt/texlive/%{version}."
+echo "Please open a new terminal session to use it."
+echo "If it does not work, try to source the script manually:"
 echo "  source /etc/profile.d/texlive.sh"
 echo "==================================================================="
 
 %files
 /opt/texlive
 %config(noreplace) /etc/profile.d/texlive.sh
+%config(noreplace) /etc/bashrc.d/texlive.sh
 
 %changelog
 %autochangelog
