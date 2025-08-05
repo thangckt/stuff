@@ -70,13 +70,21 @@ find %{buildroot}/opt/texlive/%{version} -type f \
 
 %post
 ## Rebuild formats at install time
-sudo -i
 export PATH=/opt/texlive/%{version}/bin/x86_64-linux:$PATH
 export TEXMFCNF=/opt/texlive/%{version}/texmf-dist/web2c
 
-mktexlsr
-updmap-sys
-fmtutil-sys
+# Refresh file name database
+mktexlsr > /dev/null 2>&1 || :
+
+# Only run updmap-sys if we find any *.map files
+if find /opt/texlive/%{version}/texmf-dist -name '*.map' | grep -q .; then
+    updmap-sys > /dev/null 2>&1 || echo "Warning: updmap-sys failed"
+fi
+
+# Only run fmtutil-sys if formats are defined
+if grep -q '^[^#]' /opt/texlive/%{version}/texmf-dist/web2c/fmtutil.cnf 2>/dev/null; then
+    fmtutil-sys --all > /dev/null 2>&1 || echo "Warning: fmtutil-sys failed"
+fi
 
 ## registers each binary file in opt/ folder of TeX Live 2025
 for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
