@@ -69,23 +69,6 @@ find %{buildroot}/opt/texlive/%{version} -type f \
   \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.conf' \) -delete
 
 %post
-## Rebuild formats at install time
-export PATH=/opt/texlive/%{version}/bin/x86_64-linux:$PATH
-export TEXMFCNF=/opt/texlive/%{version}/texmf-dist/web2c
-
-# Refresh file name database
-mktexlsr
-
-# Only run updmap-sys if we find any *.map files
-if find /opt/texlive/%{version}/texmf-dist -name '*.map' | grep -q .; then
-    updmap-sys
-fi
-
-# Only run fmtutil-sys if formats are defined
-if grep -q '^[^#]' /opt/texlive/%{version}/texmf-dist/web2c/fmtutil.cnf 2>/dev/null; then
-    fmtutil-sys --all
-fi
-
 ## registers each binary file in opt/ folder of TeX Live 2025
 for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
     [ -f "$bin_path" ] || continue
@@ -95,6 +78,13 @@ for bin_path in /opt/texlive/%{version}/bin/x86_64-linux/*; do
     fi
     alternatives --install /usr/bin/$bin_name $bin_name "$bin_path" 100 || :
 done
+
+## Rebuild formats at install time
+export PATH=/opt/texlive/%{version}/bin/x86_64-linux:$PATH
+export TEXMFCNF=/opt/texlive/%{version}/texmf-dist/web2c
+mktexlsr > /dev/null 2>&1 || :
+updmap-sys > /dev/null 2>&1 || :
+fmtutil-sys --all > /dev/null 2>&1 || :
 
 ## Inform
 echo "======================================================="
