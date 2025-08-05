@@ -14,24 +14,15 @@ ExclusiveArch:  x86_64
 
 ## Force replace the Fedora TeX Live (Epoch to ensure our version is always "newer")
 Epoch:          1
-Provides:       texlive
-Provides:       texlive-core
-Provides:       texlive-kpathsea
-Provides:       texlive-latex
-Provides:       texlive-collection-latex
-Provides:       texlive-collection-latexrecommended
-Provides:       texlive-collection-fontsrecommended
-Provides:       texlive-scheme-full
-Provides:       texlive-full
+Provides:       texlive = 1:%{version}
+Provides:       texlive-basic = 1:%{version}
 
-Obsoletes:      texlive-core < %{version}
-Obsoletes:      texlive-kpathsea < %{version}
-Obsoletes:      texlive-latex < %{version}
-Obsoletes:      texlive-collection-latex < %{version}
-Obsoletes:      texlive-collection-latexrecommended < %{version}
-Obsoletes:      texlive-collection-fontsrecommended < %{version}
-Obsoletes:      texlive-scheme-full < %{version}
-Obsoletes:      texlive-full < %{version}
+# Obsolete our own basic package, plus the Fedora ones we are replacing.
+# The 'texlive' Provides is what dnf will use to handle most other dependencies.
+Obsoletes:      texlive-core < 1:%{version}
+Obsoletes:      texlive-kpathsea < 1:%{version}
+Obsoletes:      texlive-latex < 1:%{version}
+Obsoletes:      texlive-scheme-basic < 1:%{version}
 
 BuildRequires:  perl wget tar xz
 Requires:       perl

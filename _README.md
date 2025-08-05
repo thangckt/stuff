@@ -24,7 +24,7 @@ How to get the spec file for a package:
 ## Auto replacement
 - Add `Obsoletes: <package_name> <version>` to automatically remove conflicting or older versions
 - Add `Provides: <package_name> = <version>` to declare that this package will fulfill the requirements of the specified package name and version.
-- Add `Conflicts: <package_name> <version>` to prevent conflicts with other packages.
+- Add `Conflicts: <package_name> <version>` to force removal of conflicting packages during installation.
 
 
 
