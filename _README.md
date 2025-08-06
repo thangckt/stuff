@@ -45,27 +45,10 @@ mkdir(/usr/local/texlive/) failed: Permission denied
 RPM doesn’t allow writes to `/usr/local/` during `%install`.
 
 
-Deal with this problem:
-- Remove prebuilt format files to avoid embedded %{buildroot}. Then rebuild formats at install time.
-```sh
-%install
-## other install here
-
-## Remove prebuilt format files to avoid embedded %{buildroot}
-find %{buildroot}/opt/texlive/%{version} -type f \
-  \( -name 'install-tl.log' -o -name 'texlive.profile' -o -name '*.log' -o -name '*.map' -o -name '*.fmt' -o -name '*.base' -o -name '*.conf' \) -delete
-
-%posttrans
-## This part runs after all packages are installed
-## Rebuild formats at install time
-/opt/texlive/%{version}/bin/x86_64-linux/mktexlsr > /dev/null 2>&1 || :
-/opt/texlive/%{version}/bin/x86_64-linux/updmap-sys > /dev/null 2>&1 || :
-/opt/texlive/%{version}/bin/x86_64-linux/fmtutil-sys --all > /dev/null 2>&1 || :
-```
 
 
 There are 2 ways to set ENV paths for `texlive` packages:
-1. Use `alternaives` to set the default path. (this way may better)
+1. Use `alternaives` to set the default path.
 - Some packages may not work properly with this method.
 ```sh
 %post
@@ -95,7 +78,7 @@ if [ "$1" -eq 0 ]; then
     done
 fi
 ```
-2. Use `PATH` environment variable to set the default path
+2. Use `PATH` environment variable to set the default path (recommended for texlive install-tl).
 - Must ensure both `login` and `non-login` shells are configured.
 ```sh
 %install
