@@ -12,15 +12,6 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 
 ExclusiveArch:  x86_64
 
-## Replace and protect from conflicting
-Provides:       texlive, texlive-*
-
-Obsoletes:      texlive <= %{version}
-Obsoletes:      texlive-base <= %{version}
-Obsoletes:      texlive-kpathsea <= %{version}
-Obsoletes:      texlive-latex <= %{version}
-Obsoletes:      texlive-scheme-basic <= %{version}
-
 BuildRequires:  perl-devel tar
 
 %global install_dir /opt/texlive/%{version}
