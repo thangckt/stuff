@@ -134,3 +134,6 @@ echo "======================================================="
   ]
 "
 ```
+
+## rustdesk
+- version 1.4.1 is very slow on the client side, so use version 1.4.0 instead.
