@@ -32,11 +32,11 @@ cd ..
 # Nothing to build
 
 %install
-## Install texlive to a temporary directory to avoid embedding %{buildroot} in the file-paths
+###ANCHOR Install texlive to a temporary directory to avoid embedding %{buildroot} in the file-paths
 mkdir -p tmp_texlive
 tmp_install_dir=$(realpath tmp_texlive)
 
-# Create a custom install profile with absolute paths
+## Create a custom install profile with absolute paths
 cat > texlive.profile <<EOF
 selected_scheme scheme-basic
 TEXDIR          ${tmp_install_dir}
@@ -66,26 +66,26 @@ find ${tmp_install_dir} -type f \( -name 'install-tl.log' -o -name 'texlive.prof
 mkdir -p %{buildroot}%{install_dir}
 cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
 
-### Replace TeX Live's broken biber with system's biber
+###ANCHOR Fix some issues
+## Replace TeX Live's broken biber with system's biber
 rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 
-## export environment variables (PATH, MANPATH, etc.) (not use).
+## Set default repository for `tlmgr`, to ensures `tlmgr update` works
+%{buildroot}%{install_dir}/bin/x86_64-linux/tlmgr option repository https://mirror.ctan.org/systems/texlive/tlnet || :
+
+###ANCHOR Set Texlive PATH
+## export environment variables (PATH, MANPATH, etc.)
 mkdir -p %{buildroot}/etc/profile.d
 cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
 export PATH=%{install_dir}/bin/x86_64-linux:\$PATH
 export MANPATH=%{install_dir}/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=%{install_dir}/texmf-dist/doc/info:\$INFOPATH
-# Ensure tlmgr uses /opt/texlive instead of /usr/share/texlive
-export TEXMFSYSVAR=%{install_dir}/texmf-var
-export TEXMFSYSCONFIG=%{install_dir}/texmf-config
-export TEXMFROOT=%{install_dir}
 EOF
 
-## New section to ensure non-login shells also get the PATH
+## To ensure non-login shells also get the PATH
 mkdir -p %{buildroot}/etc/bashrc.d
 cat > %{buildroot}/etc/bashrc.d/texlive.sh <<EOF
-# Source the profile.d script for interactive non-login shells
 if [ -f /etc/profile.d/texlive.sh ]; then
   . /etc/profile.d/texlive.sh
 fi
@@ -97,8 +97,8 @@ echo "======================================================="
 echo "TeX Live has been installed to %{install_dir}."
 echo "To take effect, open a new terminal session, or source this script manually:"
 echo "  source /etc/profile.d/texlive.sh"
+echo "To change `tlmgr` repository, run: tlmgr option repository <URL>"
 echo "======================================================="
-
 
 %files
 %{install_dir}
