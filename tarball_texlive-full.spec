@@ -97,7 +97,7 @@ echo "======================================================="
 echo "TeX Live has been installed to %{install_dir}."
 echo "To take effect, open a new terminal session, or source this script manually:"
 echo "  source /etc/profile.d/texlive.sh"
-echo "To change `tlmgr` repository, run: tlmgr option repository <URL>"
+echo "To change repository, run: tlmgr option repository <URL>"
 echo "======================================================="
 
 %files
