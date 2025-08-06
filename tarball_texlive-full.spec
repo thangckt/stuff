@@ -12,17 +12,7 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 
 ExclusiveArch:  x86_64
 
-## Replace and protect from conflicting
-Provides:       texlive, texlive-*
-
-Obsoletes:      texlive <= %{version}
-Obsoletes:      texlive-base <= %{version}
-Obsoletes:      texlive-kpathsea <= %{version}
-Obsoletes:      texlive-latex <= %{version}
-Obsoletes:      texlive-scheme-full <= %{version}
-
-BuildRequires:  perl tar
-Requires:       perl
+BuildRequires:  perl-devel tar
 
 %global install_dir /opt/texlive/%{version}
 
@@ -75,41 +65,38 @@ find ${tmp_install_dir} -type f \( -name 'install-tl.log' -o -name 'texlive.prof
 mkdir -p %{buildroot}%{install_dir}
 cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
 
+## export environment variables (PATH, MANPATH, etc.) (not use).
+mkdir -p %{buildroot}/etc/profile.d
+cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
+export PATH=%{install_dir}/bin/x86_64-linux:\$PATH
+export MANPATH=%{install_dir}/texmf-dist/doc/man:\$MANPATH
+export INFOPATH=%{install_dir}/texmf-dist/doc/info:\$INFOPATH
+EOF
+
+## New section to ensure non-login shells also get the PATH
+mkdir -p %{buildroot}/etc/bashrc.d
+cat > %{buildroot}/etc/bashrc.d/texlive.sh <<EOF
+# Source the profile.d script for interactive non-login shells
+if [ -f /etc/profile.d/texlive.sh ]; then
+  . /etc/profile.d/texlive.sh
+fi
+EOF
+
 
 %post
-## registers each binary file in opt/ folder of TeX Live 2025
-for bin_path in %{install_dir}/bin/x86_64-linux/*; do
-    [ -f "$bin_path" ] || continue
-    bin_name=$(basename "$bin_path")
-    # If /usr/bin/$bin_name exists and is not a symlink, back it up
-    if [ -e "/usr/bin/$bin_name" ] && [ ! -L "/usr/bin/$bin_name" ]; then
-        mv "/usr/bin/$bin_name" "/usr/bin/$bin_name.bak_by_texlive_thang" || :
-    fi
-    alternatives --install /usr/bin/$bin_name $bin_name "$bin_path" 100 || :
-done
-
 ## Inform
 echo "======================================================="
-echo "TeX Live has been installed to /opt/texlive/%{version}."
+echo "TeX Live has been installed to %{install_dir}."
+echo "Please open a new terminal session to use it."
+echo "If it does not work, try to source the script manually:"
+echo "  source /etc/profile.d/texlive.sh"
 echo "======================================================="
-
-
-%preun
-## Only if uninstalling
-if [ "$1" -eq 0 ]; then
-    for bin_path in %{install_dir}/bin/x86_64-linux/*; do
-        [ -f "$bin_path" ] || continue
-        bin_name=$(basename "$bin_path")
-        # Only remove if this path is currently registered
-        if alternatives --display "$bin_name" | grep -q "$bin_path"; then
-            alternatives --remove "$bin_name" "$bin_path" || :
-        fi
-    done
-fi
 
 
 %files
 %{install_dir}
+%config(noreplace) /etc/profile.d/texlive.sh
+%config(noreplace) /etc/bashrc.d/texlive.sh
 
 %changelog
 %autochangelog
