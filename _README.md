@@ -48,7 +48,7 @@ RPM doesn’t allow writes to `/usr/local/` during `%install`.
 
 
 There are 2 ways to set ENV paths for `texlive` packages:
-1. Use `alternaives` to set the default path.
+1. Use `alternaives` to set the default path. (avoid using this method)
 - Some packages may not work properly with this method.
 ```sh
 %post
@@ -105,12 +105,12 @@ EOF
 
 %post
 # Inform the user how to activate immediately
-echo "==================================================================="
+echo "======================================================="
 echo "TeX Live has been installed to /opt/texlive/%{version}."
 echo "Please open a new terminal session to use it."
 echo "If it does not work, try to source the script manually:"
 echo "  source /etc/profile.d/texlive.sh"
-echo "==================================================================="
+echo "======================================================="
 
 %files
 /opt/texlive

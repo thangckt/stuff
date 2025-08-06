@@ -74,8 +74,6 @@ find ${tmp_install_dir} -type f \( -name 'install-tl.log' -o -name 'texlive.prof
 mkdir -p %{buildroot}%{install_dir}
 cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
 
-
-%post
 ## export environment variables (PATH, MANPATH, etc.) (not use).
 mkdir -p %{buildroot}/etc/profile.d
 cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
@@ -93,6 +91,8 @@ if [ -f /etc/profile.d/texlive.sh ]; then
 fi
 EOF
 
+
+%post
 ## Inform
 echo "======================================================="
 echo "TeX Live has been installed to %{install_dir}."
