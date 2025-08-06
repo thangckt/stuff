@@ -76,6 +76,10 @@ cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
 export PATH=%{install_dir}/bin/x86_64-linux:\$PATH
 export MANPATH=%{install_dir}/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=%{install_dir}/texmf-dist/doc/info:\$INFOPATH
+# Ensure tlmgr uses /opt/texlive instead of /usr/share/texlive
+export TEXMFSYSVAR=%{install_dir}/texmf-var
+export TEXMFSYSCONFIG=%{install_dir}/texmf-config
+export TEXMFROOT=%{install_dir}
 EOF
 
 ## New section to ensure non-login shells also get the PATH
@@ -88,11 +92,10 @@ fi
 EOF
 
 
-%post
-## Inform
+%posttrans
 echo "======================================================="
 echo "TeX Live has been installed to %{install_dir}."
-echo "To take affect, open a new terminal session, or try to source this script manually:"
+echo "To take effect, open a new terminal session, or source this script manually:"
 echo "  source /etc/profile.d/texlive.sh"
 echo "======================================================="
 
