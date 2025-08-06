@@ -21,7 +21,7 @@ Obsoletes:      texlive-kpathsea <= %{version}
 Obsoletes:      texlive-latex <= %{version}
 Obsoletes:      texlive-scheme-basic <= %{version}
 
-BuildRequires:  tar
+BuildRequires:  perl-devel tar
 
 %global install_dir /opt/texlive/%{version}
 
