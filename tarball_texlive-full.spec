@@ -12,21 +12,17 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 
 ExclusiveArch:  x86_64
 
-## Force replace the Fedora TeX Live (Epoch to ensure our version is always "newer")
-Epoch:          1
-Provides:       texlive
-Provides:       texlive-full
+## Replace and protect from conflicting
+Provides:       texlive, texlive-*
 
-# Obsolete our own basic package, plus the Fedora ones we are replacing.
-# The 'texlive' Provides is what dnf will use to handle most other dependencies.
-Obsoletes:      texlive-core
-Obsoletes:      texlive-kpathsea
-Obsoletes:      texlive-latex
-Obsoletes:      texlive-collection-latex
-Obsoletes:      texlive-collection-latexrecommended
-Obsoletes:      texlive-collection-fontsrecommended
-Obsoletes:      texlive-scheme-full
-Obsoletes:      texlive-basic
+Obsoletes:      texlive <= %{version}
+Obsoletes:      texlive-base <= %{version}
+Obsoletes:      texlive-core <= %{version}
+Obsoletes:      texlive-kpathsea <= %{version}
+Obsoletes:      texlive-latex <= %{version}
+Obsoletes:      texlive-scheme-basic <= %{version}
+Obsoletes:      texlive-scheme-full <= %{version}
+Obsoletes:      texlive-basic <= %{version}
 
 BuildRequires:  perl wget tar xz
 Requires:       perl

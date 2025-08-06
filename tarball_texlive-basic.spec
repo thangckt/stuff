@@ -15,10 +15,12 @@ ExclusiveArch:  x86_64
 ## Replace and protect from conflicting
 Provides:       texlive, texlive-*
 
-Obsoletes:      texlive-base, texlive-core, texlive-kpathsea, texlive-latex, texlive-fonts-recommended
-Obsoletes:      texlive-scheme-basic, texlive-scheme-full
-
-Conflicts:      texlive, texlive-*
+Obsoletes:      texlive <= %{version}
+Obsoletes:      texlive-base <= %{version}
+Obsoletes:      texlive-core <= %{version}
+Obsoletes:      texlive-kpathsea <= %{version}
+Obsoletes:      texlive-latex <= %{version}
+Obsoletes:      texlive-scheme-basic <= %{version}
 
 BuildRequires:  perl tar
 Requires:       perl

@@ -23,8 +23,9 @@ How to get the spec file for a package:
 
 ## Auto replacement
 - Add `Provides: <package_name>`: Let other packages know the `spec-package` (building from spec) can replace the `<package_name>`
-- Add `Obsoletes: <package_name> <version>`: Replace the `<package_name>` by the `spec-package`.
+- Add `Obsoletes: <package_name> <version>`: Replace the `<package_name>` by the `spec-package`. `Obsoletes` does not accept wildcards.
 - Add `Conflicts: <package_name> <version>`: Protect mechanism, to prevent installation of the `spec-package` if `<package_name>` is already installed, and vice versa. Need manually remove the conflicting package first.
+    - Should not use `Conflicts`, since it can prevent install dependencies. Use `Obsoletes` instead.
 
 
 # Setting the Spec files
