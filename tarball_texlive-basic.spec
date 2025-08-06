@@ -36,6 +36,11 @@ cd ..
 mkdir -p tmp_texlive
 tmp_install_dir=$(realpath tmp_texlive)
 
+## Ensure we do not pick up system texlive binaries during install
+export PATH=/usr/bin:/bin
+export TEXLIVE_INSTALL_NO_CONTEXT_CACHE=1
+unset TEXMFHOME TEXMFVAR TEXMFCONFIG TEXMFSYSCONFIG TEXMFSYSVAR
+
 ## Create a custom install profile with absolute paths
 cat > texlive.profile <<EOF
 selected_scheme scheme-basic
@@ -71,8 +76,9 @@ cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
 rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 
-## Set default repository for `tlmgr`, to ensures `tlmgr update` works
-%{buildroot}%{install_dir}/bin/x86_64-linux/tlmgr option repository https://mirror.ctan.org/systems/texlive/tlnet || :
+## Set default repository to ensures `tlmgr update` works
+%{buildroot}%{install_dir}/bin/x86_64-linux/tlmgr option repository https://mirror.ctan.org/systems/texlive/tlnet
+${tmp_install_dir}/bin/x86_64-linux/tlmgr option autobackup 0
 
 ###ANCHOR Set Texlive PATH
 ## export environment variables (PATH, MANPATH, etc.)
