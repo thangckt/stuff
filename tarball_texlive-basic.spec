@@ -17,7 +17,6 @@ Provides:       texlive, texlive-*
 
 Obsoletes:      texlive <= %{version}
 Obsoletes:      texlive-base <= %{version}
-Obsoletes:      texlive-core <= %{version}
 Obsoletes:      texlive-kpathsea <= %{version}
 Obsoletes:      texlive-latex <= %{version}
 Obsoletes:      texlive-scheme-basic <= %{version}

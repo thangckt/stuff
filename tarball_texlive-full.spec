@@ -17,14 +17,13 @@ Provides:       texlive, texlive-*
 
 Obsoletes:      texlive <= %{version}
 Obsoletes:      texlive-base <= %{version}
-Obsoletes:      texlive-core <= %{version}
 Obsoletes:      texlive-kpathsea <= %{version}
 Obsoletes:      texlive-latex <= %{version}
 Obsoletes:      texlive-scheme-basic <= %{version}
 Obsoletes:      texlive-scheme-full <= %{version}
 Obsoletes:      texlive-basic <= %{version}
 
-BuildRequires:  perl wget tar xz
+BuildRequires:  perl tar
 Requires:       perl
 
 %global install_dir /opt/texlive/%{version}
