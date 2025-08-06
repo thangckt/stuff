@@ -13,12 +13,12 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 ExclusiveArch:  x86_64
 
 ## Replace and protect from conflicting
-Provides:       texlive
-Provides:       texlive-*
-Obsoletes:      texlive
-Obsoletes:      texlive-*
-Conflicts:      texlive
-Conflicts:      texlive-*
+Provides:       texlive, texlive-*
+
+Obsoletes:      texlive-base, texlive-core, texlive-kpathsea, texlive-latex, texlive-fonts-recommended
+Obsoletes:      texlive-scheme-basic, texlive-scheme-full
+
+Conflicts:      texlive, texlive-*
 
 BuildRequires:  perl tar
 Requires:       perl
