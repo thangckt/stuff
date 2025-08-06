@@ -14,15 +14,15 @@ ExclusiveArch:  x86_64
 
 ## Force replace the Fedora TeX Live (Epoch to ensure our version is always "newer")
 Epoch:          1
-Provides:       texlive = 1:%{version}
-Provides:       texlive-basic = 1:%{version}
+Provides:       texlive
+Provides:       texlive-basic
 
 # Obsolete your own basic package, and the Fedora ones we are replacing.
 # The 'texlive' Provides is what dnf will use to handle most other dependencies.
-Obsoletes:      texlive-core < 1:%{version}
-Obsoletes:      texlive-kpathsea < 1:%{version}
-Obsoletes:      texlive-latex < 1:%{version}
-Obsoletes:      texlive-scheme-basic < 1:%{version}
+Obsoletes:      texlive-core
+Obsoletes:      texlive-kpathsea
+Obsoletes:      texlive-latex
+Obsoletes:      texlive-scheme-basic
 
 BuildRequires:  perl wget tar xz
 Requires:       perl
@@ -55,9 +55,6 @@ TEXDIR          ${tmp_install_dir}
 TEXMFLOCAL      ${tmp_install_dir}/texmf-local
 TEXMFSYSVAR     ${tmp_install_dir}/texmf-var
 TEXMFSYSCONFIG  ${tmp_install_dir}/texmf-config
-TEXMFVAR        ${tmp_install_dir}/texmf-var
-TEXMFCONFIG     ${tmp_install_dir}/texmf-config
-TEXMFHOME       ${tmp_install_dir}/texmf-home
 binary_x86_64-linux 1
 option_doc 0
 option_src 0
