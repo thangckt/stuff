@@ -1,7 +1,9 @@
 ### ref: https://github.com/terrapkg/packages/blob/frawhide/anda/devs/zed/stable/zed.spec
+### Note:
+#  - To make update persist, have to install Zed into a "writable" location
 
 Name:           zed
-Version:        0.197.6
+Version:        0.198.2
 Release:        1%{?dist}
 Summary:        Zed is a high-performance, multiplayer code editor
 
@@ -53,21 +55,37 @@ cargo build -j$(nproc) --release --package zed --package cli
 script/generate-licenses
 
 %install
-install -Dm755 target/release/zed %{buildroot}%{_libexecdir}/zed-editor
-install -Dm755 target/release/cli %{buildroot}%{_bindir}/zed
+## Install Zed editor and CLI to writable locations (/usr/share/zed)
+install -Dm755 target/release/zed %{buildroot}%{_datadir}/zed/zed-editor
+install -Dm755 target/release/cli %{buildroot}%{_datadir}/zed/zed
 
+## Create wrapper script in /usr/bin
+cat > %{buildroot}%{_bindir}/zed << 'EOF'
+USER_BIN="$HOME/.local/share/zed/zed-editor"
+SYSTEM_BIN="/usr/share/zed/zed-editor"
+# Fallback to system binary if no user binary exists
+if [ -x "$USER_BIN" ]; then
+    exec "$USER_BIN" "$@"
+else
+    exec "$SYSTEM_BIN" "$@"
+fi
+EOF
+chmod +x %{buildroot}%{_bindir}/zed
+
+## Desktop and icon files
 install -Dm644 zed.desktop %{buildroot}%{_datadir}/applications/zed.desktop
 install -Dm644 crates/zed/resources/app-icon.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/zed.png
 install -Dm644 zed.metainfo.xml %{buildroot}%{_metainfodir}/zed.metainfo.xml
 
 %files
-%license LICENSE-AGPL LICENSE-APACHE LICENSE-GPL
-%doc README.md
-%{_libexecdir}/zed-editor
 %{_bindir}/zed
+%{_datadir}/zed/zed-editor
+%{_datadir}/zed/zed
 %{_datadir}/applications/zed.desktop
 %{_datadir}/icons/hicolor/128x128/apps/zed.png
 %{_metainfodir}/zed.metainfo.xml
+%license LICENSE-AGPL LICENSE-APACHE LICENSE-GPL
+%doc README.md
 
 %changelog
 %autochangelog
