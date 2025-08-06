@@ -115,9 +115,8 @@ EOF
 %post
 # Inform the user how to activate immediately
 echo "======================================================="
-echo "TeX Live has been installed to /opt/texlive/%{version}."
-echo "Please open a new terminal session to use it."
-echo "If it does not work, try to source the script manually:"
+echo "TeX Live has been installed to %{install_dir}."
+echo "To take affect, open a new terminal session, or try to source this script manually:"
 echo "  source /etc/profile.d/texlive.sh"
 echo "======================================================="
 
