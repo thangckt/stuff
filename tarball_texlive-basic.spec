@@ -13,6 +13,7 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 ExclusiveArch:  x86_64
 
 BuildRequires:  perl-devel tar
+Requires:       perl biber
 
 %global install_dir /opt/texlive/%{version}
 
@@ -64,6 +65,10 @@ find ${tmp_install_dir} -type f \( -name 'install-tl.log' -o -name 'texlive.prof
 ## Copy staged install into %{buildroot}
 mkdir -p %{buildroot}%{install_dir}
 cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
+
+### Replace TeX Live's broken biber with system's biber
+rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
+ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 
 ## export environment variables (PATH, MANPATH, etc.) (not use).
 mkdir -p %{buildroot}/etc/profile.d
