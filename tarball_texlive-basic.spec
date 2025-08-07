@@ -71,7 +71,7 @@ cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
 rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 
-## Create symlink for tlmgr to ensure it works with sudo
+## Create symlink for /usr/bin/tlmgr to ensure it works with sudo
 ln -sf %{install_dir}/bin/x86_64-linux/tlmgr %{buildroot}%{_bindir}/tlmgr
 
 ## Set default repository to ensures `tlmgr update` works
