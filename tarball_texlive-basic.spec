@@ -12,10 +12,7 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 
 ExclusiveArch:  x86_64
 
-## Prevent install Fedora dependencies
-Conflicts: texlive texlive-* kpathsea
-
-BuildRequires:  perl-devel tar
+BuildRequires:  tar
 # Requires:       perl biber
 
 %global install_dir /opt/texlive/%{version}
