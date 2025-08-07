@@ -56,11 +56,12 @@ script/generate-licenses
 
 %install
 ## Install Zed editor and CLI to writable locations (/usr/share/zed)
-install -Dm755 target/release/zed %{buildroot}%{_datadir}/zed/zed-editor
-install -Dm755 target/release/cli %{buildroot}%{_datadir}/zed/zed
+install -Dpm755 target/release/zed %{buildroot}%{_datadir}/zed/zed-editor
+install -Dpm755 target/release/cli %{buildroot}%{_datadir}/zed/zed
 
-## Create wrapper script in /usr/bin
-cat > %{buildroot}%{_bindir}/zed << 'EOF'
+## Create /usr/bin wrapper so users can override with their own copy in ~/.local/share/zed
+install -Dpm755 /dev/stdin %{buildroot}%{_bindir}/zed <<'EOF'
+#!/bin/bash
 USER_BIN="$HOME/.local/share/zed/zed-editor"
 SYSTEM_BIN="/usr/share/zed/zed-editor"
 # Fallback to system binary if no user binary exists
@@ -70,12 +71,11 @@ else
     exec "$SYSTEM_BIN" "$@"
 fi
 EOF
-chmod +x %{buildroot}%{_bindir}/zed
 
-## Desktop and icon files
-install -Dm644 zed.desktop %{buildroot}%{_datadir}/applications/zed.desktop
-install -Dm644 crates/zed/resources/app-icon.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/zed.png
-install -Dm644 zed.metainfo.xml %{buildroot}%{_metainfodir}/zed.metainfo.xml
+## Desktop, icon and metadata
+install -Dpm644 zed.desktop %{buildroot}%{_datadir}/applications/zed.desktop
+install -Dpm644 crates/zed/resources/app-icon.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/zed.png
+install -Dpm644 zed.metainfo.xml %{buildroot}%{_metainfodir}/zed.metainfo.xml
 
 %files
 %{_bindir}/zed
