@@ -13,7 +13,7 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 ExclusiveArch:  x86_64
 
 BuildRequires:  perl-devel tar
-Requires:       perl biber
+# Requires:       perl biber
 
 %global install_dir /opt/texlive/%{version}
 
