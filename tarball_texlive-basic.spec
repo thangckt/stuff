@@ -72,8 +72,7 @@ rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 
 ## Create symlink for tlmgr to ensure it works with sudo
-mkdir -p %{buildroot}/usr/bin
-ln -sf %{install_dir}/bin/x86_64-linux/tlmgr %{buildroot}/usr/bin/tlmgr
+ln -sf %{install_dir}/bin/x86_64-linux/tlmgr %{buildroot}%{_bindir}/tlmgr
 
 ## Set default repository to ensures `tlmgr update` works
 %{buildroot}%{install_dir}/bin/x86_64-linux/tlmgr option repository https://mirror.ctan.org/systems/texlive/tlnet
@@ -106,6 +105,7 @@ echo "======================================================="
 
 %files
 %{install_dir}
+%{_bindir}/tlmgr
 %config(noreplace) /etc/profile.d/texlive.sh
 %config(noreplace) /etc/bashrc.d/texlive.sh
 
