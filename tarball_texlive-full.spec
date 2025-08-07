@@ -12,6 +12,10 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 
 ExclusiveArch:  x86_64
 
+## Prevent Fedora dependencies
+Conflicts: texlive texlive-* kpathsea
+Provides: texlive texlive-base tex(pdflatex) tex(luatex) tex(kpathsea) tex(latex)
+
 BuildRequires:  perl-devel tar
 # Requires:       perl biber
 
