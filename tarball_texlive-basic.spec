@@ -12,6 +12,8 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 
 ExclusiveArch:  x86_64
 
+Conflicts: texlive-texlive.infra
+
 BuildRequires:  perl-devel tar
 Requires:       perl biber
 
