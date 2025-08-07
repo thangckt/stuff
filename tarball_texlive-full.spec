@@ -87,7 +87,8 @@ cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
 export PATH=%{install_dir}/bin/x86_64-linux:\$PATH
 export MANPATH=%{install_dir}/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=%{install_dir}/texmf-dist/doc/info:\$INFOPATH
-export PERL5LIB=%{install_dir}/tlpkg:%{install_dir}/texmf-dist/scripts:%{install_dir}/texmf-dist/scripts/perltex
+export PERL5LIB=%{install_dir}/tlpkg:%{install_dir}/texmf-dist/scripts:%{install_dir}/texmf-dist/scripts/perltex:\
+%{install_dir}/texmf-dist/tex:%{install_dir}/texmf-dist/tex/latex/perltex
 EOF
 
 ## To ensure non-login shells also get the PATH
