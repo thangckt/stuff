@@ -12,11 +12,7 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 
 ExclusiveArch:  x86_64
 
-## Prevent Fedora dependencies
-Conflicts: texlive texlive-* kpathsea
-Provides: texlive texlive-base tex(pdflatex) tex(luatex) tex(kpathsea) tex(latex)
-
-BuildRequires:  perl-devel tar
+BuildRequires:  tar perl
 # Requires:       perl biber
 
 %global install_dir /opt/texlive/%{version}
@@ -31,6 +27,14 @@ tar -xf %{SOURCE0}
 texlive_dir=$(ls -d install-tl-* | head -n1)
 mv "$texlive_dir" ../texlive_dir
 cd ..
+
+## Download the missing Perl modules for latexindent
+mkdir -p missing_perl_modules/YAML
+curl -L -o missing_perl_modules/YAML/Tiny.pm https://raw.githubusercontent.com/Perl-Toolchain-Gang/YAML-Tiny/main/lib/YAML/Tiny.pm
+mkdir -p missing_perl_modules/File
+curl -L -o missing_perl_modules/File/HomeDir.pm https://raw.githubusercontent.com/Perl-Toolchain-Gang/File-HomeDir/main/lib/File/HomeDir.pm
+mkdir -p missing_perl_modules/Unicode
+curl -L -o missing_perl_modules/Unicode/GCString.pm https://raw.githubusercontent.com/Perl-Toolchain-Gang/Unicode-GCString/main/lib/Unicode/GCString.pm
 
 %build
 # Nothing to build
@@ -75,14 +79,24 @@ cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
 # rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 # ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 
+## Fix latexindent dependencies
+mkdir -p %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/YAML
+mkdir -p %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/File
+mkdir -p %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/Unicode
+cp -a missing_perl_modules/YAML/Tiny.pm %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/YAML/
+cp -a missing_perl_modules/File/HomeDir.pm %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/File/
+cp -a missing_perl_modules/Unicode/GCString.pm %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/Unicode/
+
+## Create wrapper for tlmgr to override system /usr/sbin/tlmgr with sudo
+mkdir -p %{buildroot}/usr/local/bin
+cat > %{buildroot}/usr/local/bin/tlmgr <<EOF
+#!/bin/sh
+exec %{install_dir}/bin/x86_64-linux/tlmgr "\$@"
+EOF
+chmod +x %{buildroot}/usr/local/bin/tlmgr
+
 ## Set default repository to ensures `tlmgr update` works
 %{buildroot}%{install_dir}/bin/x86_64-linux/tlmgr option repository https://mirror.ctan.org/systems/texlive/tlnet
-
-## Create wrapper for tlmgr to override system /usr/sbin/tlmgr
-install -Dpm755 /dev/stdin %{buildroot}/usr/local/bin/tlmgr <<'EOF'
-#!/bin/sh
-exec %{install_dir}/bin/x86_64-linux/tlmgr "$@"
-EOF
 
 ###ANCHOR Set Texlive PATH
 ## export environment variables (PATH, MANPATH, etc.)
@@ -91,9 +105,7 @@ cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
 export PATH=%{install_dir}/bin/x86_64-linux:\$PATH
 export MANPATH=%{install_dir}/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=%{install_dir}/texmf-dist/doc/info:\$INFOPATH
-export PERL5LIB=%{install_dir}/tlpkg:%{install_dir}/tlpkg/TeXLive:\
-%{install_dir}/texmf-dist/scripts:%{install_dir}/texmf-dist/scripts/perltex:\
-%{install_dir}/texmf-dist/tex:%{install_dir}/texmf-dist/tex/latex/perltex
+export PERL5LIB=%{install_dir}/tlpkg:%{install_dir}/texmf-dist/scripts:%{install_dir}/texmf-dist
 EOF
 
 ## To ensure non-login shells also get the PATH
@@ -108,7 +120,7 @@ EOF
 %posttrans
 echo "======================================================="
 echo "TeX Live has been installed to %{install_dir}."
-echo "To take effect, open a new terminal session, or source this script manually:"
+echo "To use, open a new terminal session, or source this script manually:"
 echo "  source /etc/profile.d/texlive.sh"
 echo "To change repository, run: tlmgr option repository <URL>"
 echo "======================================================="

@@ -119,7 +119,8 @@ EOF
 
 %posttrans
 echo "======================================================="
-echo "TeX Live has been installed to %{install_dir}. To use, open a new terminal session, or source this script manually:"
+echo "TeX Live has been installed to %{install_dir}."
+echo "To use, open a new terminal session, or source this script manually:"
 echo "  source /etc/profile.d/texlive.sh"
 echo "To change repository, run: tlmgr option repository <URL>"
 echo "======================================================="
