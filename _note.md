@@ -151,7 +151,12 @@ install -Dpm755 /dev/stdin %{buildroot}/usr/local/bin/tlmgr <<'EOF'
 #!/bin/sh
 exec %{install_dir}/bin/x86_64-linux/tlmgr "$@"
 EOF
-
+```
+## Perl issue
+When TeX Live is installed, it often includes its own Perl distribution and a set of Perl modules that are essential for its operation. The `PERL5LIB` environment variable specifies a list of directories where Perl should look for modules.
+```sh
+install_dir=/opt/texlive/%{version}
+export PERL5LIB=$install_dir/tlpkg:$install_dir/texmf-dist/scripts:$install_dir/texmf-dist/scripts/perltex
 ```
 
 

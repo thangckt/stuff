@@ -68,8 +68,8 @@ cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
 
 ###ANCHOR Fix some issues
 ## Replace TeX Live's broken biber with system's biber
-rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
-ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
+# rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
+# ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 
 ## Set default repository to ensures `tlmgr update` works
 %{buildroot}%{install_dir}/bin/x86_64-linux/tlmgr option repository https://mirror.ctan.org/systems/texlive/tlnet
@@ -88,6 +88,7 @@ cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
 export PATH=%{install_dir}/bin/x86_64-linux:\$PATH
 export MANPATH=%{install_dir}/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=%{install_dir}/texmf-dist/doc/info:\$INFOPATH
+export PERL5LIB=%{install_dir}/tlpkg:%{install_dir}/texmf-dist/scripts:%{install_dir}/texmf-dist/scripts/perltex
 EOF
 
 ## To ensure non-login shells also get the PATH
