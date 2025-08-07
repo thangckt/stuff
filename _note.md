@@ -166,18 +166,32 @@ export PERL5LIB=%{install_dir}/tlpkg:%{install_dir}/texmf-dist/scripts:%{install
 Can check if `biber`/`latexindent` works by running:
 ```sh
 /opt/texlive/2025/bin/x86_64-linux/biber --version
-/opt/texlive/2025/bin/x86_64-linux/latexindent --version --version
+/opt/texlive/2025/bin/x86_64-linux/latexindent --version
 ```
-This will show the missing Perl modules if they are not installed.
+Look at `Can't locate YAML/Tiny.pm in @INC` or similar error messages. This will show the missing Perl modules if they are not installed.
 - `biber` needs `PAR.pm`, `File/Temp.pm`
-- `latexindent` needs `YAML::Tiny`, `File::HomeDir`, `Unicode::GCString`
+- `latexindent` needs `YAML/Tiny.pm`
 
-> Solution: Install biber/latexindent directly, and symlink them to the TeX Live bin directory.
+1. Opt1: On Fedora, just search if missing Perl modules are available in the system, and install them.
 ```sh
-sudo dnf install biber texlive-latexindent
+dnf provides 'perl(PAR)'
+dnf provides 'perl(File::Temp)'
+dnf provides 'perl(YAML::Tiny)'
 ```
-Then, in the `%install` section of the spec file, add:
+Then add the following to the spec file:
 ```sh
+Requires: perl perl-PAR perl-File-Temp
+Requires: perl-YAML-Tiny
+```
+
+
+2. Opt2: Install biber/latexindent directly, and symlink them to the TeX Live bin directory.
+```sh
+Requires:  biber texlive-latexindent
+
+%install
+
+###ANCHOR Fix some issues
 ## Replace TeX Live's broken biber with system's biber
 rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber

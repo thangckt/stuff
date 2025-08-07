@@ -13,7 +13,8 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 ExclusiveArch:  x86_64
 
 BuildRequires:  tar perl
-Requires:       biber texlive-latexindent
+Requires:       perl perl-PAR perl-File-Temp
+Requires:       perl-YAML-Tiny
 
 %global install_dir /opt/texlive/%{version}
 
@@ -68,11 +69,11 @@ cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
 
 ###ANCHOR Fix some issues
 ## Replace TeX Live's broken biber with system's biber
-rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
-ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
+# rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
+# ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 ## Replace TeX Live's broken latexindent with system's latexindent
-rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/latexindent
-ln -s /usr/bin/latexindent %{buildroot}%{install_dir}/bin/x86_64-linux/latexindent
+# rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/latexindent
+# ln -s /usr/bin/latexindent %{buildroot}%{install_dir}/bin/x86_64-linux/latexindent
 
 ## Create wrapper for tlmgr to override system /usr/sbin/tlmgr when use sudo
 mkdir -p %{buildroot}/usr/local/bin
