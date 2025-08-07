@@ -42,6 +42,7 @@ Obsoletes:      texlive-scheme-full <= %{version}
 # `Texlive`
 - Install `texlive` using `install-tl` script.
 
+## instal in writeable directory
 The concepts between *compile-time paths* and *runtime paths*. If compile errors related to {%buildroot} being in paths, it means one of two things:
 1. The TeX Live installer itself is generating incorrect, hardcoded paths. This is a less common scenario for a robust installer like `install-tl`, which is designed to handle `DESTDIR` environments.
 2. The build process or a subsequent check is finding {%buildroot} in a file that it shouldn't, and this is being flagged as an error. This is the more likely scenario.
@@ -53,9 +54,7 @@ mkdir(/usr/local/texlive/) failed: Permission denied
 ```
 RPM doesn’t allow writes to `/usr/local/` during `%install`.
 
-
-
-
+## Set PATH
 There are 2 ways to set ENV paths for `texlive` packages:
 1. Use `alternaives` to set the default path. (avoid using this method)
 - Some packages may not work properly with this method.
@@ -134,6 +133,7 @@ echo "======================================================="
   ]
 "
 ```
+
 ## Issue with `tlmgr`
 `tlmgr` is the TeX Live Manager, used to manage/update Tex Live packages.
 
@@ -152,44 +152,38 @@ install -Dpm755 /dev/stdin %{buildroot}/usr/local/bin/tlmgr <<'EOF'
 exec %{install_dir}/bin/x86_64-linux/tlmgr "$@"
 EOF
 ```
+
 ## Perl issue
 When TeX Live is installed, it often includes its own Perl distribution and a set of Perl modules that are essential for its operation. The `PERL5LIB` environment variable specifies a list of directories where Perl should look for modules.
 ```sh
 install_dir=/opt/texlive/%{version}
 export PERL5LIB=%{install_dir}/tlpkg:%{install_dir}/texmf-dist/scripts:%{install_dir}/texmf-dist
 ```
-## `latexindent` issue
-TeX Live includes `latexindent.pl` but not all of its dependencies. You must either:
-- Add the missing Perl modules yourself, or
-- Use the system’s `latexindent.pl` (should avoid, since it install Perl modules and many other dependencies).
 
-This is cause of issue: `Can't locate YAML/Tiny.pm in @INC (you may need to install the YAML::Tiny module)...`
+## `biber`/`latexindent` issue
+`biber`/`latexindent` include in TeX Live, but they are note really standalone programs. They require some Perl modules to work properly, but these modules are not included in the TeX Live distribution by default.
 
-TeX Live upstream (via `install-tl`) includes:
-- `latexindent.pl` in `texmf-dist/scripts/latexindent/`
-- `.pm` files in `texmf-dist/scripts/latexindent/LatexIndent/*.pm`
-
-But does not include the external Perl modules like: `YAML::Tiny`, `File::HomeDir`, `Unicode::GCString`
-
-> Solution: Download required Perl modules manually
+Can check if `biber`/`latexindent` works by running:
 ```sh
-%prep
-# Download missing Perl modules for latexindent.pl
-mkdir -p missing_perl_modules/YAML
-curl -L -o missing_perl_modules/YAML/Tiny.pm https://raw.githubusercontent.com/Perl-Toolchain-Gang/YAML-Tiny/main/lib/YAML/Tiny.pm
-mkdir -p missing_perl_modules/File
-curl -L -o missing_perl_modules/File/HomeDir.pm https://raw.githubusercontent.com/Perl-Toolchain-Gang/File-HomeDir/main/lib/File/HomeDir.pm
-mkdir -p missing_perl_modules/Unicode
-curl -L -o missing_perl_modules/Unicode/GCString.pm https://raw.githubusercontent.com/Perl-Toolchain-Gang/Unicode-GCString/main/lib/Unicode/GCString.pm
+/opt/texlive/2025/bin/x86_64-linux/biber --version
+/opt/texlive/2025/bin/x86_64-linux/latexindent --version --version
+```
+This will show the missing Perl modules if they are not installed.
+- `biber` needs `PAR.pm`, `File/Temp.pm`
+- `latexindent` needs `YAML::Tiny`, `File::HomeDir`, `Unicode::GCString`
 
-%install
-# Install the missing Perl modules for latexindent
-mkdir -p %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/YAML
-mkdir -p %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/File
-mkdir -p %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/Unicode
-cp -a missing_perl_modules/YAML/Tiny.pm %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/YAML/
-cp -a missing_perl_modules/File/HomeDir.pm %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/File/
-cp -a missing_perl_modules/Unicode/GCString.pm %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/Unicode/
+> Solution: Install biber/latexindent directly, and symlink them to the TeX Live bin directory.
+```sh
+sudo dnf install biber texlive-latexindent
+```
+Then, in the `%install` section of the spec file, add:
+```sh
+## Replace TeX Live's broken biber with system's biber
+rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
+ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
+## Replace TeX Live's broken latexindent with system's latexindent
+rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/latexindent
+ln -s /usr/bin/latexindent %{buildroot}%{install_dir}/bin/x86_64-linux/latexindent
 ```
 
 # rustdesk
