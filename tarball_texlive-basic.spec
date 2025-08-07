@@ -36,11 +36,6 @@ cd ..
 mkdir -p tmp_texlive
 tmp_install_dir=$(realpath tmp_texlive)
 
-## Ensure we do not pick up system texlive binaries during install
-export PATH=/usr/bin:/bin
-export TEXLIVE_INSTALL_NO_CONTEXT_CACHE=1
-unset TEXMFHOME TEXMFVAR TEXMFCONFIG TEXMFSYSCONFIG TEXMFSYSVAR
-
 ## Create a custom install profile with absolute paths
 cat > texlive.profile <<EOF
 selected_scheme scheme-basic
@@ -78,7 +73,6 @@ ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 
 ## Set default repository to ensures `tlmgr update` works
 %{buildroot}%{install_dir}/bin/x86_64-linux/tlmgr option repository https://mirror.ctan.org/systems/texlive/tlnet
-${tmp_install_dir}/bin/x86_64-linux/tlmgr option autobackup 0
 
 ###ANCHOR Set Texlive PATH
 ## export environment variables (PATH, MANPATH, etc.)
@@ -96,6 +90,17 @@ if [ -f /etc/profile.d/texlive.sh ]; then
   . /etc/profile.d/texlive.sh
 fi
 EOF
+
+%post
+###ANCHOR Create texlive group to use tlmgr without sudo
+if ! getent group gtexlive >/dev/null; then
+    groupadd -r gtexlive
+fi
+## Set group ownership and write permissions on TeX Live tree
+chgrp -R gtexlive %{install_dir}
+chmod -R g+w %{install_dir}
+## Allow new files to inherit group
+find %{install_dir} -type d -exec chmod g+s {} +
 
 
 %posttrans
