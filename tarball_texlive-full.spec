@@ -13,7 +13,7 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 ExclusiveArch:  x86_64
 
 BuildRequires:  tar perl
-# Requires:       perl biber
+Requires:       biber texlive-latexindent
 
 %global install_dir /opt/texlive/%{version}
 
@@ -27,14 +27,6 @@ tar -xf %{SOURCE0}
 texlive_dir=$(ls -d install-tl-* | head -n1)
 mv "$texlive_dir" ../texlive_dir
 cd ..
-
-## Download the missing Perl modules for latexindent
-mkdir -p missing_perl_modules/YAML
-curl -L -o missing_perl_modules/YAML/Tiny.pm https://raw.githubusercontent.com/Perl-Toolchain-Gang/YAML-Tiny/main/lib/YAML/Tiny.pm
-mkdir -p missing_perl_modules/File
-curl -L -o missing_perl_modules/File/HomeDir.pm https://raw.githubusercontent.com/Perl-Toolchain-Gang/File-HomeDir/main/lib/File/HomeDir.pm
-mkdir -p missing_perl_modules/Unicode
-curl -L -o missing_perl_modules/Unicode/GCString.pm https://raw.githubusercontent.com/Perl-Toolchain-Gang/Unicode-GCString/main/lib/Unicode/GCString.pm
 
 %build
 # Nothing to build
@@ -76,18 +68,13 @@ cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
 
 ###ANCHOR Fix some issues
 ## Replace TeX Live's broken biber with system's biber
-# rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
-# ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
+rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
+ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
+## Replace TeX Live's broken latexindent with system's latexindent
+rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/latexindent
+ln -s /usr/bin/latexindent %{buildroot}%{install_dir}/bin/x86_64-linux/latexindent
 
-## Fix latexindent dependencies
-mkdir -p %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/YAML
-mkdir -p %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/File
-mkdir -p %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/Unicode
-cp -a missing_perl_modules/YAML/Tiny.pm %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/YAML/
-cp -a missing_perl_modules/File/HomeDir.pm %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/File/
-cp -a missing_perl_modules/Unicode/GCString.pm %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/Unicode/
-
-## Create wrapper for tlmgr to override system /usr/sbin/tlmgr with sudo
+## Create wrapper for tlmgr to override system /usr/sbin/tlmgr when use sudo
 mkdir -p %{buildroot}/usr/local/bin
 cat > %{buildroot}/usr/local/bin/tlmgr <<EOF
 #!/bin/sh
