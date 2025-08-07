@@ -139,16 +139,19 @@ echo "======================================================="
 
 There is a problem that wrong `tlmgr` is used with and without `sudo`. So can not use `tlmgr` to update packages properly.
 ```sh
-tha@thaDesktop:~$ which tlmgr
+$ which tlmgr
 /opt/texlive/2025/bin/x86_64-linux/tlmgr
-tha@thaDesktop:~$ sudo which tlmgr
+$ sudo which tlmgr
 /usr/sbin/tlmgr
 ```
-Solve this by add symlink to `/usr/sbin/tlmgr` in the `%install` section of the spec file:
+Solve this by create a wrapper script for `tlmgr` (in most system, `/usr/local/bin` is before `/usr/bin` in PATH)
 ```sh
-# Create symlink for tlmgr to ensure it works with sudo
-mkdir -p %{buildroot}/usr/bin
-ln -sf /opt/texlive/%{version}/bin/x86_64-linux/tlmgr %{buildroot}/usr/bin/tlmgr
+## Create wrapper for tlmgr to override system /usr/sbin/tlmgr
+install -Dpm755 /dev/stdin %{buildroot}/usr/local/bin/tlmgr <<'EOF'
+#!/bin/sh
+exec %{install_dir}/bin/x86_64-linux/tlmgr "$@"
+EOF
+
 ```
 
 

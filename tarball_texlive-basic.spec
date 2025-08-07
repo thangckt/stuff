@@ -12,8 +12,6 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 
 ExclusiveArch:  x86_64
 
-Obsoletes:      texlive-texlive.infra
-
 BuildRequires:  perl-devel tar
 Requires:       perl biber
 
@@ -73,12 +71,14 @@ cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
 rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 
-## Create symlink for /usr/bin/tlmgr to ensure it works with sudo
-mkdir -p %{buildroot}/usr/bin
-ln -sf %{install_dir}/bin/x86_64-linux/tlmgr %{buildroot}/usr/bin/tlmgr
-
 ## Set default repository to ensures `tlmgr update` works
 %{buildroot}%{install_dir}/bin/x86_64-linux/tlmgr option repository https://mirror.ctan.org/systems/texlive/tlnet
+
+## Create wrapper for tlmgr to override system /usr/sbin/tlmgr
+install -Dpm755 /dev/stdin %{buildroot}/usr/local/bin/tlmgr <<'EOF'
+#!/bin/sh
+exec %{install_dir}/bin/x86_64-linux/tlmgr "$@"
+EOF
 
 ###ANCHOR Set Texlive PATH
 ## export environment variables (PATH, MANPATH, etc.)
@@ -108,7 +108,7 @@ echo "======================================================="
 
 %files
 %{install_dir}
-/usr/bin/tlmgr
+/usr/local/bin/tlmgr
 %config(noreplace) /etc/profile.d/texlive.sh
 %config(noreplace) /etc/bashrc.d/texlive.sh
 
