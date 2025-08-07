@@ -71,6 +71,10 @@ cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
 rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 
+## Create symlink for tlmgr to ensure it works with sudo
+mkdir -p %{buildroot}/usr/bin
+ln -sf %{install_dir}/bin/x86_64-linux/tlmgr %{buildroot}/usr/bin/tlmgr
+
 ## Set default repository to ensures `tlmgr update` works
 %{buildroot}%{install_dir}/bin/x86_64-linux/tlmgr option repository https://mirror.ctan.org/systems/texlive/tlnet
 
@@ -90,17 +94,6 @@ if [ -f /etc/profile.d/texlive.sh ]; then
   . /etc/profile.d/texlive.sh
 fi
 EOF
-
-%post
-###ANCHOR Create texlive group to use tlmgr without sudo
-if ! getent group gtexlive >/dev/null; then
-    groupadd -r gtexlive
-fi
-## Set group ownership and write permissions on TeX Live tree
-chgrp -R gtexlive %{install_dir}
-chmod -R g+w %{install_dir}
-## Allow new files to inherit group
-find %{install_dir} -type d -exec chmod g+s {} +
 
 
 %posttrans

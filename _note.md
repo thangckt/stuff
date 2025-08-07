@@ -37,9 +37,9 @@ Obsoletes:      texlive-latex <= %{version}
 Obsoletes:      texlive-scheme-full <= %{version}
 ```
 
-# Setting the Spec files
 
-## `Texlive`
+
+# `Texlive`
 - Install `texlive` using `install-tl` script.
 
 The concepts between *compile-time paths* and *runtime paths*. If compile errors related to {%buildroot} being in paths, it means one of two things:
@@ -134,6 +134,23 @@ echo "======================================================="
   ]
 "
 ```
+## Issue with `tlmgr`
+`tlmgr` is the TeX Live Manager, used to manage/update Tex Live packages.
 
-## rustdesk
+There is a problem that wrong `tlmgr` is used with and without `sudo`. So can not use `tlmgr` to update packages properly.
+```sh
+tha@thaDesktop:~$ which tlmgr
+/opt/texlive/2025/bin/x86_64-linux/tlmgr
+tha@thaDesktop:~$ sudo which tlmgr
+/usr/sbin/tlmgr
+```
+Solve this by add symlink to `/usr/sbin/tlmgr` in the `%install` section of the spec file:
+```sh
+# Create symlink for tlmgr to ensure it works with sudo
+mkdir -p %{buildroot}/usr/bin
+ln -sf /opt/texlive/%{version}/bin/x86_64-linux/tlmgr %{buildroot}/usr/bin/tlmgr
+```
+
+
+# rustdesk
 - version 1.4.1 is very slow on the client side, so use version 1.4.0 instead.
