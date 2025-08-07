@@ -14,7 +14,6 @@ ExclusiveArch:  x86_64
 
 ## Prevent install Fedora dependencies
 Conflicts: texlive texlive-* kpathsea
-Provides: texlive texlive-base tex(pdflatex) tex(luatex) tex(kpathsea) tex(latex)
 
 BuildRequires:  perl-devel tar
 # Requires:       perl biber

@@ -177,17 +177,19 @@ But does not include the external Perl modules like: `YAML::Tiny`, `File::HomeDi
 # Download missing Perl modules for latexindent.pl
 mkdir -p missing_perl_modules/YAML
 curl -L -o missing_perl_modules/YAML/Tiny.pm https://raw.githubusercontent.com/Perl-Toolchain-Gang/YAML-Tiny/main/lib/YAML/Tiny.pm
-
 mkdir -p missing_perl_modules/File
 curl -L -o missing_perl_modules/File/HomeDir.pm https://raw.githubusercontent.com/Perl-Toolchain-Gang/File-HomeDir/main/lib/File/HomeDir.pm
-
 mkdir -p missing_perl_modules/Unicode
 curl -L -o missing_perl_modules/Unicode/GCString.pm https://raw.githubusercontent.com/Perl-Toolchain-Gang/Unicode-GCString/main/lib/Unicode/GCString.pm
 
 %install
 # Install the missing Perl modules for latexindent
-mkdir -p %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent
-cp -a missing_perl_modules/* %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/
+mkdir -p %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/YAML
+mkdir -p %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/File
+mkdir -p %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/Unicode
+cp -a missing_perl_modules/YAML/Tiny.pm %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/YAML/
+cp -a missing_perl_modules/File/HomeDir.pm %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/File/
+cp -a missing_perl_modules/Unicode/GCString.pm %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/Unicode/
 ```
 
 # rustdesk
