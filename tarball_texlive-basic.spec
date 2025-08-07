@@ -73,7 +73,6 @@ cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
 
 ## Set default repository to ensures `tlmgr update` works
 %{buildroot}%{install_dir}/bin/x86_64-linux/tlmgr option repository https://mirror.ctan.org/systems/texlive/tlnet
-%{buildroot}%{install_dir}/bin/x86_64-linux/tlmgr option backup 0
 
 ## Create wrapper for tlmgr to override system /usr/sbin/tlmgr
 install -Dpm755 /dev/stdin %{buildroot}/usr/local/bin/tlmgr <<'EOF'
