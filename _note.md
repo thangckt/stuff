@@ -156,9 +156,39 @@ EOF
 When TeX Live is installed, it often includes its own Perl distribution and a set of Perl modules that are essential for its operation. The `PERL5LIB` environment variable specifies a list of directories where Perl should look for modules.
 ```sh
 install_dir=/opt/texlive/%{version}
-export PERL5LIB=$install_dir/tlpkg:$install_dir/texmf-dist/scripts:$install_dir/texmf-dist/scripts/perltex
+export PERL5LIB=%{install_dir}/tlpkg:%{install_dir}/texmf-dist/scripts:%{install_dir}/texmf-dist
 ```
+## `latexindent` issue
+TeX Live includes `latexindent.pl` but not all of its dependencies. You must either:
+- Add the missing Perl modules yourself, or
+- Use the system’s `latexindent.pl` (should avoid, since it install Perl modules and many other dependencies).
 
+This is cause of issue: `Can't locate YAML/Tiny.pm in @INC (you may need to install the YAML::Tiny module)...`
+
+TeX Live upstream (via `install-tl`) includes:
+- `latexindent.pl` in `texmf-dist/scripts/latexindent/`
+- `.pm` files in `texmf-dist/scripts/latexindent/LatexIndent/*.pm`
+
+But does not include the external Perl modules like: `YAML::Tiny`, `File::HomeDir`, `Unicode::GCString`
+
+> Solution: Download required Perl modules manually
+```sh
+%prep
+# Download missing Perl modules for latexindent.pl
+mkdir -p missing_perl_modules/YAML
+curl -L -o missing_perl_modules/YAML/Tiny.pm https://raw.githubusercontent.com/Perl-Toolchain-Gang/YAML-Tiny/main/lib/YAML/Tiny.pm
+
+mkdir -p missing_perl_modules/File
+curl -L -o missing_perl_modules/File/HomeDir.pm https://raw.githubusercontent.com/Perl-Toolchain-Gang/File-HomeDir/main/lib/File/HomeDir.pm
+
+mkdir -p missing_perl_modules/Unicode
+curl -L -o missing_perl_modules/Unicode/GCString.pm https://raw.githubusercontent.com/Perl-Toolchain-Gang/Unicode-GCString/main/lib/Unicode/GCString.pm
+
+%install
+# Install the missing Perl modules for latexindent
+mkdir -p %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent
+cp -a missing_perl_modules/* %{buildroot}%{install_dir}/texmf-dist/scripts/latexindent/
+```
 
 # rustdesk
 - version 1.4.1 is very slow on the client side, so use version 1.4.0 instead.
