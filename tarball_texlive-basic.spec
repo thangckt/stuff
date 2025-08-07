@@ -12,7 +12,7 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 
 ExclusiveArch:  x86_64
 
-## Prevent Fedora dependencies
+## Prevent install Fedora dependencies
 Conflicts: texlive texlive-* kpathsea
 Provides: texlive texlive-base tex(pdflatex) tex(luatex) tex(kpathsea) tex(latex)
 
@@ -91,9 +91,8 @@ cat > %{buildroot}/etc/profile.d/texlive.sh <<EOF
 export PATH=%{install_dir}/bin/x86_64-linux:\$PATH
 export MANPATH=%{install_dir}/texmf-dist/doc/man:\$MANPATH
 export INFOPATH=%{install_dir}/texmf-dist/doc/info:\$INFOPATH
-export PERL5LIB=%{install_dir}/tlpkg:%{install_dir}/tlpkg/TeXLive:\
-%{install_dir}/texmf-dist/scripts:%{install_dir}/texmf-dist/scripts/perltex:\
-%{install_dir}/texmf-dist/tex:%{install_dir}/texmf-dist/tex/latex/perltex
+export PERL5LIB=%{install_dir}/tlpkg:%{install_dir}/texmf-dist:\
+%{install_dir}/texmf-dist/scripts:%{install_dir}/texmf-dist/tex
 EOF
 
 ## To ensure non-login shells also get the PATH
