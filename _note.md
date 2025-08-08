@@ -121,8 +121,8 @@ echo "======================================================="
 
 %files
 /opt/texlive
-%config(noreplace) /etc/profile.d/texlive.sh
-%config(noreplace) /etc/bashrc.d/texlive.sh
+/etc/profile.d/texlive.sh
+/etc/bashrc.d/texlive.sh
 ```
 - Also need to see `env` in `latex-workshop` to work properly.
 ```js
