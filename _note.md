@@ -147,10 +147,12 @@ $ sudo which tlmgr
 Solve this by create a wrapper script for `tlmgr` (in most system, `/usr/local/bin` is before `/usr/bin` in PATH)
 ```sh
 ## Create wrapper for tlmgr to override system /usr/sbin/tlmgr
-install -Dpm755 /dev/stdin %{buildroot}/usr/local/bin/tlmgr <<'EOF'
+mkdir -p %{buildroot}/usr/local/bin
+cat > %{buildroot}/usr/local/bin/tlmgr <<EOF
 #!/bin/sh
-exec %{install_dir}/bin/x86_64-linux/tlmgr "$@"
+exec %{install_dir}/bin/x86_64-linux/tlmgr "\$@"
 EOF
+chmod +x %{buildroot}/usr/local/bin/tlmgr
 ```
 
 ## Perl issue
@@ -175,23 +177,10 @@ Look at `Can't locate YAML/Tiny.pm in @INC` or similar error messages. This will
 There are few ways to work around this issue:
 1. Opt1 (the best way): Reinstall newer packages using `tlmgr` in TeX Live.
 ```sh
-/opt/texlive/2025/bin/x86_64-linux/tlmgr install biber latexindent
+/opt/texlive/2025/bin/x86_64-linux/tlmgr install --reinstall biber latexindent
 ```
 
-2. Opt2: On Fedora, just search if missing Perl modules are available in the system, and install them.
-- This way only works for `latexindent`, not work for `biber`.
-```sh
-dnf provides 'perl(PAR)'
-dnf provides 'perl(File::Temp)'
-dnf provides 'perl(YAML::Tiny)'
-```
-Then add the following to the spec file:
-```sh
-Requires: perl perl-PAR perl-File-Temp
-Requires: perl-YAML-Tiny
-```
-
-3. Opt3 (avoid using): Install biber/latexindent in system, and symlink them to the TeX Live bin directory.
+1. Opt2 (avoid using): Install `biber/latexindent` in system, and symlink them to the TeX Live bin directory.
 ```sh
 Requires:  biber texlive-latexindent
 

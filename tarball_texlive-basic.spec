@@ -45,7 +45,6 @@ TEXMFSYSCONFIG  ${tmp_install_dir}/texmf-config
 binary_x86_64-linux 1
 option_doc 0
 option_src 0
-repository https://mirror.ctan.org/systems/texlive/tlnet
 EOF
 
 ./texlive_dir/install-tl -profile texlive.profile -no-interaction -gui text
