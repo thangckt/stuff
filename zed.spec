@@ -3,7 +3,7 @@
 #  - To make update persist, have to install Zed into a "writable" location
 
 Name:           zed
-Version:        0.198.2
+Version:        0.198.3
 Release:        1%{?dist}
 Summary:        Zed is a high-performance, multiplayer code editor
 

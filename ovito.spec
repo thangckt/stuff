@@ -1,7 +1,7 @@
 ### REF: https://www.ovito.org/docs/current/development/build_linux.html
 
 Name:           ovito
-Version:        3.13.0
+Version:        3.13.1
 Release:        1%{?dist}
 Summary:        OVITO - Open Visualization Tool (GUI)
 
