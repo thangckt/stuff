@@ -161,7 +161,7 @@ export PERL5LIB=%{install_dir}/tlpkg:%{install_dir}/texmf-dist/scripts:%{install
 ```
 
 ## `biber`/`latexindent` issue
-`biber`/`latexindent` include in TeX Live, but they are note really standalone programs. They require some Perl modules to work properly, but these modules are not included in the TeX Live distribution by default.
+`biber`/`latexindent` include in TeX Live, but they may error due to missing Perl modules.
 
 Can check if `biber`/`latexindent` works by running:
 ```sh
@@ -172,7 +172,14 @@ Look at `Can't locate YAML/Tiny.pm in @INC` or similar error messages. This will
 - `biber` needs `PAR.pm`, `File/Temp.pm`
 - `latexindent` needs `YAML/Tiny.pm`
 
-1. Opt1: On Fedora, just search if missing Perl modules are available in the system, and install them.
+There are few ways to work around this issue:
+1. Opt1 (the best way): Reinstall newer packages using `tlmgr` in TeX Live.
+```sh
+/opt/texlive/2025/bin/x86_64-linux/tlmgr install biber latexindent
+```
+
+2. Opt2: On Fedora, just search if missing Perl modules are available in the system, and install them.
+- This way only works for `latexindent`, not work for `biber`.
 ```sh
 dnf provides 'perl(PAR)'
 dnf provides 'perl(File::Temp)'
@@ -184,8 +191,7 @@ Requires: perl perl-PAR perl-File-Temp
 Requires: perl-YAML-Tiny
 ```
 
-
-2. Opt2: Install biber/latexindent directly, and symlink them to the TeX Live bin directory.
+3. Opt3 (avoid using): Install biber/latexindent in system, and symlink them to the TeX Live bin directory.
 ```sh
 Requires:  biber texlive-latexindent
 
@@ -199,6 +205,7 @@ ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/latexindent
 ln -s /usr/bin/latexindent %{buildroot}%{install_dir}/bin/x86_64-linux/latexindent
 ```
+
 
 # rustdesk
 - version 1.4.1 is very slow on the client side, so use version 1.4.0 instead.
