@@ -12,9 +12,7 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 
 ExclusiveArch:  x86_64
 
-BuildRequires:  tar perl
-Requires:       perl perl-PAR perl-File-Temp
-Requires:       perl-YAML-Tiny
+BuildRequires:  tar perl-devel
 
 %global install_dir /opt/texlive/%{version}
 
@@ -68,12 +66,8 @@ mkdir -p %{buildroot}%{install_dir}
 cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
 
 ###ANCHOR Fix some issues
-## Replace TeX Live's broken biber with system's biber
-# rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
-# ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
-## Replace TeX Live's broken latexindent with system's latexindent
-# rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/latexindent
-# ln -s /usr/bin/latexindent %{buildroot}%{install_dir}/bin/x86_64-linux/latexindent
+## Fix broken biber/latexindent in TeX Live
+%{buildroot}%{install_dir}/bin/x86_64-linux/tlmgr install --reinstall biber latexindent || :
 
 ## Create wrapper for tlmgr to override system /usr/sbin/tlmgr when use sudo
 mkdir -p %{buildroot}/usr/local/bin
@@ -83,8 +77,6 @@ exec %{install_dir}/bin/x86_64-linux/tlmgr "\$@"
 EOF
 chmod +x %{buildroot}/usr/local/bin/tlmgr
 
-## Set default repository to ensures `tlmgr update` works
-%{buildroot}%{install_dir}/bin/x86_64-linux/tlmgr option repository https://mirror.ctan.org/systems/texlive/tlnet
 
 ###ANCHOR Set Texlive PATH
 ## export environment variables (PATH, MANPATH, etc.)
@@ -110,14 +102,13 @@ echo "======================================================="
 echo "TeX Live has been installed to %{install_dir}."
 echo "To use, open a new terminal session, or source this script manually:"
 echo "  source /etc/profile.d/texlive.sh"
-echo "To change repository, run: tlmgr option repository <URL>"
 echo "======================================================="
 
 %files
 %{install_dir}
 /usr/local/bin/tlmgr
-%config(noreplace) /etc/profile.d/texlive.sh
-%config(noreplace) /etc/bashrc.d/texlive.sh
+/etc/profile.d/texlive.sh
+/etc/bashrc.d/texlive.sh
 
 %changelog
 %autochangelog
