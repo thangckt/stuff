@@ -49,8 +49,8 @@ mkdir -p %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
 cp %{SOURCE1} %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/ovito.png
 
 # Install documentation
-mkdir -p %{buildroot}%{_datadir}/goldendict/doc
-cp -a doc/* %{buildroot}%{_datadir}/goldendict/doc/
+mkdir -p %{buildroot}%{_datadir}/ovito/doc
+cp -a doc/* %{buildroot}%{_datadir}/ovito/doc/
 
 # Clean up
 rm -f %{buildroot}%{_bindir}/ssh_askpass
