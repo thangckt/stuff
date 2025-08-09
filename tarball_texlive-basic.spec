@@ -29,9 +29,6 @@ mv "$texlive_dir" ../texlive_dir
 cd ..
 
 %build
-# Nothing to build
-
-%install
 ###ANCHOR Install texlive to a temporary directory to avoid embedding %{buildroot} in the file-paths
 mkdir -p tmp_texlive
 tmp_install_dir=$(realpath tmp_texlive)
@@ -50,6 +47,10 @@ EOF
 
 ./texlive_dir/install-tl -profile texlive.profile -no-interaction -gui text
 
+###ANCHOR Fix some issues
+## Remove unnecessary build files
+find ${tmp_install_dir} -type f \( -name 'install-tl.log' -o -name 'texlive.profile' \) -delete || :
+
 ## Fix ambiguous and legacy python2 shebangs
 find ${tmp_install_dir} -type f -exec sed -i \
   -e '1s|^#! */usr/bin/python2$|#!/usr/bin/python3|' \
@@ -59,16 +60,13 @@ find ${tmp_install_dir} -type f -exec sed -i \
   -e '1s|^#! */usr/bin/env python$|#!/usr/bin/python3|' \
   {} +
 
-## Remove unnecessary build files
-find ${tmp_install_dir} -type f \( -name 'install-tl.log' -o -name 'texlive.profile' \) -delete || :
+## Fix broken biber/latexindent in TeX Live
+${tmp_install_dir}/bin/x86_64-linux/tlmgr install --reinstall biber latexindent
 
+%install
 ## Copy staged install into %{buildroot}
 mkdir -p %{buildroot}%{install_dir}
 cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
-
-###ANCHOR Fix some issues
-## Fix broken biber/latexindent in TeX Live
-%{buildroot}%{install_dir}/bin/x86_64-linux/tlmgr install --reinstall biber latexindent
 
 ## Create wrapper for tlmgr to override system /usr/sbin/tlmgr when use sudo
 mkdir -p %{buildroot}/usr/local/bin
@@ -77,7 +75,6 @@ cat > %{buildroot}/usr/local/bin/tlmgr <<EOF
 exec %{install_dir}/bin/x86_64-linux/tlmgr "\$@"
 EOF
 chmod +x %{buildroot}/usr/local/bin/tlmgr
-
 
 ###ANCHOR Set Texlive PATH
 ## export environment variables (PATH, MANPATH, etc.)
@@ -95,6 +92,7 @@ if [ -f /etc/profile.d/texlive.sh ]; then
   . /etc/profile.d/texlive.sh
 fi
 EOF
+
 
 %posttrans
 echo "======================================================="
