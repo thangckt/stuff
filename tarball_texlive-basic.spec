@@ -67,9 +67,6 @@ mkdir -p %{buildroot}%{install_dir}
 cp -a "$tmp_install_dir"/* %{buildroot}%{install_dir}/
 
 ###ANCHOR Fix some issues
-## Fix broken biber/latexindent in TeX Live
-%{buildroot}%{install_dir}/bin/x86_64-linux/tlmgr install --reinstall biber latexindent || :
-
 ## Create wrapper for tlmgr to override system /usr/sbin/tlmgr when use sudo
 mkdir -p %{buildroot}/usr/local/bin
 cat > %{buildroot}/usr/local/bin/tlmgr <<EOF
@@ -96,6 +93,9 @@ if [ -f /etc/profile.d/texlive.sh ]; then
 fi
 EOF
 
+%post
+## Fix broken biber/latexindent in TeX Live
+%{install_dir}/bin/x86_64-linux/tlmgr install --reinstall biber latexindent || :
 
 %posttrans
 echo "======================================================="
