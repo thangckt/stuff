@@ -57,12 +57,12 @@ sed -i "s#. prepare_vscode.sh#. ./prepare_vscode.sh#g" build.sh
 mkdir -p %{buildroot}/usr/share/vscodium
 cp -r VSCode-linux-%{vscode_arch}/* %{buildroot}/usr/share/vscodium/
 
-# Replace bundled ripgrep with system binary
-ln -sf /usr/bin/rg %{buildroot}/usr/share/vscodium/resources/app/node_modules/@vscode/ripgrep/bin/rg
-
 # Symlink binary
 mkdir -p %{buildroot}%{_bindir}
 ln -s /usr/share/vscodium/bin/codium %{buildroot}%{_bindir}/codium
+
+# Replace bundled ripgrep with system binary
+ln -sf /usr/bin/rg %{buildroot}/usr/share/vscodium/resources/app/node_modules/@vscode/ripgrep/bin/rg
 
 # Desktop entry
 mkdir -p %{buildroot}%{_datadir}/applications

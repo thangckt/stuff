@@ -1,22 +1,22 @@
 ### ref: https://github.com/terrapkg/packages/blob/frawhide/anda/devs/zed/stable/zed.spec
 ### Note:
-#  - To make update persist, have to install Zed into a "writable" location
+#  - simplify desktop file from the original: https://github.com/zed-industries/zed/blob/main/crates/zed/resources/zed.desktop.in
 
 Name:           zed
-Version:        0.198.3
+Version:        0.198.5
 Release:        1%{?dist}
-Summary:        Zed is a high-performance, multiplayer code editor
+Summary:        High-performance, multiplayer code editor
 
 License:        AGPL-3.0-only AND Apache-2.0 AND GPL-3.0-or-later
 URL:            https://zed.dev/
-#Source0:       https://github.com/zed-industries/zed/archive/refs/tags/v%{version}.tar.gz
+Source0:        https://github.com/zed-industries/zed/archive/refs/tags/v%{version}.tar.gz
 
 BuildRequires:  cargo-rpm-macros >= 24
-BuildRequires:  gcc, gcc-c++, clang, cmake, mold, git
+BuildRequires:  gcc, gcc-c++, clang, cmake, git
 BuildRequires:  alsa-lib-devel, fontconfig-devel, wayland-devel
 BuildRequires:  libxkbcommon-x11-devel, openssl-devel
-BuildRequires:  libzstd-devel, vulkan-loader, libcurl-devel
-BuildRequires:  gettext-envsubst
+BuildRequires:  libzstd-devel, vulkan-loader-devel, libcurl-devel
+BuildRequires:  expat-devel, libxcb-devel, libX11-devel, libXi-devel
 
 Conflicts:      zed-nightly
 Conflicts:      zed-preview
@@ -25,65 +25,51 @@ Conflicts:      zed-preview
 Code at the speed of thought — Zed is a high-performance, multiplayer code editor from the creators of Atom and Tree-sitter.
 
 %prep
-# Clone Zed with submodules
-git clone --recurse-submodules https://github.com/zed-industries/zed.git zed
-cd zed
-git checkout v%{version}
-git submodule update --init --recursive
-cd ..
-cp -a zed/. ./
-rm -rf zed
+%autosetup -n zed-%{version}
 
-# Desktop files
-export APP_ID=zed
-export APP_NAME="Zed Editor"
-export APP_CLI="zed"
-export APP_ICON="zed"
-export APP_ARGS="%U"
-export DO_STARTUP_NOTIFY=true
-
-# Generate desktop/metainfo files
-envsubst < crates/zed/resources/zed.desktop.in > zed.desktop
-envsubst < crates/zed/resources/flatpak/zed.metainfo.xml.in > zed.metainfo.xml
-
-# Append StartupWMClass to ensure KDE task manager shows icon
-grep -q '^StartupWMClass=' zed.desktop || sed -i '/^\[Desktop Action /i StartupWMClass=dev.zed.Zed' zed.desktop
+### Or replace all pre section by clone Zed with submodules
+# git clone --recurse-submodules https://github.com/zed-industries/zed.git zed
+# cd zed
+# git checkout v%{version}
+# git submodule update --init --recursive
+# cd ..
+# cp -a zed/. ./
+# rm -rf zed
 
 %build
-export CARGO_HOME=.cargo
-cargo build -j$(nproc) --release --package zed --package cli
-script/generate-licenses
+%cargo_build --release --package zed
 
 %install
-## Install Zed editor and CLI to writable locations (/usr/share/zed)
-install -Dpm755 target/release/zed %{buildroot}%{_datadir}/zed/zed-editor
-install -Dpm755 target/release/cli %{buildroot}%{_datadir}/zed/zed
+install -Dpm755 target/release/zed %{buildroot}%{_bindir}/zed
 
-## Create /usr/bin wrapper so users can override with their own copy in ~/.local/share/zed
-install -Dpm755 /dev/stdin %{buildroot}%{_bindir}/zed <<'EOF'
-#!/bin/bash
-USER_BIN="$HOME/.local/share/zed/zed-editor"
-SYSTEM_BIN="/usr/share/zed/zed-editor"
-# Fallback to system binary if no user binary exists
-if [ -x "$USER_BIN" ]; then
-    exec "$USER_BIN" "$@"
-else
-    exec "$SYSTEM_BIN" "$@"
-fi
+## Desktop file
+mkdir -p %{buildroot}%{_datadir}/applications
+cat > %{buildroot}%{_datadir}/applications/zed.desktop <<'EOF'
+[Desktop Entry]
+Name=Zed Editor
+GenericName=Text Editor
+Exec=zed %U
+Icon=zed
+Type=Application
+StartupNotify=true
+Categories=Utility;TextEditor;Development;IDE;
+MimeType=text/plain;application/x-zerosize;x-scheme-handler/zed;
+Actions=NewWorkspace;
+Keywords=zed;
+
+[Desktop Action NewWorkspace]
+Name=Open a new workspace
+Exec=zed --new %U
 EOF
 
-## Desktop, icon and metadata
-install -Dpm644 zed.desktop %{buildroot}%{_datadir}/applications/zed.desktop
-install -Dpm644 crates/zed/resources/app-icon.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/zed.png
-install -Dpm644 zed.metainfo.xml %{buildroot}%{_metainfodir}/zed.metainfo.xml
+## Icon
+install -Dpm644 crates/zed/resources/app-icon.png \
+    %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/zed.png
 
 %files
 %{_bindir}/zed
-%{_datadir}/zed/zed-editor
-%{_datadir}/zed/zed
 %{_datadir}/applications/zed.desktop
 %{_datadir}/icons/hicolor/128x128/apps/zed.png
-%{_metainfodir}/zed.metainfo.xml
 %license LICENSE-AGPL LICENSE-APACHE LICENSE-GPL
 %doc README.md
 
