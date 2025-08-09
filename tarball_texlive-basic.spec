@@ -97,8 +97,7 @@ EOF
 PATH=%{install_dir}/bin/x86_64-linux:$PATH \
     %{install_dir}/bin/x86_64-linux/tlmgr install --reinstall biber latexindent
 
-
-%posttrans
+## Info
 echo "======================================================="
 echo "TeX Live has been installed to %{install_dir}."
 echo "To use, open a new terminal session, or source this script manually:"
