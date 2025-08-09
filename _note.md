@@ -161,8 +161,6 @@ When TeX Live is installed, it often includes its own Perl distribution and a se
 install_dir=/opt/texlive/%{version}
 export PERL5LIB=%{install_dir}/tlpkg:%{install_dir}/texmf-dist/scripts:%{install_dir}/texmf-dist
 ```
-
-## `biber`/`latexindent` issue
 `biber`/`latexindent` include in TeX Live, but they may error due to missing Perl modules.
 
 Can check if `biber`/`latexindent` works by running:
@@ -174,10 +172,17 @@ Look at `Can't locate YAML/Tiny.pm in @INC` or similar error messages. This will
 - `biber` needs `PAR.pm`, `File/Temp.pm`
 - `latexindent` needs `YAML/Tiny.pm`
 
+## `latexindent` issue
+`Can't locate YAML/Tiny.pm in @INC` issue
+```sh
+Requires:  perl-YAML-Tiny
+```
+
+## `biber` issue
 There are few ways to work around this issue:
 1. Opt1 (the best way): Reinstall newer packages using `tlmgr` in TeX Live.
 ```sh
-/opt/texlive/2025/bin/x86_64-linux/tlmgr install --reinstall biber latexindent
+/opt/texlive/2025/bin/x86_64-linux/tlmgr install --reinstall biber
 ```
 
 1. Opt2 (avoid using): Install `biber/latexindent` in system, and symlink them to the TeX Live bin directory.
@@ -190,9 +195,6 @@ Requires:  biber texlive-latexindent
 ## Replace TeX Live's broken biber with system's biber
 rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/biber
 ln -s /usr/bin/biber %{buildroot}%{install_dir}/bin/x86_64-linux/biber
-## Replace TeX Live's broken latexindent with system's latexindent
-rm -f %{buildroot}%{install_dir}/bin/x86_64-linux/latexindent
-ln -s /usr/bin/latexindent %{buildroot}%{install_dir}/bin/x86_64-linux/latexindent
 ```
 
 

@@ -13,7 +13,7 @@ Source0:        https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/%{ver
 ExclusiveArch:  x86_64
 
 BuildRequires:  tar perl-devel
-Requires:       perl
+Requires:       perl perl-YAML-Tiny
 
 %global install_dir /opt/texlive/%{version}
 
@@ -93,9 +93,9 @@ fi
 EOF
 
 %post
-## Fix broken biber/latexindent (update their versions)
+## Fix broken biber (update its versions)
 PATH=%{install_dir}/bin/x86_64-linux:$PATH \
-    %{install_dir}/bin/x86_64-linux/tlmgr install --reinstall biber latexindent
+    %{install_dir}/bin/x86_64-linux/tlmgr install --reinstall biber
 
 ## Info
 echo "======================================================="
