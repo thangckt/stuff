@@ -11,6 +11,10 @@ License:        AGPL-3.0-only AND Apache-2.0 AND GPL-3.0-or-later
 URL:            https://zed.dev/
 Source0:        https://github.com/zed-industries/zed/archive/refs/tags/v%{version}.tar.gz
 
+# Vendored dependencies tarball (created with `cargo vendor`)
+# This avoids network access in Copr builds
+Source1:        zed-%{version}-vendor.tar.zst
+
 BuildRequires:  cargo-rpm-macros >= 24
 BuildRequires:  gcc, gcc-c++, clang, cmake, git
 BuildRequires:  alsa-lib-devel, fontconfig-devel, wayland-devel
@@ -25,7 +29,9 @@ Conflicts:      zed-preview
 Code at the speed of thought — Zed is a high-performance, multiplayer code editor from the creators of Atom and Tree-sitter.
 
 %prep
-%autosetup -n zed-%{version}
+%autosetup -n zed-%{version} -p1
+# Unpack vendored Rust crates
+tar --strip-components=1 -xf %{SOURCE1}
 
 ### Or replace all pre section by clone Zed with submodules
 # git clone --recurse-submodules https://github.com/zed-industries/zed.git zed
