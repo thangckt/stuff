@@ -37,7 +37,9 @@ Code at the speed of thought — Zed is a high-performance, multiplayer code edi
 # rm -rf zed
 
 %build
-%cargo_build --release --package zed
+export CARGO_HOME=$(pwd)/.cargo
+export RUSTFLAGS="%{build_ldflags} %{?__global_ldflags}"
+cargo build --release --offline --package zed
 
 %install
 install -Dpm755 target/release/zed %{buildroot}%{_bindir}/zed
