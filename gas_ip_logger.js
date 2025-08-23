@@ -134,59 +134,86 @@
     // Get browser information from user agent string
     function getBrowserInfo() {
         const ua = navigator.userAgent;
-        const browserInfo = { name: 'Unknown', version: 'Unknown' };
+        const info = {
+            browser: 'Unknown',
+            os: 'Unknown',
+            device: 'Unknown',
+            arch: navigator.userAgentData?.architecture || navigator.platform || 'Unknown',
+            screen: `${window.screen.width}x${window.screen.height} @${window.devicePixelRatio}x`,
+            language: navigator.language || 'Unknown',
+            touchSupport: 'ontouchstart' in window || navigator.maxTouchPoints > 0
+        };
 
-        // Check for iOS devices and specific Safari scenarios
+        // --- Browser detection ---
         if (/iP(hone|od|ad)/.test(ua)) {
             if (/Safari/.test(ua) && !/CriOS/.test(ua) && !/FxiOS/.test(ua)) {
-                // Safari on iOS
-                const versionMatch = ua.match(/Version\/(\d+\.\d+)/);
-                browserInfo.name = 'Safari';
-                browserInfo.version = versionMatch ? versionMatch[1] : 'Unknown';
+                const version = ua.match(/Version\/(\d+\.\d+)/)?.[1] || 'Unknown';
+                info.browser = `Safari-${version}`;
             } else if (/CriOS/.test(ua)) {
-                // Chrome on iOS
-                const versionMatch = ua.match(/CriOS\/(\d+\.\d+)/);
-                browserInfo.name = 'Chrome';
-                browserInfo.version = versionMatch ? versionMatch[1] : 'Unknown';
+                info.browser = `Chrome-${ua.match(/CriOS\/(\d+\.\d+)/)?.[1] || 'Unknown'}`;
             } else if (/FxiOS/.test(ua)) {
-                // Firefox on iOS
-                const versionMatch = ua.match(/FxiOS\/(\d+\.\d+)/);
-                browserInfo.name = 'Firefox';
-                browserInfo.version = versionMatch ? versionMatch[1] : 'Unknown';
+                info.browser = `Firefox-${ua.match(/FxiOS\/(\d+\.\d+)/)?.[1] || 'Unknown'}`;
             } else {
-                // Other WebKit-based browsers on iOS
-                browserInfo.name = 'WebKit-based Browser';
+                info.browser = 'WebKit-based-iOS';
             }
         } else {
-            // Handle non-iOS devices
             const browserData = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
             if (/trident/i.test(browserData[1])) {
-                const version = /\brv[ :]+(\d+)/g.exec(ua) || [];
-                browserInfo.name = 'Internet Explorer';
-                browserInfo.version = version[1] || 'Unknown';
+                const version = (/\brv[ :]+(\d+)/g.exec(ua) || [])[1] || 'Unknown';
+                info.browser = `Internet Explorer-${version}`;
             } else if (browserData[1] === 'Chrome') {
                 const temp = ua.match(/\b(OPR|Edg)\/(\d+)/);
                 if (temp) {
-                    browserInfo.name = temp[1] === 'OPR' ? 'Opera' : 'Edge';
-                    browserInfo.version = temp[2];
+                    info.browser = `${temp[1] === 'OPR' ? 'Opera' : 'Edge'}-${temp[2]}`;
                 } else {
-                    browserInfo.name = 'Chrome';
-                    browserInfo.version = browserData[2];
+                    info.browser = `Chrome-${browserData[2]}`;
                 }
             } else if (browserData[1]) {
-                browserInfo.name = browserData[1];
-                browserInfo.version = browserData[2];
+                info.browser = `${browserData[1]}-${browserData[2]}`;
             }
-
-            // Special handling for Safari
             if (/Safari/.test(ua) && !/Chrome/.test(ua)) {
-                const versionMatch = ua.match(/Version\/(\d+\.\d+)/);
-                browserInfo.name = 'Safari';
-                browserInfo.version = versionMatch ? versionMatch[1] : 'Unknown';
+                const version = ua.match(/Version\/(\d+\.\d+)/)?.[1] || 'Unknown';
+                info.browser = `Safari-${version}`;
             }
         }
 
-        return browserInfo;
+        // --- OS detection ---
+        if (/Windows NT/.test(ua)) {
+            info.os = `Windows-${ua.match(/Windows NT (\d+\.\d+)/)?.[1] || 'Unknown'}`;
+        } else if (/Mac OS X/.test(ua)) {
+            info.os = `macOS-${ua.match(/Mac OS X (\d+[_\.\d]+)/)?.[1].replace(/_/g, '.') || 'Unknown'}`;
+        } else if (/Android/.test(ua)) {
+            info.os = `Android-${ua.match(/Android (\d+(\.\d+)?)/)?.[1] || 'Unknown'}`;
+        } else if (/Linux/.test(ua)) {
+            let distro = 'Linux';
+            let de = 'Unknown';
+            let version = 'Unknown';
+
+            if (/Ubuntu/i.test(ua)) distro = 'Ubuntu';
+            else if (/Fedora/i.test(ua)) distro = 'Fedora';
+            else if (/Arch/i.test(ua)) distro = 'Arch';
+            else if (/Debian/i.test(ua)) distro = 'Debian';
+
+            const versionMatch = ua.match(/(Ubuntu|Fedora|Debian)\/?(\d+[\.\d]*)/i);
+            if (versionMatch) version = versionMatch[2];
+
+            info.os = `${distro}-${de}-${version}`;
+        } else if (/iP(hone|od|ad)/.test(ua)) {
+            info.os = 'iOS';
+        }
+
+        // --- Device type detection ---
+        if (/Mobi|iPhone|Android.+Mobile|Windows Phone/i.test(ua)) {
+            info.device = 'Mobile';
+        } else if (/iPad|Tablet|Nexus 7|SM-T|Kindle|Silk/i.test(ua)) {
+            info.device = 'Tablet';
+        } else if (/Windows|Macintosh|X11|Linux/i.test(ua)) {
+            info.device = 'Desktop';
+        } else {
+            info.device = 'Unknown';
+        }
+
+        return info;
     }
 
     function getTimestamp() {
@@ -222,8 +249,15 @@
             latitude: visitorInfo.latitude,
             longitude: visitorInfo.longitude,
             asn: visitorInfo.asn,
-            browser: `${browserInfo.name} ${browserInfo.version}`,
-            os: navigator.platform,
+            // Browser Info
+            browser: browserInfo.browser,
+            os: browserInfo.os,
+            device: browserInfo.device,
+            arch: browserInfo.arch,
+            screen: browserInfo.screen,
+            language: browserInfo.language,
+            touchSupport: browserInfo.touchSupport,
+            // Page Info
             currentUrl: currentUrl,
         };
         await sendDataToGoogleApp(jsonData);
