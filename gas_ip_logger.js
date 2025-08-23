@@ -134,8 +134,6 @@
     // Get browser information from user agent string
     function getBrowserInfo() {
         const ua = navigator.userAgent;
-        const uaData = navigator.userAgentData;
-
         const info = {
             browser: 'Unk',
             os: 'Unk',
@@ -147,22 +145,7 @@
         };
 
         // --- Arch detection ---
-        let arch = 'Unk';
-        if (uaData?.architecture) {
-            arch = uaData.architecture;
-        } else {
-            // Fallback: parse UA string
-            if (/x86_64|Win64|WOW64|amd64|x64/i.test(ua)) {
-                arch = 'x86_64';
-            } else if (/i686|i386/i.test(ua)) {
-                arch = 'x86';
-            } else if (/armv8|aarch64/i.test(ua)) {
-                arch = 'arm64';
-            } else if (/arm/i.test(ua)) {
-                arch = 'arm';
-            }
-        }
-        info.arch = arch;
+        info.arch = navigator.userAgentData?.architecture || navigator.platform || 'Unknown';
 
         // --- Browser detection (same as before) ---
         if (/iP(hone|od|ad)/.test(ua)) {
