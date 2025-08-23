@@ -134,32 +134,33 @@
     // Get browser information from user agent string
     function getBrowserInfo() {
         const ua = navigator.userAgent;
+        const arch = navigator.userAgentData?.architecture || navigator.platform || 'Unk';
+
         const info = {
-            browser: 'Unknown',
-            os: 'Unknown',
-            device: 'Unknown',
-            arch: navigator.userAgentData?.architecture || navigator.platform || 'Unknown',
+            browser: 'Unk',
+            os: 'Unk',
+            device: 'Unk',
             screen: `${window.screen.width}x${window.screen.height} @${window.devicePixelRatio}x`,
-            language: navigator.language || 'Unknown',
+            language: navigator.language || 'Unk',
             touchSupport: 'ontouchstart' in window || navigator.maxTouchPoints > 0
         };
 
         // --- Browser detection ---
         if (/iP(hone|od|ad)/.test(ua)) {
             if (/Safari/.test(ua) && !/CriOS/.test(ua) && !/FxiOS/.test(ua)) {
-                const version = ua.match(/Version\/(\d+\.\d+)/)?.[1] || 'Unknown';
+                const version = ua.match(/Version\/(\d+\.\d+)/)?.[1] || 'Unk';
                 info.browser = `Safari-${version}`;
             } else if (/CriOS/.test(ua)) {
-                info.browser = `Chrome-${ua.match(/CriOS\/(\d+\.\d+)/)?.[1] || 'Unknown'}`;
+                info.browser = `Chrome-${ua.match(/CriOS\/(\d+\.\d+)/)?.[1] || 'Unk'}`;
             } else if (/FxiOS/.test(ua)) {
-                info.browser = `Firefox-${ua.match(/FxiOS\/(\d+\.\d+)/)?.[1] || 'Unknown'}`;
+                info.browser = `Firefox-${ua.match(/FxiOS\/(\d+\.\d+)/)?.[1] || 'Unk'}`;
             } else {
                 info.browser = 'WebKit-based-iOS';
             }
         } else {
             const browserData = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
             if (/trident/i.test(browserData[1])) {
-                const version = (/\brv[ :]+(\d+)/g.exec(ua) || [])[1] || 'Unknown';
+                const version = (/\brv[ :]+(\d+)/g.exec(ua) || [])[1] || 'Unk';
                 info.browser = `Internet Explorer-${version}`;
             } else if (browserData[1] === 'Chrome') {
                 const temp = ua.match(/\b(OPR|Edg)\/(\d+)/);
@@ -172,22 +173,24 @@
                 info.browser = `${browserData[1]}-${browserData[2]}`;
             }
             if (/Safari/.test(ua) && !/Chrome/.test(ua)) {
-                const version = ua.match(/Version\/(\d+\.\d+)/)?.[1] || 'Unknown';
+                const version = ua.match(/Version\/(\d+\.\d+)/)?.[1] || 'Unk';
                 info.browser = `Safari-${version}`;
             }
         }
 
         // --- OS detection ---
+        let osString = 'Unk';
+
         if (/Windows NT/.test(ua)) {
-            info.os = `Windows-${ua.match(/Windows NT (\d+\.\d+)/)?.[1] || 'Unknown'}`;
+            osString = `Windows-${ua.match(/Windows NT (\d+\.\d+)/)?.[1] || 'Unk'}`;
         } else if (/Mac OS X/.test(ua)) {
-            info.os = `macOS-${ua.match(/Mac OS X (\d+[_\.\d]+)/)?.[1].replace(/_/g, '.') || 'Unknown'}`;
+            osString = `macOS-${ua.match(/Mac OS X (\d+[_\.\d]+)/)?.[1].replace(/_/g, '.') || 'Unk'}`;
         } else if (/Android/.test(ua)) {
-            info.os = `Android-${ua.match(/Android (\d+(\.\d+)?)/)?.[1] || 'Unknown'}`;
+            osString = `Android-${ua.match(/Android (\d+(\.\d+)?)/)?.[1] || 'Unk'}`;
         } else if (/Linux/.test(ua)) {
             let distro = 'Linux';
-            let de = 'Unknown';
-            let version = 'Unknown';
+            let de = 'Unk';
+            let version = 'Unk';
 
             if (/Ubuntu/i.test(ua)) distro = 'Ubuntu';
             else if (/Fedora/i.test(ua)) distro = 'Fedora';
@@ -197,10 +200,13 @@
             const versionMatch = ua.match(/(Ubuntu|Fedora|Debian)\/?(\d+[\.\d]*)/i);
             if (versionMatch) version = versionMatch[2];
 
-            info.os = `${distro}-${de}-${version}`;
+            osString = `${distro}-${de}-${version}`;
         } else if (/iP(hone|od|ad)/.test(ua)) {
-            info.os = 'iOS';
+            osString = 'iOS';
         }
+
+        // combine OS + arch
+        info.os = `${osString} (${arch})`;
 
         // --- Device type detection ---
         if (/Mobi|iPhone|Android.+Mobile|Windows Phone/i.test(ua)) {
@@ -210,7 +216,7 @@
         } else if (/Windows|Macintosh|X11|Linux/i.test(ua)) {
             info.device = 'Desktop';
         } else {
-            info.device = 'Unknown';
+            info.device = 'Unk';
         }
 
         return info;
