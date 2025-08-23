@@ -143,7 +143,7 @@
             device: 'Unk',
             screen: `${window.screen.width}x${window.screen.height} @${window.devicePixelRatio}x`,
             language: navigator.language || 'Unk',
-            touchSupport: 'ontouchstart' in window || navigator.maxTouchPoints > 0
+            isTouch: 'ontouchstart' in window || navigator.maxTouchPoints > 0
         };
 
         // --- Arch detection ---
@@ -276,7 +276,7 @@
             device: browserInfo.device,
             screen: browserInfo.screen,
             language: browserInfo.language,
-            touchSupport: browserInfo.touchSupport,
+            isTouch: browserInfo.isTouch,
             // Page Info
             currentUrl: currentUrl,
         };
