@@ -259,7 +259,6 @@
             browser: browserInfo.browser,
             os: browserInfo.os,
             device: browserInfo.device,
-            arch: browserInfo.arch,
             screen: browserInfo.screen,
             language: browserInfo.language,
             touchSupport: browserInfo.touchSupport,
