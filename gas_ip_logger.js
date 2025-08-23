@@ -134,18 +134,37 @@
     // Get browser information from user agent string
     function getBrowserInfo() {
         const ua = navigator.userAgent;
-        const arch = navigator.userAgentData?.architecture || navigator.platform || 'Unk';
+        const uaData = navigator.userAgentData;
 
         const info = {
             browser: 'Unk',
             os: 'Unk',
+            arch: 'Unk',
             device: 'Unk',
             screen: `${window.screen.width}x${window.screen.height} @${window.devicePixelRatio}x`,
             language: navigator.language || 'Unk',
             touchSupport: 'ontouchstart' in window || navigator.maxTouchPoints > 0
         };
 
-        // --- Browser detection ---
+        // --- Arch detection ---
+        let arch = 'Unk';
+        if (uaData?.architecture) {
+            arch = uaData.architecture;
+        } else {
+            // Fallback: parse UA string
+            if (/x86_64|Win64|WOW64|amd64|x64/i.test(ua)) {
+                arch = 'x86_64';
+            } else if (/i686|i386/i.test(ua)) {
+                arch = 'x86';
+            } else if (/armv8|aarch64/i.test(ua)) {
+                arch = 'arm64';
+            } else if (/arm/i.test(ua)) {
+                arch = 'arm';
+            }
+        }
+        info.arch = arch;
+
+        // --- Browser detection (same as before) ---
         if (/iP(hone|od|ad)/.test(ua)) {
             if (/Safari/.test(ua) && !/CriOS/.test(ua) && !/FxiOS/.test(ua)) {
                 const version = ua.match(/Version\/(\d+\.\d+)/)?.[1] || 'Unk';
@@ -178,15 +197,13 @@
             }
         }
 
-        // --- OS detection ---
-        let osString = 'Unk';
-
+        // --- OS detection (same as before) ---
         if (/Windows NT/.test(ua)) {
-            osString = `Windows-${ua.match(/Windows NT (\d+\.\d+)/)?.[1] || 'Unk'}`;
+            info.os = `Windows-${ua.match(/Windows NT (\d+\.\d+)/)?.[1] || 'Unk'}`;
         } else if (/Mac OS X/.test(ua)) {
-            osString = `macOS-${ua.match(/Mac OS X (\d+[_\.\d]+)/)?.[1].replace(/_/g, '.') || 'Unk'}`;
+            info.os = `macOS-${ua.match(/Mac OS X (\d+[_\.\d]+)/)?.[1].replace(/_/g, '.') || 'Unk'}`;
         } else if (/Android/.test(ua)) {
-            osString = `Android-${ua.match(/Android (\d+(\.\d+)?)/)?.[1] || 'Unk'}`;
+            info.os = `Android-${ua.match(/Android (\d+(\.\d+)?)/)?.[1] || 'Unk'}`;
         } else if (/Linux/.test(ua)) {
             let distro = 'Linux';
             let de = 'Unk';
@@ -200,13 +217,10 @@
             const versionMatch = ua.match(/(Ubuntu|Fedora|Debian)\/?(\d+[\.\d]*)/i);
             if (versionMatch) version = versionMatch[2];
 
-            osString = `${distro}-${de}-${version}`;
+            info.os = `${distro}-${de}-${version}`;
         } else if (/iP(hone|od|ad)/.test(ua)) {
-            osString = 'iOS';
+            info.os = 'iOS';
         }
-
-        // combine OS + arch
-        info.os = `${osString} (${arch})`;
 
         // --- Device type detection ---
         if (/Mobi|iPhone|Android.+Mobile|Windows Phone/i.test(ua)) {
@@ -222,6 +236,7 @@
         return info;
     }
 
+    // Get current timestamp
     function getTimestamp() {
         const options = {
             timeZone: "Asia/Seoul",
