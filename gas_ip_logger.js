@@ -145,7 +145,11 @@
         };
 
         // --- Arch detection ---
-        info.arch = navigator.userAgentData?.architecture || navigator.platform || 'Unknown';
+        let arch = navigator.userAgentData?.architecture || navigator.platform || 'Unknown';
+        if (arch.startsWith('Linux ')) {
+            arch = arch.replace('Linux ', '');
+        }
+        info.arch = arch;
 
         // --- Browser detection (same as before) ---
         if (/iP(hone|od|ad)/.test(ua)) {
