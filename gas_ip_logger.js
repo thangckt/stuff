@@ -246,9 +246,9 @@
             region: visitorInfo.region,
             country: visitorInfo.country,
             postal: visitorInfo.postal,
-            latitude: visitorInfo.latitude,
-            longitude: visitorInfo.longitude,
             asn: visitorInfo.asn,
+            // latitude: visitorInfo.latitude,
+            // longitude: visitorInfo.longitude,
             // Browser Info
             browser: browserInfo.browser,
             os: browserInfo.os,
