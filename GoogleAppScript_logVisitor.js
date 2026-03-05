@@ -20,6 +20,8 @@ function doPost(e) {
 const blackListCrawler = [ // Define blacklist list-of-dictionaries
     { ip: '205.169.39.45', browser: 'Chrome-117', os: 'Windows-10.0' },
     { ip: '34.72.176.129', browser: 'Chrome-125', os: 'Linux-Unk' },
+    { ip: '43.173.181.218', browser: 'Chrome-116', os: 'Windows-10.0' },
+    { ip: '187.190.192.48', browser: 'Chrome-133', os: 'Windows-10.0' },
 ];
 
 function checkIfBlocked(visitorInfo, blackList) {
