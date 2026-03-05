@@ -252,7 +252,7 @@
             const allMatch = Object.keys(blockedInfo).every(key => {
                 const actual = visitorInfo[key]?.toString().trim();
                 const expected = blockedInfo[key]?.toString().trim();
-                return actual && expected && actual.includes(expected);
+                return actual !== undefined && actual.includes(expected);
             });
             if (allMatch) return true;
         }
@@ -263,9 +263,9 @@
     // Log visitor information and send to Google Sheet
     async function logVisitor() {
         const timestamp = getTimestamp()
-        const visitorInfo = await getVisitorInfo();
         const browserInfo = getBrowserInfo();
         const currentUrl = window.location.href.replace(window.location.origin, '');
+        const visitorInfo = await getVisitorInfo();
 
         const jsonData = {
             timestamp: timestamp,
@@ -294,9 +294,8 @@
         if (checkIfBlocked(jsonData, blackList1)) {
             return; // Do not log or send data for blocked visitors
         }
-        else {
-            await sendDataToGoogleApp(jsonData, ScriptId_visitorSheet);
-        }
+
+        await sendDataToGoogleApp(jsonData, ScriptId_visitorSheet);
     }
 
     // Function trigger the visitor logging when the page loads
