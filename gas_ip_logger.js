@@ -33,14 +33,14 @@
                 url: 'https://ipinfo.io/json',
                 parse: (data) => ({
                     ip: data.ip,
-                    org: data.org.split(' ').slice(1).join(" "),
+                    org: data.org?.split(' ').slice(1).join(" ") ?? 'Unk',
                     city: data.city,
                     region: data.region,
                     country: data.country,
                     postal: data.postal,
-                    asn: data.org.split(' ')[0],
-                    latitude: data.loc.split(',')[0],
-                    longitude: data.loc.split(',')[1],
+                    asn: data.org?.split(' ')[0] ?? 'Unk',
+                    latitude: data.loc?.split(',')[0],
+                    longitude: data.loc?.split(',')[1],
                 }),
             },
             {
@@ -175,7 +175,6 @@
             info.os = `Android-${ua.match(/Android (\d+(\.\d+)?)/)?.[1] || 'Unk'}`;
         } else if (/Linux/.test(ua)) {
             let distro = 'Linux';
-            let de = 'Unk';
             let version = 'Unk';
 
             if (/Ubuntu/i.test(ua)) distro = 'Ubuntu';
@@ -186,7 +185,7 @@
             const versionMatch = ua.match(/(Ubuntu|Fedora|Debian)\/?(\d+[\.\d]*)/i);
             if (versionMatch) version = versionMatch[2];
 
-            info.os = `${distro}-${de}-${version}`;
+            info.os = `${distro}-${version}`;
         } else if (/iP(hone|od|ad)/.test(ua)) {
             info.os = 'iOS';
         }
@@ -223,7 +222,7 @@
 
     // Async function to send JSON data to Google Sheets via Google Apps Script
     const ScriptId_visitorSheet = 'AKfycbzM04ouw1vGf5wOZs4106A95PUbfpahtJ-_7cOl1_vWFGw5xey4YLENbGbiyIgs0Xd2tw'
-    const ScriptId_crawSheet = 'AKfycbzM04ouw1vGf5wOZs4106A95PUbfpahtJ-_7cOl1_vWFGw5xey4YLENbGbiyIgs0Xd2tw'
+    const ScriptId_otherSheet = "define_your_own_script_id_here" // Placeholder for another Google Apps Script
 
     async function sendDataToGoogleApp(jsonData, ScriptId) {
         const URL = `https://script.google.com/macros/s/${ScriptId}/exec`;
@@ -248,13 +247,13 @@
     function checkIfBlocked(visitorInfo, blackList) {
         // Check if the visitor is in the blacklist
         for (const blockedInfo of blackList) {
-            for (const key in blockedInfo) {
-                if (visitorInfo[key] && visitorInfo[key].includes(blockedInfo[key])) {
-                    return true; // Visitor is blocked
-                }
-            }
+            // Block only if ALL keys in the entry match (AND logic)
+            const allMatch = Object.keys(blockedInfo).every(key =>
+                visitorInfo[key] && visitorInfo[key].includes(blockedInfo[key])
+            );
+            if (allMatch) return true;
         }
-        return false; // Visitor is not blocked
+        return false;
     }
 
 
