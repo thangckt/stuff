@@ -1,5 +1,6 @@
 // Logging visistors
 // By Thang Nguyen
+// Updated: 2026Mar06
 
 
 // GoogleAppsScript function to handle CORS and save JSON to a sheet
