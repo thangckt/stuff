@@ -240,7 +240,7 @@
 
     // Filter visitors based on IP, ASN, or other criteria (optional)
     const blackList1 = [ // Define blacklist list-of-dictionaries
-        { ip: '114.70.12.225', asn: 'AS45379', browser: 'Chrome-145', os: 'Linux-Unk-Unk' }, // item 1
+        { ip: '114.70.12.225', asn: 'AS45379', browser: 'Chrome-145', os: 'Linux-Unk' }, // item 1
         { browser: 'Chrome-145', os: 'Windows' }, // item 2
     ];
 
@@ -248,9 +248,11 @@
         // Check if the visitor is in the blacklist
         for (const blockedInfo of blackList) {
             // Block only if ALL keys in the entry match (AND logic)
-            const allMatch = Object.keys(blockedInfo).every(key =>
-                visitorInfo[key] && visitorInfo[key].includes(blockedInfo[key])
-            );
+            const allMatch = Object.keys(blockedInfo).every(key => {
+                const actual = visitorInfo[key]?.toString().trim();
+                const expected = blockedInfo[key]?.toString().trim();
+                return actual && expected && actual.includes(expected);
+            });
             if (allMatch) return true;
         }
         return false;
