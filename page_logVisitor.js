@@ -209,8 +209,8 @@
     function getTimestamp() {
         const parts = new Intl.DateTimeFormat("en-US", {
             timeZone: "Asia/Seoul",
-            year: '2-digit',
-            month: 'short',  // short: "Jan", long: "January"
+            year: 'numeric',
+            month: '2-digit',
             day: '2-digit',
             hour: '2-digit',
             minute: '2-digit',
@@ -218,7 +218,7 @@
             hour12: false // 24-hour format
         }).formatToParts(new Date());
         const get = (type) => parts.find(p => p.type === type)?.value ?? 'Unk';
-        return `${get('year')}${get('month')}${get('day')}, ${get('hour')}:${get('minute')}:${get('second')}`;
+        return `${get('month')}/${get('day')}/${get('year')} ${get('hour')}:${get('minute')}:${get('second')}`;
     }
 
     // Async function to send JSON data to Google Sheets via Google Apps Script
