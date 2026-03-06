@@ -5,90 +5,91 @@
 // ref: Using Google App Mail: https://github.com/dwyl/learn-to-send-email-via-google-script-html-no-server
 
 (function () {
-    // Fetch visitor info using ipapi.co API
+
+    // Array of API endpoints with their respective data extraction logic
+    const APIs = [
+        {
+            url: 'https://ipapi.co/json',
+            parse: (data) => ({
+                ip: data.ip,
+                org: data.org,
+                city: data.city,
+                region: data.region,
+                country: data.country_name,
+                postal: data.postal,
+                asn: data.asn,
+                latitude: data.latitude,
+                longitude: data.longitude,
+            }),
+        },
+        {
+            url: 'https://ipinfo.io/json',
+            parse: (data) => ({
+                ip: data.ip,
+                org: data.org?.split(' ').slice(1).join(" ") ?? 'Unk',
+                city: data.city,
+                region: data.region,
+                country: data.country,
+                postal: data.postal,
+                asn: data.org?.split(' ')[0] ?? 'Unk',
+                latitude: data.loc?.split(',')[0],
+                longitude: data.loc?.split(',')[1],
+            }),
+        },
+        {
+            url: 'https://api.ip.sb/geoip',
+            parse: (data) => ({
+                ip: data.ip,
+                org: data.organization,
+                city: data.city,
+                region: data.region,
+                country: data.country,
+                postal: data.postal_code,
+                asn: data.asn,
+                latitude: data.latitude,
+                longitude: data.longitude,
+            }),
+        },
+        {
+            url: 'https://ipwho.is',
+            parse: (data) => ({
+                ip: data.ip,
+                org: data.connection?.isp,
+                city: data.city,
+                region: data.region,
+                country: data.country,
+                postal: data.postal,
+                asn: data.connection?.asn,
+                latitude: data.latitude,
+                longitude: data.longitude,
+            }),
+        },
+        {
+            url: 'https://api.techniknews.net/ipgeo',
+            parse: (data) => ({
+                ip: data.ip,
+                org: data.isp,
+                city: data.city,
+                region: data.region,
+                country: data.country,
+                postal: data.zip,
+                asn: data.as.split(' ')[0],
+                latitude: data.lat,
+                longitude: data.lon,
+            }),
+        },
+    ];
+
+    function isEmpty(obj) {
+        return Object.keys(obj).length === 0;
+    }
+
+    // Fetch visitor info using multiple IP APIs with fallback
     async function getVisitorInfo() {
         let visitorInfo = {};
 
-        function isEmpty(obj) {
-            return Object.keys(obj).length === 0;
-        }
-
-        // Array of API endpoints with their respective data extraction logic
-        const apis = [
-            {
-                url: 'https://ipapi.co/json',
-                parse: (data) => ({
-                    ip: data.ip,
-                    org: data.org,
-                    city: data.city,
-                    region: data.region,
-                    country: data.country_name,
-                    postal: data.postal,
-                    asn: data.asn,
-                    latitude: data.latitude,
-                    longitude: data.longitude,
-                }),
-            },
-            {
-                url: 'https://ipinfo.io/json',
-                parse: (data) => ({
-                    ip: data.ip,
-                    org: data.org?.split(' ').slice(1).join(" ") ?? 'Unk',
-                    city: data.city,
-                    region: data.region,
-                    country: data.country,
-                    postal: data.postal,
-                    asn: data.org?.split(' ')[0] ?? 'Unk',
-                    latitude: data.loc?.split(',')[0],
-                    longitude: data.loc?.split(',')[1],
-                }),
-            },
-            {
-                url: 'https://api.ip.sb/geoip',
-                parse: (data) => ({
-                    ip: data.ip,
-                    org: data.organization,
-                    city: data.city,
-                    region: data.region,
-                    country: data.country,
-                    postal: data.postal_code,
-                    asn: data.continent_code + data.asn,
-                    latitude: data.latitude,
-                    longitude: data.longitude,
-                }),
-            },
-            {
-                url: 'https://ipwho.is',
-                parse: (data) => ({
-                    ip: data.ip,
-                    org: data.connection.isp,
-                    city: data.city,
-                    region: data.region,
-                    country: data.country,
-                    postal: data.postal,
-                    asn: data.connection.asn,
-                    latitude: data.latitude,
-                    longitude: data.longitude,
-                }),
-            },
-            {
-                url: 'https://api.techniknews.net/ipgeo',
-                parse: (data) => ({
-                    ip: data.ip,
-                    org: data.isp,
-                    city: data.city,
-                    region: data.region,
-                    country: data.country,
-                    postal: data.zip,
-                    asn: data.as.split(' ')[0],
-                    latitude: data.lat,
-                    longitude: data.lon,
-                }),
-            },
-        ];
-
         // Iterate over the APIs until one returns valid data
-        for (const api of apis) {
+        for (const api of APIs) {
             try {
                 const res = await fetch(api.url);
                 const jdata = await res.json();
@@ -206,7 +207,7 @@
 
     // Get current timestamp
     function getTimestamp() {
-        const options = {
+        const parts = new Intl.DateTimeFormat("en-US", {
             timeZone: "Asia/Seoul",
             year: '2-digit',
             month: 'short',  // short: "Jan", long: "January"
@@ -215,9 +216,9 @@
             minute: '2-digit',
             second: '2-digit',
             hour12: false // 24-hour format
-        };
-        const timestamp = new Date().toLocaleString("en-US", options);
-        return timestamp.replace(/(\d{2})\s(\w{3})\s(\d{2}), (\d{2}:\d{2}:\d{2})/, '$3$2$1, $4');
+        }).formatToParts(new Date());
+        const get = (type) => parts.find(p => p.type === type)?.value ?? 'Unk';
+        return `${get('year')}${get('month')}${get('day')}, ${get('hour')}:${get('minute')}:${get('second')}`;
     }
 
     // Async function to send JSON data to Google Sheets via Google Apps Script
@@ -299,8 +300,8 @@
     }
 
     // Function trigger the visitor logging when the page loads
-    window.onload = function () {
+    window.addEventListener('load', function () {
         setTimeout(logVisitor, 3000); // Wait for 3000 milliseconds (3 seconds) before calling logVisitor
-    };
+    });
 
 })();

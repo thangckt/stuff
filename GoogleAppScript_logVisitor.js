@@ -20,7 +20,8 @@ function doPost(e) {
 // Filter visitors based on IP, ASN, or other fields
 const blackListCrawler = [ // Define blacklist list-of-dictionaries
     { ip: '205.169.39.45', browser: 'Chrome-117', os: 'Windows-10.0' },
-    { ip: '34.72.176.129', browser: 'Chrome-125', os: 'Linux-Unk' },
+    { ip: '34.72.176.129', browser: 'Chrome-125', os: 'Linux-Unk' }, // google
+    { ip: '34.123.170.104', browser: 'Chrome-125', os: 'Linux-Unk' }, // google
     { ip: '43.173.181.218', browser: 'Chrome-116', os: 'Windows-10.0' },
     { ip: '187.190.192.48', browser: 'Chrome-133', os: 'Windows-10.0' },
 ];
@@ -32,7 +33,7 @@ function checkIfBlocked(visitorInfo, blackList) {
         const allMatch = Object.keys(blockedInfo).every(key => {
             const actual = visitorInfo[key]?.toString().trim();
             const expected = blockedInfo[key]?.toString().trim();
-            return actual && expected && actual.includes(expected);
+            return actual !== undefined && actual.includes(expected);
         });
         if (allMatch) return true;
     }
