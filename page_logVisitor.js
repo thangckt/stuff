@@ -241,9 +241,9 @@
 
     // Filter visitors based on IP, ASN, or other fields
     const blackList1 = [ // Define blacklist list-of-dictionaries
-        { ip: '114.70.12.225', browser: 'Chrome-145', os: 'Linux-Unk' }, // CANLab desktop
-        { ip: '180.228.220.66', browser: 'Chrome-145', os: 'Linux-Unk' }, // Home laptop
-        { ip: '180.228.220.66', browser: 'Chrome-145', os: 'Android-10' }, // Home mobile
+        { ip: '114.70.12.225', org: 'Ulsan National Institute of Science and Technology', os: 'Linux-Unk' }, // CANLab desktop
+        { ip: '180.228.220.66', org: 'LG POWERCOMM', os: 'Linux-Unk' }, // Home laptop
+        { ip: '180.228.220.66', org: 'LG POWERCOMM', os: 'Android-10' }, // Home mobile
     ];
 
     function checkIfBlocked(visitorInfo, blackList) {
