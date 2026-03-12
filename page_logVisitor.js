@@ -117,6 +117,7 @@
     // Get browser information from user agent string
     function getBrowserInfo() {
         const ua = navigator.userAgent;
+        const uaData = navigator.userAgentData; // UA Client Hints API (Chromium-based browsers)
         const info = {
             browser: 'Unk',
             os: 'Unk',
@@ -128,78 +129,115 @@
         };
 
         // --- Arch detection ---
-        let arch = navigator.userAgentData?.architecture || navigator.platform || 'Unknown';
-        if (arch.startsWith('Linux ')) {
-            arch = arch.replace('Linux ', '');
-        }
+        let arch = uaData?.architecture || navigator.platform || 'Unknown';
+        if (arch.startsWith('Linux ')) arch = arch.replace('Linux ', '');
         info.arch = arch;
 
-        // --- Browser detection (same as before) ---
-        if (/iP(hone|od|ad)/.test(ua)) {
-            if (/Safari/.test(ua) && !/CriOS/.test(ua) && !/FxiOS/.test(ua)) {
-                const version = ua.match(/Version\/(\d+\.\d+)/)?.[1] || 'Unk';
-                info.browser = `Safari-${version}`;
-            } else if (/CriOS/.test(ua)) {
-                info.browser = `Chrome-${ua.match(/CriOS\/(\d+\.\d+)/)?.[1] || 'Unk'}`;
-            } else if (/FxiOS/.test(ua)) {
-                info.browser = `Firefox-${ua.match(/FxiOS\/(\d+\.\d+)/)?.[1] || 'Unk'}`;
-            } else {
-                info.browser = 'WebKit-based-iOS';
-            }
-        } else {
-            const browserData = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
-            if (/trident/i.test(browserData[1])) {
-                const version = (/\brv[ :]+(\d+)/g.exec(ua) || [])[1] || 'Unk';
-                info.browser = `Internet Explorer-${version}`;
-            } else if (browserData[1] === 'Chrome') {
-                const temp = ua.match(/\b(OPR|Edg)\/(\d+)/);
-                if (temp) {
-                    info.browser = `${temp[1] === 'OPR' ? 'Opera' : 'Edge'}-${temp[2]}`;
+        // --- Browser detection: Client Hints first (Chromium-based browsers) ---
+        if (uaData?.brands?.length) {
+            const brand = uaData.brands.find(b =>
+                !/not[\s._-]?a[\s._-]?brand/i.test(b.brand) && !/^chromium$/i.test(b.brand)
+            ) || uaData.brands.find(b => /chromium/i.test(b.brand));
+            if (brand) info.browser = `${brand.brand}-${brand.version}`;
+        }
+
+        // --- Browser detection: UA string fallback ---
+        if (info.browser === 'Unk') {
+            if (/iP(hone|od|ad)/.test(ua)) {
+                if (/Safari/.test(ua) && !/CriOS/.test(ua) && !/FxiOS/.test(ua)) {
+                    info.browser = `Safari-${ua.match(/Version\/(\d+\.\d+)/)?.[1] || 'Unk'}`;
+                } else if (/CriOS/.test(ua)) {
+                    info.browser = `Chrome-${ua.match(/CriOS\/(\d+\.\d+)/)?.[1] || 'Unk'}`;
+                } else if (/FxiOS/.test(ua)) {
+                    info.browser = `Firefox-${ua.match(/FxiOS\/(\d+\.\d+)/)?.[1] || 'Unk'}`;
                 } else {
-                    info.browser = `Chrome-${browserData[2]}`;
+                    info.browser = 'WebKit-based-iOS';
                 }
-            } else if (browserData[1]) {
-                info.browser = `${browserData[1]}-${browserData[2]}`;
-            }
-            if (/Safari/.test(ua) && !/Chrome/.test(ua)) {
-                const version = ua.match(/Version\/(\d+\.\d+)/)?.[1] || 'Unk';
-                info.browser = `Safari-${version}`;
+            } else {
+                const browserData = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+                if (/trident/i.test(browserData[1])) {
+                    info.browser = `Internet Explorer-${(/\brv[ :]+(\d+)/g.exec(ua) || [])[1] || 'Unk'}`;
+                } else if (browserData[1] === 'Chrome') {
+                    const temp = ua.match(/\b(OPR|Edg)\/(\d+)/);
+                    info.browser = temp
+                        ? `${temp[1] === 'OPR' ? 'Opera' : 'Edge'}-${temp[2]}`
+                        : `Chrome-${browserData[2]}`;
+                } else if (browserData[1]) {
+                    info.browser = `${browserData[1]}-${browserData[2]}`;
+                }
+                if (/Safari/.test(ua) && !/Chrome/.test(ua)) {
+                    info.browser = `Safari-${ua.match(/Version\/(\d+\.\d+)/)?.[1] || 'Unk'}`;
+                }
             }
         }
 
-        // --- OS detection (same as before) ---
-        if (/Windows NT/.test(ua)) {
-            info.os = `Windows-${ua.match(/Windows NT (\d+\.\d+)/)?.[1] || 'Unk'}`;
-        } else if (/Mac OS X/.test(ua)) {
-            info.os = `macOS-${ua.match(/Mac OS X (\d+[_\.\d]+)/)?.[1].replace(/_/g, '.') || 'Unk'}`;
-        } else if (/Android/.test(ua)) {
-            info.os = `Android-${ua.match(/Android (\d+(\.\d+)?)/)?.[1] || 'Unk'}`;
-        } else if (/Linux/.test(ua)) {
-            let distro = 'Linux';
-            let version = 'Unk';
-
-            if (/Ubuntu/i.test(ua)) distro = 'Ubuntu';
-            else if (/Fedora/i.test(ua)) distro = 'Fedora';
-            else if (/Arch/i.test(ua)) distro = 'Arch';
-            else if (/Debian/i.test(ua)) distro = 'Debian';
-
-            const versionMatch = ua.match(/(Ubuntu|Fedora|Debian)\/?(\d+[\.\d]*)/i);
-            if (versionMatch) version = versionMatch[2];
-
-            info.os = `${distro}-${version}`;
-        } else if (/iP(hone|od|ad)/.test(ua)) {
-            info.os = 'iOS';
+        // --- OS detection: Client Hints first ---
+        if (uaData?.platform) {
+            const p = uaData.platform;
+            if (/android/i.test(p)) {
+                info.os = `Android-${ua.match(/Android (\d+(?:\.\d+)?)/)?.[1] || 'Unk'}`;
+            } else if (/windows/i.test(p)) {
+                info.os = `Windows-${ua.match(/Windows NT (\d+\.\d+)/)?.[1] || 'Unk'}`;
+            } else if (/macos/i.test(p)) {
+                info.os = `macOS-${ua.match(/Mac OS X (\d+[_.\d]+)/)?.[1]?.replace(/_/g, '.') || 'Unk'}`;
+            } else if (/ios/i.test(p)) {
+                info.os = 'iOS';
+            } else if (/linux/i.test(p)) {
+                info.os = 'Linux-Unk';
+            }
         }
 
-        // --- Device type detection ---
-        if (/Mobi|iPhone|Android.+Mobile|Windows Phone/i.test(ua)) {
-            info.device = 'Mobile';
-        } else if (/iPad|Tablet|Nexus 7|SM-T|Kindle|Silk/i.test(ua)) {
-            info.device = 'Tablet';
-        } else if (/Windows|Macintosh|X11|Linux/i.test(ua)) {
-            info.device = 'Desktop';
-        } else {
-            info.device = 'Unk';
+        // --- OS detection: UA string fallback ---
+        if (info.os === 'Unk') {
+            if (/Windows NT/.test(ua)) {
+                info.os = `Windows-${ua.match(/Windows NT (\d+\.\d+)/)?.[1] || 'Unk'}`;
+            } else if (/Mac OS X/.test(ua)) {
+                info.os = `macOS-${ua.match(/Mac OS X (\d+[_.\d]+)/)?.[1]?.replace(/_/g, '.') || 'Unk'}`;
+            } else if (/Android/.test(ua)) {
+                info.os = `Android-${ua.match(/Android (\d+(?:\.\d+)?)/)?.[1] || 'Unk'}`;
+            } else if (/Linux/.test(ua)) {
+                let distro = 'Linux';
+                let version = 'Unk';
+                if (/Ubuntu/i.test(ua)) distro = 'Ubuntu';
+                else if (/Fedora/i.test(ua)) distro = 'Fedora';
+                else if (/Arch/i.test(ua)) distro = 'Arch';
+                else if (/Debian/i.test(ua)) distro = 'Debian';
+                const versionMatch = ua.match(/(Ubuntu|Fedora|Debian)\/?(\d+[\.\d]*)/i);
+                if (versionMatch) version = versionMatch[2];
+                info.os = `${distro}-${version}`;
+            } else if (/iP(hone|od|ad)/.test(ua)) {
+                info.os = 'iOS';
+            }
+        }
+
+        // --- OS fallback: infer from arch when touch suggests a mobile/ARM device ---
+        if (info.os === 'Unk' && /arm/i.test(arch)) {
+            info.os = info.isTouch ? 'Android-Unk' : 'Linux-ARM';
+        }
+
+        // --- Device detection: Client Hints first (most reliable) ---
+        if (uaData?.mobile !== undefined) {
+            info.device = uaData.mobile ? 'Mobile' : 'Desktop';
+        }
+
+        // --- Device detection: UA string fallback ---
+        if (info.device === 'Unk') {
+            if (/Mobi|iPhone|Android.+Mobile|Windows Phone/i.test(ua)) {
+                info.device = 'Mobile';
+            } else if (/iPad|Tablet|Nexus 7|SM-T|Kindle|Silk/i.test(ua)) {
+                info.device = 'Tablet';
+            } else if (/Windows|Macintosh|X11|Linux/i.test(ua)) {
+                info.device = 'Desktop';
+            }
+        }
+
+        // --- Device fallback: infer from touch capability and screen size ---
+        if (info.device === 'Unk') {
+            if (info.isTouch) {
+                info.device = window.screen.width <= 600 ? 'Mobile' : 'Tablet';
+            } else {
+                info.device = 'Desktop';
+            }
         }
 
         return info;
