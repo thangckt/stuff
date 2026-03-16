@@ -19,14 +19,17 @@ function doPost(e) {
 
 // Filter visitors based on IP, ASN, or other fields
 const blackListCrawler = [ // Define blacklist list-of-dictionaries
-  { ip: '205.169.39.45', browser: 'Chrome-117', os: 'Windows-10.0' },
   { ip: '34.72.176.129', browser: 'Chrome-125', os: 'Linux-Unk' }, // google
   { ip: '34.123.170.104', browser: 'Chrome-125', os: 'Linux-Unk' }, // google
+  { org: 'Tencent Building, Kejizhongyi Avenue', asn: 'AS132203', os: 'Windows-10.0' }, // Tencent
+  { org: "Alibaba US Technology Co., Ltd.", asn: 'AS45102', browser: 'Chrome-125', os: 'macOS-10.15.7' }, // Alibaba
+  { org: 'Facebook, Inc.', asn: 'AS32934', os: 'Windows-10.0' }, // Facebook
+  { ip: '205.169.39.45', browser: 'Chrome-117', os: 'Windows-10.0' },
   { ip: '43.173.181.218', browser: 'Chrome-116', os: 'Windows-10.0' },
   { ip: '187.190.192.48', browser: 'Chrome-133', os: 'Windows-10.0' },
 ];
 
-function checkIfBlocked(visitorInfo, blackList) {
+function checkIfCrawler(visitorInfo, blackList) {
   // Check if the visitor is in the blacklist
   for (const blockedInfo of blackList) {
     // Block only if ALL keys in the entry match (AND logic)
@@ -48,12 +51,12 @@ function record_data(jsonData) {
 
   try {
     const doc = SpreadsheetApp.getActiveSpreadsheet();
-    const sheet = checkIfBlocked(jsonData, blackListCrawler)
-      ? doc.getSheetByName('crawler')
-      : doc.getSheetByName('visistor');
+    const isCrawler = checkIfCrawler(jsonData, blackListCrawler); // Check if visitor is a crawler
+    const sheetName = isCrawler ? 'crawler' : 'visitor';
+    const sheet = doc.getSheetByName(sheetName);
 
     if (!sheet) {
-      throw new Error("No active sheet found.");
+      throw new Error(`Sheet "${sheetName}" not found. Available sheets: ${doc.getSheets().map(s => s.getName()).join(', ')}`);
     }
 
     // Get current sheet headers (first row)
@@ -88,7 +91,8 @@ function record_data(jsonData) {
     }
 
   } catch (error) {
-    Logger.log('Error in record_data: ' + error.message); // Log detailed error
+    Logger.log(`[record_data] ERROR: ${error.message}`);
+    Logger.log(`[record_data] Stack: ${error.stack}`);
   } finally {
     lock.releaseLock(); // Release lock once done
   }
